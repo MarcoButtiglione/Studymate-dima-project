@@ -21,6 +21,57 @@ class HomePage extends StatelessWidget {
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
             ]),
+            Row(
+              children: <Widget>[
+                const Expanded(flex: 9, child: NextFilledCardExample()),
+                Expanded(
+                    flex: 3,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text("1"),
+                            SizedBox(width: 10),
+                            Icon(
+                              Icons.remove_red_eye,
+                              color: Colors.grey,
+                              size: 25.0,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 7),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text("1"),
+                            SizedBox(width: 10),
+                            Icon(
+                              Icons.star,
+                              color: Colors.grey,
+                              size: 25.0,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.mode,
+                                color: Colors.grey,
+                                size: 25.0,
+                              ),
+                              onPressed: () {
+                                //
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
+              ],
+            ),
             const Divider(
               color: Colors.grey,
             ),
@@ -47,7 +98,6 @@ class HomePage extends StatelessWidget {
                 SmallFilledCardExample(),
                 SmallFilledCardExample(),
               ]),
-              
             ),
             const SizedBox(height: 20),
             const Divider(
@@ -95,6 +145,24 @@ class FilledCardExample extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceVariant,
         child: const SizedBox(
           height: 300,
+          child: Center(child: Text('Filled Card')),
+        ),
+      ),
+    );
+  }
+}
+
+class NextFilledCardExample extends StatelessWidget {
+  const NextFilledCardExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        elevation: 0,
+        color: Theme.of(context).colorScheme.surfaceVariant,
+        child: const SizedBox(
+          height: 100,
           child: Center(child: Text('Filled Card')),
         ),
       ),
