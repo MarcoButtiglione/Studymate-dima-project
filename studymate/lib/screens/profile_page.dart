@@ -60,6 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Text("Modify your interests",
                     textAlign: TextAlign.left, style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold)),
               ]),
+              
             ],
           ),
         ),

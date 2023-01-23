@@ -1,10 +1,10 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
+import 'package:studymate/screens/chat_page.dart';
 import 'package:studymate/screens/homepage.dart';
+import 'package:studymate/screens/new_lesson_page.dart';
 import 'package:studymate/screens/profile_page.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:studymate/screens/search_page.dart';
 
 void main() {
   //WidgetsFlutterBinding.ensureInitialized();
@@ -58,13 +58,13 @@ class _MyHomePageState extends State<MyHomePage> {
         page = HomePage();
         break;
       case 1:
-        page = Placeholder();
+        page = SearchPage();
         break;
       case 2:
-        page = Placeholder();
+        page = NewLessonPage();
         break;
       case 3:
-        page = Placeholder();
+        page = ChatPage();
         break;
       case 4:
         page = ProfilePage();
