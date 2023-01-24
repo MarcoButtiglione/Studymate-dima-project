@@ -38,7 +38,28 @@ class _SearchPageState extends State<SearchPage> {
                   size: 25.0,
                 ),
                 onPressed: () {
-                  //
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20))),
+                    builder: (context) => Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const FlutterLogo(size: 120),
+                          const FlutterLogo(size: 120),
+                          const FlutterLogo(size: 120),
+                          ElevatedButton(
+                            child: const Text("Close"),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
                 },
               ),
             ]),
@@ -86,7 +107,6 @@ class _SearchPageState extends State<SearchPage> {
             const RecentItem(),
             const SizedBox(height: 15),
             const RecentItem(),
-
           ],
         ),
       ),
@@ -213,7 +233,6 @@ class CategoryCard extends StatelessWidget {
   const CategoryCard({
     super.key,
   });
-
 
   @override
   Widget build(BuildContext context) {
