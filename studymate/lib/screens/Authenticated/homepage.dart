@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
+import 'package:studymate/screens/Authenticated/chat_page.dart';
+import 'package:studymate/screens/Authenticated/notification_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -33,7 +35,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  //
+                  Navigator.of(context).push(_createRoute(const NotificationPage()));
                 },
               ),
               const SizedBox(width: 10),
@@ -48,7 +50,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  //
+                  Navigator.of(context).push(_createRoute(const ChatPage()));
                 },
               ),
             ]),
@@ -277,4 +279,22 @@ class SuggestedItem extends StatelessWidget {
       ),
     );
   }
+}
+
+Route _createRoute(Widget page) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>  page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1.0, 0.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

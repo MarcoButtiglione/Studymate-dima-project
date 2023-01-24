@@ -43,7 +43,7 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ]),
             AutocompleteSearch(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Row(children: const <Widget>[
               Text("Categories",
                   textAlign: TextAlign.left,
@@ -76,7 +76,7 @@ class _SearchPageState extends State<SearchPage> {
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
             ]),
-            const SizedBox(height: 30),
+            const SizedBox(height: 15),
             const RecentItem(),
             const SizedBox(height: 15),
             const RecentItem(),
