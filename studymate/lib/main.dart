@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
 import 'package:studymate/screens/OnBoard/onBoard.dart';
 
+
+
 int? isviewed;
 void main() async {
   //WidgetsFlutterBinding.ensureInitialized();

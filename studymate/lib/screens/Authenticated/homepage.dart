@@ -211,13 +211,8 @@ class NextFilledCardExample extends StatelessWidget {
 class SmallFilledCardExample extends StatelessWidget {
   const SmallFilledCardExample({
     super.key,
-    this.imageURL,
-    this.subject,
-    this.description,
   });
-  final String? imageURL;
-  final String? subject;
-  final String? description;
+
 
   @override
   Widget build(BuildContext context) {
