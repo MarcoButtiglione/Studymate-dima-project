@@ -4,11 +4,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
 import 'package:studymate/screens/OnBoard/onBoard.dart';
 
-
-
 int? isviewed;
 void main() async {
-    //WidgetsFlutterBinding.ensureInitialized();
+  //WidgetsFlutterBinding.ensureInitialized();
   //SystemChrome.setPreferredOrientations(
   //    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
@@ -17,7 +15,6 @@ void main() async {
   isviewed = prefs.getInt('onBoard');
   runApp(MyApp());
 }
-
 
 class MyApp extends StatefulWidget {
   @override
@@ -31,16 +28,11 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'StudyMate',
       theme: ThemeData(
-          useMaterial3: true,
-          colorScheme:
-              ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 81, 69)),
-        ),
+        useMaterial3: true,
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 81, 69)),
+      ),
       home: isviewed != 0 ? OnBoard() : Authenticated(),
     );
   }
 }
-
-
-
-
-
