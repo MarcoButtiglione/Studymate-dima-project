@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
 import 'package:studymate/screens/Authenticated/chat_page.dart';
+import 'package:studymate/screens/Authenticated/lesson_page.dart';
 import 'package:studymate/screens/Authenticated/notification_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -238,7 +239,7 @@ class SuggestedItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        print("Tapped on container");
+         Navigator.of(context).push(_createRoute(const LessonPage()));
       },
       child: Row(
         children: [
