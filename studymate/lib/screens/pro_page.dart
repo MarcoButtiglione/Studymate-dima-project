@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 
-class ChatPage extends StatefulWidget {
+class ProPage extends StatefulWidget {
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<ProPage> createState() => _ProPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ProPageState extends State<ProPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override

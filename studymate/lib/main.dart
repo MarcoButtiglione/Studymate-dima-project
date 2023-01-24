@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studymate/screens/chat_page.dart';
+import 'package:studymate/screens/pro_page.dart';
 import 'package:studymate/screens/homepage.dart';
 import 'package:studymate/screens/new_lesson_page.dart';
 import 'package:studymate/screens/profile_page.dart';
@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = NewLessonPage();
         break;
       case 3:
-        page = ChatPage();
+        page = ProPage();
         break;
       case 4:
         page = ProfilePage();
@@ -119,8 +119,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: 'Search',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.message),
-                    label: 'Message',
+                    icon: Icon(Icons.star),
+                    label: 'Pro',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.account_circle),

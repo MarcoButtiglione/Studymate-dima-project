@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -9,22 +10,84 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-           
-            const SizedBox(height: 10),
-            Row(children: const <Widget>[
-              Text("Welcome",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
+            //Header
+            Row(children: <Widget>[
+              const Expanded(
+                flex: 9,
+                child: Text("Welcome",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
+              IconButton(
+                icon: Badge(
+                  position: BadgePosition.topEnd(top: 0, end: 0),
+                  showBadge: true,
+                  child: const Icon(
+                    Icons.notifications,
+                    color: Colors.grey,
+                    size: 25.0,
+                  ),
+                ),
+                onPressed: () {
+                  //
+                },
+              ),
+              const SizedBox(width: 10),
+              IconButton(
+                icon: Badge(
+                  position: BadgePosition.topEnd(top: 0, end: 0),
+                  showBadge: true,
+                  child: const Icon(
+                    Icons.message,
+                    color: Colors.grey,
+                    size: 25.0,
+                  ),
+                ),
+                onPressed: () {
+                  //
+                },
+              ),
             ]),
-            const SizedBox(height: 30),
+            //--------------------
+            //Saved lessons
+            SizedBox(
+              height: 100.0,
+              child:
+                  ListView(scrollDirection: Axis.horizontal, children: const [
+                SmallFilledCardExample(),
+                SmallFilledCardExample(),
+                SmallFilledCardExample(),
+                SmallFilledCardExample(),
+                SmallFilledCardExample(),
+                SmallFilledCardExample(),
+                SmallFilledCardExample(),
+                SmallFilledCardExample(),
+                SmallFilledCardExample(),
+                SmallFilledCardExample(),
+                SmallFilledCardExample(),
+              ]),
+            ),
+            //--------------------
+            //Your next lesson
+            const SizedBox(height: 20),
             Row(children: const <Widget>[
-              Text("Yourn next lesson",
+              Text("Your next lesson",
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  )),
             ]),
             Row(
               children: <Widget>[
-                const Expanded(flex: 9, child: NextFilledCardExample()),
+                const Expanded(
+                  flex: 9,
+                  child: NextFilledCardExample(),
+                ),
                 Expanded(
                     flex: 3,
                     child: Column(
@@ -73,38 +136,13 @@ class HomePage extends StatelessWidget {
                     )),
               ],
             ),
-            const Divider(
-              color: Colors.grey,
-            ),
-            const SizedBox(height: 20),
-            Row(children: const <Widget>[
-              Text("Saved lessons",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-            ]),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 100.0,
-              child:
-                  ListView(scrollDirection: Axis.horizontal, children: const [
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-              ]),
-            ),
             const SizedBox(height: 20),
             const Divider(
               color: Colors.grey,
             ),
-            const SizedBox(height: 30),
+            //--------------------
+            //Suggested for you
+            const SizedBox(height: 20),
             Row(children: const <Widget>[
               Text("Suggested for you",
                   textAlign: TextAlign.left,
@@ -112,22 +150,21 @@ class HomePage extends StatelessWidget {
             ]),
             const SizedBox(height: 10),
             const Text(
-                "This is a list of possible lessons who you may find interesting.",
+                "This is a list of possible community tutors you could study with.",
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 13)),
             const SizedBox(height: 30),
-            Row(children: const <Widget>[
-              Expanded(child: FilledCardExample()),
-              Expanded(child: FilledCardExample()),
-            ]),
-            Row(children: const <Widget>[
-              Expanded(child: FilledCardExample()),
-              Expanded(child: FilledCardExample()),
-            ]),
-            Row(children: const <Widget>[
-              Expanded(child: FilledCardExample()),
-              Expanded(child: FilledCardExample()),
-            ]),
+            const SuggestedItem(),
+            const SizedBox(height: 15),
+            const SuggestedItem(),
+            const SizedBox(height: 15),
+            const SuggestedItem(),
+            const SizedBox(height: 15),
+            const SuggestedItem(),
+            const SizedBox(height: 15),
+            const SuggestedItem(),
+
+            //--------------------
           ],
         ),
       ),
@@ -172,7 +209,15 @@ class NextFilledCardExample extends StatelessWidget {
 }
 
 class SmallFilledCardExample extends StatelessWidget {
-  const SmallFilledCardExample({super.key});
+  const SmallFilledCardExample({
+    super.key,
+    this.imageURL,
+    this.subject,
+    this.description,
+  });
+  final String? imageURL;
+  final String? subject;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
@@ -181,9 +226,59 @@ class SmallFilledCardExample extends StatelessWidget {
         elevation: 0,
         color: Theme.of(context).colorScheme.surfaceVariant,
         child: const SizedBox(
-          height: 90,
-          width: 90,
+          height: 70,
+          width: 70,
         ),
+      ),
+    );
+  }
+}
+
+class SuggestedItem extends StatelessWidget {
+  const SuggestedItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        print("Tapped on container");
+      },
+      child: Row(
+        children: [
+          SizedBox(
+            height: 70,
+            width: 70,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(35),
+              child: const Image(
+                image: NetworkImage(
+                    'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'),
+              ),
+            ),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              children: [
+                Row(
+                  children: const [
+                    Text(
+                      "Machine Learning",
+                      textAlign: TextAlign.left,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: const [
+                    Text("Thursday 26/01/2023, Milan"),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
