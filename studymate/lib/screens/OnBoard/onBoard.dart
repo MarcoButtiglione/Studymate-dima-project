@@ -57,7 +57,7 @@ class _OnBoardState extends State<OnBoard> {
         borderRadius: BorderRadius.all(
           Radius.circular(50),
         ),
-        color: Color.fromARGB(255, 227, 172, 249),
+        color: Color.fromARGB(255, 233, 64, 87),
       ),
       margin: const EdgeInsets.only(right: 5),
       height: 10,
@@ -103,7 +103,7 @@ class _OnBoardState extends State<OnBoard> {
                                   fontFamily: "Crimson Pro",
                                   fontWeight: FontWeight.w600,
                                   fontSize: (width <= 550) ? 30 : 35,
-                                  color: Color.fromARGB(255, 227, 172, 249)),
+                                  color: Color.fromARGB(255, 233, 64, 87)),
                             ),
                             const SizedBox(height: 15),
                             Text(
@@ -146,7 +146,7 @@ class _OnBoardState extends State<OnBoard> {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  const Color.fromARGB(255, 227, 172, 249),
+                                  const Color.fromARGB(255, 233, 64, 87),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50),
                               ),
@@ -158,7 +158,8 @@ class _OnBoardState extends State<OnBoard> {
                               textStyle: TextStyle(
                                   fontSize: (width <= 550) ? 13 : 17,
                                   fontFamily: "Crimson Pro",
-                                  color: const Color.fromARGB(255, 0, 0, 0)),
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255)),
                             ),
                             child: const Text("START"),
                           ),
@@ -193,7 +194,7 @@ class _OnBoardState extends State<OnBoard> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
-                                      const Color.fromARGB(255, 227, 172, 249),
+                                      const Color.fromARGB(255, 233, 64, 87),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
@@ -204,7 +205,8 @@ class _OnBoardState extends State<OnBoard> {
                                       : const EdgeInsets.symmetric(
                                           horizontal: 30, vertical: 25),
                                   textStyle: TextStyle(
-                                      color: const Color.fromARGB(255, 0, 0, 0),
+                                      color: const Color.fromARGB(
+                                          255, 255, 255, 255),
                                       fontSize: (width <= 550) ? 13 : 17),
                                 ),
                                 child: const Text("NEXT"),
