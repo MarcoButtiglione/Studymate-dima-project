@@ -72,23 +72,32 @@ class _SearchPageState extends State<SearchPage> {
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
             ]),
             SizedBox(
-              height: 150.0,
+              height: 180.0,
               child:
                   ListView(scrollDirection: Axis.horizontal, children: const [
-                CategoryCard(),
-                CategoryCard(),
-                CategoryCard(),
-                CategoryCard(),
-                CategoryCard(),
-                CategoryCard(),
-                CategoryCard(),
-                CategoryCard(),
-                CategoryCard(),
-                CategoryCard(),
-                CategoryCard(),
+                CategoryCard(
+                  name: "Architecture",
+                  url:
+                      "https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=410&q=80",
+                ),
+                CategoryCard(
+                  name: "Computer science",
+                  url:
+                      "https://images.unsplash.com/photo-1610563166150-b34df4f3bcd6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1076&q=80",
+                ),
+                CategoryCard(
+                  name: "Mathematics",
+                  url:
+                      "https://images.unsplash.com/photo-1635372722656-389f87a941b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80",
+                ),
+                CategoryCard(
+                  name: "Literature",
+                  url:
+                      'https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
+                ),
               ]),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             const Divider(
               color: Colors.grey,
             ),
@@ -231,20 +240,32 @@ class _AutocompleteSearchState extends State<AutocompleteSearch> {
 }
 
 class CategoryCard extends StatelessWidget {
-  const CategoryCard({
-    super.key,
-  });
+  final String name;
+  final String url;
+  const CategoryCard({super.key, required this.name, required this.url});
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Card(
-        elevation: 0,
-        color: Theme.of(context).colorScheme.surfaceVariant,
-        child: const SizedBox(
-          height: 150,
-          width: 100,
-        ),
+      child: Column(
+        children: [
+          Card(
+            elevation: 0,
+            color: Theme.of(context).colorScheme.surfaceVariant,
+            child: SizedBox(
+              height: 150,
+              width: 100,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(url),
+                ),
+              ),
+            ),
+          ),
+          Text(name, style: TextStyle(fontWeight: FontWeight.bold))
+        ],
       ),
     );
   }
@@ -257,7 +278,7 @@ class RecentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-         Navigator.of(context).push(_createRoute(const LessonPage()));
+        Navigator.of(context).push(_createRoute(const LessonPage()));
       },
       child: Row(
         children: [
@@ -302,7 +323,7 @@ class RecentItem extends StatelessWidget {
 
 Route _createRoute(Widget page) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>  page,
+    pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(1.0, 0.0);
       const end = Offset.zero;
