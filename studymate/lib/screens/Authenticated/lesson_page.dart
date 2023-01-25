@@ -80,11 +80,11 @@ class LessonPage extends StatelessWidget {
                   padding: const EdgeInsets.all(40.0),
                   child: SingleChildScrollView(
                     child: Column(
-                      children: const [
-                        SizedBox(
+                      children: [
+                        const SizedBox(
                           height: 20,
                         ),
-                        Align(
+                        const Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "Machine Learning",
@@ -93,7 +93,7 @@ class LessonPage extends StatelessWidget {
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Align(
+                        const Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "Computer science",
@@ -102,6 +102,144 @@ class LessonPage extends StatelessWidget {
                               fontSize: 15,
                             ),
                           ),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Location",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Milano, MI",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(10.0),
+                                  topLeft: Radius.circular(10.0),
+                                  bottomLeft: Radius.circular(10.0),
+                                  bottomRight: Radius.circular(10.0),
+                                ),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                              ),
+                              width: 100,
+                              height: 50,
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.pin_drop,
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Text("1 km")
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Date",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "26/01/2023, 16:00-17:00",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "About",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam suscipit dictum nunc ac euismod. Ut a tristique magna, eget lobortis enim.",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "User rating",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Row(
+                          children: const [
+                            Icon(
+                              Icons.star,
+                              color: Color.fromARGB(255, 101, 101, 101),
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Color.fromARGB(255, 101, 101, 101),
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Color.fromARGB(255, 101, 101, 101),
+                            ),
+                            Icon(
+                              Icons.star_border,
+                              color: Color.fromARGB(255, 101, 101, 101),
+                            ),
+                            Icon(
+                              Icons.star_border,
+                              color: Color.fromARGB(255, 101, 101, 101),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -123,33 +261,32 @@ class LessonPage extends StatelessWidget {
                       width: 50,
                       height: 50,
                       child: IconButton(
-                        icon: const Icon(Icons.message_outlined),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20))),
-                            builder: (context) => Container(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const FlutterLogo(size: 120),
-                                  const FlutterLogo(size: 120),
-                                  const FlutterLogo(size: 120),
-                                  ElevatedButton(
-                                    child: const Text("Close"),
-                                    onPressed: () => Navigator.pop(context),
-                                  ),
-                                ],
+                          icon: const Icon(Icons.message_outlined),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20))),
+                              builder: (context) => Container(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const FlutterLogo(size: 120),
+                                    const FlutterLogo(size: 120),
+                                    const FlutterLogo(size: 120),
+                                    ElevatedButton(
+                                      child: const Text("Close"),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        style:messageButtonStyle()
-                      ),
+                            );
+                          },
+                          style: messageButtonStyle()),
                     ),
                     const SizedBox(
                       width: 20,
