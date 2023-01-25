@@ -1,6 +1,7 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:studymate/screens/Authenticated/chat_page.dart';
 import 'package:studymate/screens/Authenticated/lesson_page.dart';
 import 'package:studymate/screens/Authenticated/notification_page.dart';
@@ -26,7 +27,7 @@ class HomePage extends StatelessWidget {
                     )),
               ),
               IconButton(
-                icon: Badge(
+                icon: badges.Badge(
                   position: BadgePosition.topEnd(top: 0, end: 0),
                   showBadge: true,
                   child: const Icon(
@@ -36,12 +37,13 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(_createRoute(const NotificationPage()));
+                  Navigator.of(context)
+                      .push(_createRoute(const NotificationPage()));
                 },
               ),
               const SizedBox(width: 10),
               IconButton(
-                icon: Badge(
+                icon: badges.Badge(
                   position: BadgePosition.topEnd(top: 0, end: 0),
                   showBadge: true,
                   child: const Icon(
@@ -216,7 +218,6 @@ class SmallFilledCardExample extends StatelessWidget {
     super.key,
   });
 
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -239,7 +240,7 @@ class SuggestedItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-         Navigator.of(context).push(_createRoute(const LessonPage()));
+        Navigator.of(context).push(_createRoute(const LessonPage()));
       },
       child: Row(
         children: [
@@ -284,7 +285,7 @@ class SuggestedItem extends StatelessWidget {
 
 Route _createRoute(Widget page) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>  page,
+    pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(1.0, 0.0);
       const end = Offset.zero;

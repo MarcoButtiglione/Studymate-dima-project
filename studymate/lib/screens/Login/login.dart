@@ -31,121 +31,117 @@ class _LoginState extends State<Login> {
             Widget>[
           Expanded(
             flex: 8,
-            child: Form(
-              key: formKey,
-              child: Column(children: [
-                Padding(
-                  padding: EdgeInsets.only(top: size.height * 0.2),
+            child: Column(children: [
+              Padding(
+                padding: EdgeInsets.only(top: size.height * 0.2),
+                child: const Text(
+                  "Login",
+                  style: TextStyle(
+                    fontFamily: "Crimson Pro",
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
+                    color: Color.fromARGB(255, 233, 64, 87),
+                  ),
+                ),
+              ),
+              SizedBox(height: size.height * 0.03),
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                child: TextFormField(
+                  controller: emailController,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: "Email"),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (email) =>
+                      email != null && !EmailValidator.validate(email)
+                          ? 'Enter a valid email'
+                          : null,
+                ),
+              ),
+              SizedBox(height: size.height * 0.03),
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                child: TextFormField(
+                  controller: passwordController,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(labelText: "Password"),
+                  obscureText: true,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) =>
+                      value != null && value.isEmpty ? 'Enter password' : null,
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                margin: const EdgeInsets.only(right: 50, top: 10),
+                child: GestureDetector(
+                  onTap: () => {},
                   child: const Text(
-                    "Login",
+                    "Forgot your password?",
                     style: TextStyle(
-                      fontFamily: "Crimson Pro",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 35,
-                      color: Color.fromARGB(255, 233, 64, 87),
+                        fontSize: 12, color: Color.fromARGB(156, 65, 62, 88)),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 40.0),
+                width: 300,
+                child: ElevatedButton(
+                    onPressed: signIn,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 233, 64, 87),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      elevation: 0,
+                      padding: (size.width <= 550)
+                          ? const EdgeInsets.symmetric(
+                              horizontal: 70, vertical: 20)
+                          : const EdgeInsets.symmetric(
+                              horizontal: 70, vertical: 25),
                     ),
-                  ),
-                ),
-                SizedBox(height: size.height * 0.03),
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.symmetric(horizontal: 40),
-                  child: TextFormField(
-                    controller: emailController,
-                    textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(labelText: "Email"),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (email) =>
-                        email != null && !EmailValidator.validate(email)
-                            ? 'Enter a valid email'
-                            : null,
-                  ),
-                ),
-                SizedBox(height: size.height * 0.03),
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.symmetric(horizontal: 40),
-                  child: TextFormField(
-                    controller: passwordController,
-                    textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(labelText: "Password"),
-                    obscureText: true,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value != null && value.isEmpty
-                        ? 'Enter password'
-                        : null,
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  margin: const EdgeInsets.only(right: 50, top: 10),
-                  child: GestureDetector(
-                    onTap: () => {},
                     child: const Text(
-                      "Forgot your password?",
+                      "LOGIN",
                       style: TextStyle(
-                          fontSize: 12, color: Color.fromARGB(156, 65, 62, 88)),
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 255, 255, 255),
+                      ),
+                    )),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(top: 20),
+                    child: GestureDetector(
+                      onTap: () => {},
+                      child: const Text(
+                        "Don't Have an Account?",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromARGB(156, 65, 62, 88)),
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 40.0),
-                  width: 300,
-                  child: ElevatedButton(
-                      onPressed: signIn,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 233, 64, 87),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        elevation: 0,
-                        padding: (size.width <= 550)
-                            ? const EdgeInsets.symmetric(
-                                horizontal: 70, vertical: 20)
-                            : const EdgeInsets.symmetric(
-                                horizontal: 70, vertical: 25),
-                      ),
+                  Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(top: 20, left: 5),
+                    child: GestureDetector(
+                      onTap: () => {},
                       child: const Text(
-                        "LOGIN",
+                        "Sign up",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 255, 255, 255),
-                        ),
-                      )),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(top: 20),
-                      child: GestureDetector(
-                        onTap: () => {},
-                        child: const Text(
-                          "Don't Have an Account?",
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Color.fromARGB(156, 65, 62, 88)),
-                        ),
+                            fontSize: 12,
+                            color: Color.fromARGB(255, 233, 64, 87)),
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.only(top: 20, left: 5),
-                      child: GestureDetector(
-                        onTap: () => {},
-                        child: const Text(
-                          "Sign up",
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Color.fromARGB(255, 233, 64, 87)),
-                        ),
-                      ),
-                    )
-                  ],
-                )
-              ]),
-            ),
+                  )
+                ],
+              )
+            ]),
           ),
           Expanded(
               flex: 3,
@@ -225,14 +221,15 @@ class _LoginState extends State<Login> {
   }
 
   Future signIn() async {
-    final isValid = formKey.currentState!.validate();
-    if (!isValid) return;
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(child: CircularProgressIndicator()));
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
     } on FirebaseAuthException catch (e) {
-      print(e);
       Utils.showSnackBar(e.message);
     }
     navigatorKey.currentState!.popUntil((route) => route.isFirst);

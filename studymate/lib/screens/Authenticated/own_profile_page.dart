@@ -145,8 +145,10 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                 child: GestureDetector(
                   onTap: () => FirebaseAuth.instance.signOut(),
                   child: const Text("Logout",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 233, 64, 87))),
                 ),
               ),
             ],
