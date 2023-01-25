@@ -1,8 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:studymate/component/utils.dart';
 import 'package:studymate/main.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:studymate/screens/Login/register.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -10,7 +12,6 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -110,37 +111,28 @@ class _LoginState extends State<Login> {
                       ),
                     )),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(top: 20),
-                    child: GestureDetector(
-                      onTap: () => {},
-                      child: const Text(
-                        "Don't Have an Account?",
-                        style: TextStyle(
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: RichText(
+                    text: TextSpan(
+                        style: const TextStyle(
                             fontSize: 12,
                             color: Color.fromARGB(156, 65, 62, 88)),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(top: 20, left: 5),
-                    child: GestureDetector(
-                      onTap: () => {},
-                      child: const Text(
-                        "Sign up",
-                        style: TextStyle(
+                        text: "Don't Have an Account?",
+                        children: [
+                      TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Register())),
+                        text: ' SignUp',
+                        style: const TextStyle(
                             fontSize: 12,
                             color: Color.fromARGB(255, 233, 64, 87)),
-                      ),
-                    ),
-                  )
-                ],
-              )
+                      )
+                    ])),
+              ),
             ]),
           ),
           Expanded(
