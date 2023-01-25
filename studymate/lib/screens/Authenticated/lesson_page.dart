@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:studymate/screens/Authenticated/chat_page.dart';
 import 'package:studymate/screens/Authenticated/other_profile_page.dart';
 
 class LessonPage extends StatelessWidget {
@@ -21,7 +22,7 @@ class LessonPage extends StatelessWidget {
               child: Container(
                 width: 150,
                 height: 250,
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).colorScheme.secondary,
                 child: Image.network(
                   'https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332&q=80',
                   fit: BoxFit.fill,
@@ -79,12 +80,103 @@ class LessonPage extends StatelessWidget {
                   padding: const EdgeInsets.all(40.0),
                   child: SingleChildScrollView(
                     child: Column(
-                      children: [],
+                      children: const [
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Machine Learning",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Computer science",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
+            Positioned(
+              top: 150,
+              left: 0,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment
+                      .center, //Center Row contents horizontally,
+
+                  children: [
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: IconButton(
+                        icon: const Icon(Icons.message_outlined),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20))),
+                            builder: (context) => Container(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const FlutterLogo(size: 120),
+                                  const FlutterLogo(size: 120),
+                                  const FlutterLogo(size: 120),
+                                  ElevatedButton(
+                                    child: const Text("Close"),
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        style:messageButtonStyle()
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    const SizedBox(
+                      width: 90,
+                      height: 90,
+                      child: SendRequestToggleButton(
+                        isEnabled: true,
+                        getDefaultStyle: sendRequestButtonStyle,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    const SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: SavedToggleButton(
+                        isEnabled: true,
+                        getDefaultStyle: savedButtonStyle,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -107,5 +199,150 @@ Route _createRoute(Widget page) {
         child: child,
       );
     },
+  );
+}
+
+class SendRequestToggleButton extends StatefulWidget {
+  const SendRequestToggleButton(
+      {required this.isEnabled, this.getDefaultStyle, super.key});
+
+  final bool isEnabled;
+  final ButtonStyle? Function(bool, ColorScheme)? getDefaultStyle;
+
+  @override
+  State<SendRequestToggleButton> createState() =>
+      _SendRequestToggleButtonState();
+}
+
+class _SendRequestToggleButtonState extends State<SendRequestToggleButton> {
+  bool selected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    final VoidCallback? onPressed = widget.isEnabled
+        ? () {
+            setState(() {
+              selected = !selected;
+            });
+          }
+        : null;
+    ButtonStyle? style;
+    if (widget.getDefaultStyle != null) {
+      style = widget.getDefaultStyle!(selected, colors);
+    }
+
+    return IconButton(
+      isSelected: selected,
+      icon: const Icon(
+        Icons.check_outlined,
+        size: 50,
+      ),
+      selectedIcon: const Icon(
+        Icons.check,
+        size: 50,
+      ),
+      onPressed: onPressed,
+      style: style,
+    );
+  }
+}
+
+class SavedToggleButton extends StatefulWidget {
+  const SavedToggleButton(
+      {required this.isEnabled, this.getDefaultStyle, super.key});
+
+  final bool isEnabled;
+  final ButtonStyle? Function(bool, ColorScheme)? getDefaultStyle;
+
+  @override
+  State<SavedToggleButton> createState() => _SavedToggleButtonState();
+}
+
+class _SavedToggleButtonState extends State<SavedToggleButton> {
+  bool selected = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme colors = Theme.of(context).colorScheme;
+    final VoidCallback? onPressed = widget.isEnabled
+        ? () {
+            setState(() {
+              selected = !selected;
+            });
+          }
+        : null;
+    ButtonStyle? style;
+    if (widget.getDefaultStyle != null) {
+      style = widget.getDefaultStyle!(selected, colors);
+    }
+
+    return IconButton(
+      isSelected: selected,
+      icon: const Icon(
+        Icons.favorite_outline,
+        size: 25,
+      ),
+      selectedIcon: const Icon(
+        Icons.favorite,
+        size: 25,
+      ),
+      onPressed: onPressed,
+      style: style,
+    );
+  }
+}
+
+ButtonStyle sendRequestButtonStyle(bool selected, ColorScheme colors) {
+  ColorScheme color =
+      ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 0, 215, 36));
+  return IconButton.styleFrom(
+    foregroundColor: selected ? color.onPrimary : color.primary,
+    backgroundColor: selected ? color.primary : color.surfaceVariant,
+    disabledForegroundColor: color.onSurface.withOpacity(0.38),
+    disabledBackgroundColor: color.onSurface.withOpacity(0.12),
+    hoverColor: selected
+        ? color.onPrimary.withOpacity(0.08)
+        : color.primary.withOpacity(0.08),
+    focusColor: selected
+        ? color.onPrimary.withOpacity(0.12)
+        : color.primary.withOpacity(0.12),
+    highlightColor: selected
+        ? color.onPrimary.withOpacity(0.12)
+        : color.primary.withOpacity(0.12),
+  );
+}
+
+ButtonStyle savedButtonStyle(bool selected, ColorScheme colors) {
+  ColorScheme color =
+      ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 82, 14));
+  return IconButton.styleFrom(
+    foregroundColor: selected ? color.onPrimary : color.primary,
+    backgroundColor: selected ? color.primary : color.surfaceVariant,
+    disabledForegroundColor: color.onSurface.withOpacity(0.38),
+    disabledBackgroundColor: color.onSurface.withOpacity(0.12),
+    hoverColor: selected
+        ? color.onPrimary.withOpacity(0.08)
+        : color.primary.withOpacity(0.08),
+    focusColor: selected
+        ? color.onPrimary.withOpacity(0.12)
+        : color.primary.withOpacity(0.12),
+    highlightColor: selected
+        ? color.onPrimary.withOpacity(0.12)
+        : color.primary.withOpacity(0.12),
+  );
+}
+
+ButtonStyle messageButtonStyle() {
+  ColorScheme color =
+      ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 168, 168, 168));
+  return IconButton.styleFrom(
+    foregroundColor: color.primary,
+    backgroundColor: color.surfaceVariant,
+    disabledForegroundColor: color.onSurface.withOpacity(0.38),
+    disabledBackgroundColor: color.onSurface.withOpacity(0.12),
+    hoverColor: color.primary.withOpacity(0.08),
+    focusColor: color.primary.withOpacity(0.12),
+    highlightColor: color.primary.withOpacity(0.12),
   );
 }
