@@ -6,22 +6,20 @@ import 'package:studymate/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:studymate/screens/Login/login.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class Reset extends StatefulWidget {
+  const Reset({super.key});
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _ResetState createState() => _ResetState();
 }
 
-class _RegisterState extends State<Register> {
+class _ResetState extends State<Reset> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
 
   @override
   void dispose() {
     emailController.dispose();
-    passwordController.dispose();
     super.dispose();
   }
 
@@ -39,12 +37,24 @@ class _RegisterState extends State<Register> {
               Padding(
                 padding: EdgeInsets.only(top: size.height * 0.2),
                 child: const Text(
-                  "Register",
+                  "Reset password",
                   style: TextStyle(
                     fontFamily: "Crimson Pro",
                     fontWeight: FontWeight.bold,
-                    fontSize: 35,
+                    fontSize: 30,
                     color: Color.fromARGB(255, 233, 64, 87),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              const Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Text(
+                  "Recive an email to reset your password.",
+                  style: TextStyle(
+                    fontFamily: "Crimson Pro",
+                    fontSize: 16,
+                    color: Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
               ),
@@ -63,26 +73,11 @@ class _RegisterState extends State<Register> {
                           : null,
                 ),
               ),
-              SizedBox(height: size.height * 0.03),
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(horizontal: 40),
-                child: TextFormField(
-                  controller: passwordController,
-                  textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(labelText: "Password"),
-                  obscureText: true,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) => value != null && value.length < 6
-                      ? 'Enter min. 6 characters'
-                      : null,
-                ),
-              ),
               Container(
                 margin: const EdgeInsets.only(top: 40.0),
                 width: 300,
                 child: ElevatedButton(
-                    onPressed: signUp,
+                    onPressed: resetPsw,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 233, 64, 87),
                       shape: RoundedRectangleBorder(
@@ -96,39 +91,19 @@ class _RegisterState extends State<Register> {
                               horizontal: 70, vertical: 25),
                     ),
                     child: const Text(
-                      "SignUp",
+                      "Reset Password",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 255, 255, 255),
                       ),
                     )),
               ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: RichText(
-                    text: TextSpan(
-                        style: const TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(156, 65, 62, 88)),
-                        text: "Already Have an Account?",
-                        children: [
-                      TextSpan(
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Login())),
-                        text: ' Login',
-                        style: const TextStyle(
-                            fontSize: 12,
-                            color: Color.fromARGB(255, 233, 64, 87)),
-                      )
-                    ])),
-              ),
             ]),
       ),
     );
   }
 
-  Future signUp() async {
+  Future resetPsw() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
     showDialog(
@@ -136,9 +111,8 @@ class _RegisterState extends State<Register> {
         barrierDismissible: false,
         builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.text.trim());
       navigatorKey.currentState!.popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);

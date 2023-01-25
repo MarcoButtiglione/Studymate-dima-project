@@ -5,6 +5,7 @@ import 'package:studymate/component/utils.dart';
 import 'package:studymate/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:studymate/screens/Login/register.dart';
+import 'package:studymate/screens/Login/reset.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -78,7 +79,10 @@ class _LoginState extends State<Login> {
                 alignment: Alignment.centerRight,
                 margin: const EdgeInsets.only(right: 50, top: 10),
                 child: GestureDetector(
-                  onTap: () => {},
+                  onTap: () => {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Reset())),
+                  },
                   child: const Text(
                     "Forgot your password?",
                     style: TextStyle(
