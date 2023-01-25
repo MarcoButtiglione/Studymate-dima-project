@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
-import 'package:studymate/screens/OnBoard/size_config.dart';
+import 'package:studymate/screens/Login/login.dart';
 
 class OnboardModel {
   String img;
@@ -68,9 +68,9 @@ class _OnBoardState extends State<OnBoard> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    double width = SizeConfig.screenW!;
-    double height = SizeConfig.screenH!;
+    Size size = MediaQuery.of(context).size;
+    double width = size.width;
+    double height = size.height;
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: SafeArea(
@@ -142,7 +142,7 @@ class _OnBoardState extends State<OnBoard> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Authenticated()));
+                                      builder: (context) => Login()));
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:

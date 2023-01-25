@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -138,6 +139,16 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               ]),
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(top: 20),
+                child: GestureDetector(
+                  onTap: () => FirebaseAuth.instance.signOut(),
+                  child: const Text("Logout",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                ),
+              ),
             ],
           ),
         ),
