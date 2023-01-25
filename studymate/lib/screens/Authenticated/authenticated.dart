@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:studymate/screens/Authenticated/homepage.dart';
 import 'package:studymate/screens/Authenticated/new_lesson_page.dart';
 import 'package:studymate/screens/Authenticated/pro_page.dart';
-import 'package:studymate/screens/Authenticated/profile_page.dart';
+import 'package:studymate/screens/Authenticated/own_profile_page.dart';
 import 'package:studymate/screens/Authenticated/search_page.dart';
 
 class Authenticated extends StatefulWidget {
@@ -36,7 +36,7 @@ class _AuthenticatedState extends State<Authenticated> {
         page = ProPage();
         break;
       case 4:
-        page = ProfilePage();
+        page = OwnProfilePage();
         break;
 
       default:

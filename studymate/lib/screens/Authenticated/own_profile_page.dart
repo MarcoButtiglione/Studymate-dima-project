@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatefulWidget {
+class OwnProfilePage extends StatefulWidget {
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<OwnProfilePage> createState() => _OwnProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _OwnProfilePageState extends State<OwnProfilePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
