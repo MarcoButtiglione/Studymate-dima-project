@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:studymate/screens/Login/login.dart';
 
 class OwnProfilePage extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Center(
       child: SingleChildScrollView(
         child: Padding(
@@ -92,7 +94,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                   children: <Widget>[
                     TextFormField(
                       enabled: false,
-                      initialValue: 'Daniel',
+                      initialValue: user.email,
                       decoration: InputDecoration(
                         labelText: "First name",
                         border: OutlineInputBorder(
@@ -143,7 +145,11 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(top: 20),
                 child: GestureDetector(
-                  onTap: () => FirebaseAuth.instance.signOut(),
+                  onTap: () => {
+                    FirebaseAuth.instance.signOut(),
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Login()))
+                  },
                   child: const Text("Logout",
                       style: TextStyle(
                           fontSize: 15,

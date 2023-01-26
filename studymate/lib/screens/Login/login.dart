@@ -7,6 +7,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:studymate/screens/Login/register.dart';
 import 'package:studymate/screens/Login/reset.dart';
 
+import '../Authenticated/authenticated.dart';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -220,14 +222,17 @@ class _LoginState extends State<Login> {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => Center(child: CircularProgressIndicator()));
+        builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
+      //navigatorKey.currentState!.popUntil((route) => route.isFirst);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Authenticated()));
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
+      Navigator.of(context).pop();
     }
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
