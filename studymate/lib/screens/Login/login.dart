@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:studymate/component/utils.dart';
 import 'package:studymate/main.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:studymate/provider/google_sign_in.dart';
 import 'package:studymate/screens/Login/register.dart';
 import 'package:studymate/screens/Login/reset.dart';
 
@@ -173,46 +175,59 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ]),
-                  Container(
-                      margin: const EdgeInsets.only(top: 40.0),
-                      width: 300,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Color.fromARGB(156, 105, 102, 121),
-                              spreadRadius: 2),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/login/google.png",
-                            height: 32,
-                            width: 32,
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              left: 26,
-                              top: 8,
-                              right: 58,
-                              bottom: 5,
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) =>
+                              const Center(child: CircularProgressIndicator()));
+                      final provider = Provider.of<GoogleSignInProvider>(
+                          context,
+                          listen: false);
+                      provider.googleLogin(context);
+                    },
+                    child: Container(
+                        margin: const EdgeInsets.only(top: 40.0),
+                        width: 300,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Color.fromARGB(156, 105, 102, 121),
+                                spreadRadius: 2),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/login/google.png",
+                              height: 32,
+                              width: 32,
                             ),
-                            child: Text(
-                              "Sing Up with Google",
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Color.fromARGB(156, 105, 102, 121)),
-                            ),
-                          )
-                        ],
-                      ))
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                left: 26,
+                                top: 8,
+                                right: 58,
+                                bottom: 5,
+                              ),
+                              child: Text(
+                                "Sign Up with Google",
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: Color.fromARGB(156, 105, 102, 121)),
+                              ),
+                            )
+                          ],
+                        )),
+                  )
                 ],
               )),
         ]));
