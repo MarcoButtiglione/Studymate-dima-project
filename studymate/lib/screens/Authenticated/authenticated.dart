@@ -4,7 +4,7 @@ import 'package:studymate/screens/Authenticated/homepage.dart';
 import 'package:studymate/screens/Authenticated/new_lesson_page.dart';
 import 'package:studymate/screens/Authenticated/pro_page.dart';
 import 'package:studymate/screens/Authenticated/own_profile_page.dart';
-import 'package:studymate/screens/Authenticated/search_page.dart';
+import 'package:studymate/screens/Authenticated/Search/search_page.dart';
 
 class Authenticated extends StatefulWidget {
   @override

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:studymate/screens/Authenticated/chat_page.dart';
+import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
 import 'package:studymate/screens/Authenticated/lesson_page.dart';
 import 'package:studymate/screens/Authenticated/notification_page.dart';
 
@@ -58,29 +59,79 @@ class HomePage extends StatelessWidget {
               ),
             ]),
             //--------------------
-            //Saved lessons
-            SizedBox(
-              height: 100.0,
-              child:
-                  ListView(scrollDirection: Axis.horizontal, children: const [
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-                SmallFilledCardExample(),
-              ]),
-            ),
-            //--------------------
             //Your next lesson
             const SizedBox(height: 20),
             Row(children: const <Widget>[
               Text("Your next lesson",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  )),
+            ]),
+            Row(
+              children: <Widget>[
+                const Expanded(
+                  flex: 9,
+                  child: NextFilledCardExample(),
+                ),
+                Expanded(
+                    flex: 3,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text("1"),
+                            SizedBox(width: 10),
+                            Icon(
+                              Icons.remove_red_eye,
+                              color: Colors.grey,
+                              size: 25.0,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 7),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text("1"),
+                            SizedBox(width: 10),
+                            Icon(
+                              Icons.star,
+                              color: Colors.grey,
+                              size: 25.0,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.mode,
+                                color: Colors.grey,
+                                size: 25.0,
+                              ),
+                              onPressed: () {
+                                //
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const Divider(
+              color: Colors.grey,
+            ),
+            //--------------------
+            //Your next tutoring
+            const SizedBox(height: 20),
+            Row(children: const <Widget>[
+              Text("Your next tutoring",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontSize: 15,
@@ -159,15 +210,39 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 13)),
             const SizedBox(height: 30),
-            const SuggestedItem(),
+                        const SizedBox(height: 15),
+            const LessonCard(
+              lessonName: "Machine Learning",
+              userName: "Robert Jackson",
+              userImageURL: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
+              date: "Thursday 26/01/2023",
+              location: "Milan",
+            ),
             const SizedBox(height: 15),
-            const SuggestedItem(),
+            const LessonCard(
+              lessonName: "Fisica tecnica",
+              userName: "Mark Crosby",
+              userImageURL: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+              date: "Thursday 26/01/2023",
+              location: "Milan",
+            ),
             const SizedBox(height: 15),
-            const SuggestedItem(),
+            const LessonCard(
+              lessonName: "Analisi 1",
+              userName: "Stephen King",
+              userImageURL: "https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+              date: "Thursday 26/01/2023",
+              location: "Milan",
+            ),
             const SizedBox(height: 15),
-            const SuggestedItem(),
-            const SizedBox(height: 15),
-            const SuggestedItem(),
+            const LessonCard(
+              lessonName: "Teoria dei segnali",
+              userName: "Mario Rossi",
+              userImageURL: "https://images.unsplash.com/photo-1541752171745-4176eee47556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+              date: "Thursday 26/01/2023",
+              location: "Milan",
+            ),
+          
 
             //--------------------
           ],
