@@ -5,6 +5,7 @@ import 'package:studymate/component/utils.dart';
 import 'package:studymate/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:studymate/screens/Login/login.dart';
+import 'package:studymate/screens/Login/setUser.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -139,7 +140,8 @@ class _RegisterState extends State<Register> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
-      navigatorKey.currentState!.popUntil((route) => route.isFirst);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => SetUser()));
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
       Navigator.of(context).pop();

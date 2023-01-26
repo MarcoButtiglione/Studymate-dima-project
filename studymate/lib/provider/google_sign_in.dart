@@ -4,6 +4,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
 import 'package:studymate/screens/Login/login.dart';
 
+import '../screens/Login/setUser.dart';
+
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
@@ -19,9 +21,17 @@ class GoogleSignInProvider extends ChangeNotifier {
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
       );
+
+      final list =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(_user!.email);
       await FirebaseAuth.instance.signInWithCredential(credential);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Authenticated()));
+      if (list.isNotEmpty) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Authenticated()));
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SetUser()));
+      }
     } on Exception catch (e) {
       print(e);
       //Navigator.of(context).pop();
