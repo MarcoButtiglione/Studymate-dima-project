@@ -1,9 +1,14 @@
-import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
+import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:studymate/component/storage.dart';
+import 'package:studymate/screens/Authenticated/authenticated.dart';
+import 'package:file_picker/file_picker.dart';
 import '../../component/utils.dart';
+import '../../models/user.dart';
 
 class SetUser extends StatefulWidget {
   @override
@@ -13,8 +18,9 @@ class SetUser extends StatefulWidget {
 class _SetUserState extends State<SetUser> {
   final firstnameControler = TextEditingController();
   final lastnameControler = TextEditingController();
-  //final imageControler = TextEditingController();
-
+  final Storage storage = Storage();
+  late String filename = "user.png";
+  final user = FirebaseAuth.instance.currentUser!;
   @override
   void dispose() {
     firstnameControler.dispose();
@@ -24,7 +30,6 @@ class _SetUserState extends State<SetUser> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -47,33 +52,23 @@ class _SetUserState extends State<SetUser> {
                 width: 150,
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),
-                    child: Image.asset("assets/login/google.png")),
+                    child: Image.network(
+                        storage.downloadFile(filename) as String)),
               ),
               IconButton(
                   icon: const Icon(Icons.photo_camera),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(20))),
-                      builder: (context) => Container(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const FlutterLogo(size: 120),
-                            const FlutterLogo(size: 120),
-                            const FlutterLogo(size: 120),
-                            ElevatedButton(
-                              child: const Text("Close"),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                  onPressed: () async {
+                    final results = await FilePicker.platform.pickFiles(
+                        allowMultiple: false,
+                        type: FileType.custom,
+                        allowedExtensions: ['png', 'jpg']);
+                    if (results == null) {
+                      Utils.showSnackBar('No file selected');
+                    } else {
+                      final path = results.files.single.path!;
+                      storage.uploadFile(path, user.uid);
+                      filename = user.uid;
+                    }
                   },
                   style: IconButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -100,31 +95,27 @@ class _SetUserState extends State<SetUser> {
           Container(
             alignment: Alignment.center,
             margin: EdgeInsets.symmetric(horizontal: 40),
-            child: TextFormField(
+            child: TextField(
               controller: firstnameControler,
               textInputAction: TextInputAction.next,
-              decoration: InputDecoration(labelText: "Name"),
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (email) => email != null ? 'Enter a name' : null,
+              decoration: const InputDecoration(labelText: "Name"),
             ),
           ),
           SizedBox(height: size.height * 0.03),
           Container(
             alignment: Alignment.center,
             margin: EdgeInsets.symmetric(horizontal: 40),
-            child: TextFormField(
-              controller: firstnameControler,
+            child: TextField(
+              controller: lastnameControler,
               textInputAction: TextInputAction.next,
-              decoration: InputDecoration(labelText: "Surname"),
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (email) => email != null ? 'Enter a surname' : null,
+              decoration: const InputDecoration(labelText: "Surname"),
             ),
           ),
           Container(
             margin: const EdgeInsets.only(top: 40.0),
             width: 300,
             child: ElevatedButton(
-                onPressed: Continue,
+                onPressed: setProfile,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 233, 64, 87),
                   shape: RoundedRectangleBorder(
@@ -147,14 +138,23 @@ class _SetUserState extends State<SetUser> {
         ]));
   }
 
-  Future Continue() async {
+  Future setProfile() async {
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
-//      Navigator.push(
-      //         context, MaterialPageRoute(builder: (context) => ,,()));
+      final docUser = FirebaseFirestore.instance.collection('users').doc();
+      final addUser = Users(
+          id: user.uid,
+          firstname: firstnameControler.text.trim(),
+          lastname: lastnameControler.text.trim(),
+          profileImageURL: filename);
+      final json = addUser.toJson();
+      await docUser.set(json);
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Authenticated()));
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
       Navigator.of(context).pop();

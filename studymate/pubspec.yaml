@@ -25,9 +25,8 @@ dependencies:
   cloud_firestore: ^4.3.1
   email_validator: ^2.1.17
   google_sign_in: ^5.0.3
-  
-
-
+  file_picker: ^5.2.5
+  firebase_storage: ^11.0.10
 
 
 dev_dependencies:

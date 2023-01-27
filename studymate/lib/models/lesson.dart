@@ -10,7 +10,7 @@ class Lesson {
   final String description;
   final int userRating;
 
-  final User userTutor;
+  final Users userTutor;
   final Category category;
 
   Lesson(
@@ -24,5 +24,4 @@ class Lesson {
     this.userTutor,
     this.category,
   );
-  
 }

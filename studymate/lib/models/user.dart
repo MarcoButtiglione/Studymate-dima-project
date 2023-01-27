@@ -1,22 +1,26 @@
 import 'package:studymate/models/category.dart';
 
-class User {
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String birthdayDate;
+class Users {
+  String id;
+  final String firstname;
+  final String lastname;
   final String profileImageURL;
-  final List<Category> categoriesOfInterest;
+  late List<Category> categoriesOfInterest;
   final int userRating;
 
+  Users({
+    required this.id,
+    required this.firstname,
+    required this.lastname,
+    required this.profileImageURL,
+    this.userRating = 0,
+  });
 
-  User(
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.birthdayDate,
-    this.profileImageURL,
-    this.categoriesOfInterest,
-    this.userRating,
-  );
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'firstname': firstname,
+        'lastname': lastname,
+        'profileImage': profileImageURL,
+        'userRating': userRating,
+      };
 }
