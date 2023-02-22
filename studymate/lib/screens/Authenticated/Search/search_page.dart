@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,10 +11,18 @@ import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart'
 import 'package:studymate/screens/Authenticated/lesson_page.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
+import '../../../models/category.dart';
+
 class SearchPage extends StatefulWidget {
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
+
+Stream<List<Category>> readCategory() => FirebaseFirestore.instance
+    .collection('categories')
+    .snapshots()
+    .map((snapshot) =>
+        snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
 
 class _SearchPageState extends State<SearchPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -44,13 +53,12 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 onPressed: () {
                   showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20))),
-                    builder: (context) => FilterBottomsheetSearch()
-                  );
+                      context: context,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20))),
+                      builder: (context) => FilterBottomsheetSearch());
                 },
               ),
             ]),
@@ -64,29 +72,27 @@ class _SearchPageState extends State<SearchPage> {
             ]),
             SizedBox(
               height: 180.0,
-              child:
-                  ListView(scrollDirection: Axis.horizontal, children: const [
-                CategoryCard(
-                  name: "Architecture",
-                  url:
-                      "https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=410&q=80",
-                ),
-                CategoryCard(
-                  name: "Chemistry",
-                  url:
-                      "https://images.unsplash.com/photo-1554475900-0a0350e3fc7b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=417&q=80",
-                ),
-                CategoryCard(
-                  name: "Computer science",
-                  url:
-                      "https://images.unsplash.com/photo-1610563166150-b34df4f3bcd6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1076&q=80",
-                ),
-                CategoryCard(
-                  name: "Mathematics",
-                  url:
-                      "https://images.unsplash.com/photo-1635372722656-389f87a941b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80",
-                ),
-              ]),
+              child: StreamBuilder<List<Category>>(
+                stream: readCategory(),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text("Something went wrong!");
+                  } else if (snapshot.hasData) {
+                    final categories = snapshot.data!;
+                    return ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: categories
+                          .map((category) => CategoryCard(
+                              name: category.name, url: category.imageURL))
+                          .toList(),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
+              ),
             ),
             const SizedBox(height: 10),
             const Divider(
@@ -103,7 +109,8 @@ class _SearchPageState extends State<SearchPage> {
             const LessonCard(
               lessonName: "Machine Learning",
               userName: "Robert Jackson",
-              userImageURL: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
+              userImageURL:
+                  "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
               date: "Thursday 26/01/2023",
               location: "Milan",
             ),
@@ -111,7 +118,8 @@ class _SearchPageState extends State<SearchPage> {
             const LessonCard(
               lessonName: "Fisica tecnica",
               userName: "Mark Crosby",
-              userImageURL: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+              userImageURL:
+                  "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
               date: "Thursday 26/01/2023",
               location: "Milan",
             ),
@@ -119,7 +127,8 @@ class _SearchPageState extends State<SearchPage> {
             const LessonCard(
               lessonName: "Analisi 1",
               userName: "Stephen King",
-              userImageURL: "https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+              userImageURL:
+                  "https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
               date: "Thursday 26/01/2023",
               location: "Milan",
             ),
@@ -127,7 +136,8 @@ class _SearchPageState extends State<SearchPage> {
             const LessonCard(
               lessonName: "Teoria dei segnali",
               userName: "Mario Rossi",
-              userImageURL: "https://images.unsplash.com/photo-1541752171745-4176eee47556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+              userImageURL:
+                  "https://images.unsplash.com/photo-1541752171745-4176eee47556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
               date: "Thursday 26/01/2023",
               location: "Milan",
             ),
@@ -137,7 +147,6 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
-
 
 Route _createRoute(Widget page) {
   return PageRouteBuilder(

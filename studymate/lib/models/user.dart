@@ -1,4 +1,3 @@
-import 'package:studymate/models/category.dart';
 
 class Users {
   String id;
