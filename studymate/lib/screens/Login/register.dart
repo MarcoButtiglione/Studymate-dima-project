@@ -5,7 +5,9 @@ import 'package:studymate/component/utils.dart';
 import 'package:studymate/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:studymate/screens/Login/login.dart';
-import 'package:studymate/screens/Login/setUser.dart';
+
+import '../Authenticated/FirstLogin/setUser.dart';
+
 
 class Register extends StatefulWidget {
   const Register({super.key});

@@ -11,13 +11,13 @@ class Storage {
   ) async {
     File file = File(filePath);
     try {
-      await storage.ref("profilePicture/$fileName").putFile(file);
+      await storage.ref().child("profilePicture").child(fileName).putFile(file);
     } on FirebaseException catch (e) {
-      Utils.showSnackBar(e as String?);
+      print(e);
     }
   }
 
-  Future<String?> downloadFile(String imageName) async {
+  Future<String> downloadFile(String imageName) async {
     try {
       var urlRef = storage
           .ref()
@@ -28,5 +28,6 @@ class Storage {
     } catch (e) {
       print(e);
     }
+    return "asset/";
   }
 }

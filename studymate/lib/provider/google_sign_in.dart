@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
 import 'package:studymate/screens/Login/login.dart';
 
-import '../screens/Login/setUser.dart';
+import '../screens/Authenticated/FirstLogin/setUser.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();

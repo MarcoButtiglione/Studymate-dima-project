@@ -5,10 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studymate/component/storage.dart';
+import 'package:studymate/screens/Authenticated/FirstLogin/intrest.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
 import 'package:file_picker/file_picker.dart';
-import '../../component/utils.dart';
-import '../../models/user.dart';
+
+import '../../../component/utils.dart';
+import '../../../models/user.dart';
 
 class SetUser extends StatefulWidget {
   @override
@@ -19,7 +21,7 @@ class _SetUserState extends State<SetUser> {
   final firstnameControler = TextEditingController();
   final lastnameControler = TextEditingController();
   final Storage storage = Storage();
-  late String filename = "user.png";
+  late String imgUrl = "assets/login/user.png";
   final user = FirebaseAuth.instance.currentUser!;
   @override
   void dispose() {
@@ -52,8 +54,8 @@ class _SetUserState extends State<SetUser> {
                 width: 150,
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),
-                    child: Image.network(
-                        storage.downloadFile(filename) as String)),
+                    //child: Image.network(imgUrl)),
+                    child: Image.asset("assets/login/user.png")),
               ),
               IconButton(
                   icon: const Icon(Icons.photo_camera),
@@ -67,7 +69,7 @@ class _SetUserState extends State<SetUser> {
                     } else {
                       final path = results.files.single.path!;
                       storage.uploadFile(path, user.uid);
-                      filename = user.uid;
+                      //imgUrl = storage.downloadFile(user.uid) as String;
                     }
                   },
                   style: IconButton.styleFrom(
@@ -149,12 +151,13 @@ class _SetUserState extends State<SetUser> {
           id: user.uid,
           firstname: firstnameControler.text.trim(),
           lastname: lastnameControler.text.trim(),
-          profileImageURL: filename);
+          profileImageURL: imgUrl);
       final json = addUser.toJson();
       await docUser.set(json);
 
+      // ignore: use_build_context_synchronously
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Authenticated()));
+          context, MaterialPageRoute(builder: (context) => Intrest()));
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
       Navigator.of(context).pop();
