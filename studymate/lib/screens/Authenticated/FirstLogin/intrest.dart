@@ -1,13 +1,8 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:studymate/component/storage.dart';
 import 'package:studymate/models/category.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
-
-import '../Search/widgets/category_card.dart';
 
 class Intrest extends StatefulWidget {
   @override
@@ -116,19 +111,7 @@ class _IntrestState extends State<Intrest> {
     List<Category> temp = [];
     if (selectedCatList.isNotEmpty) {
       try {
-        selectedCatList.forEach((element) async {
-          final cat = FirebaseFirestore.instance
-              .collection('Category')
-              .where('name', isEqualTo: element);
-
-          temp.add(cat.get() as Category);
-          /*var querySnapshots = await cat.get();
-          var documentID;
-          for (var snapshot in querySnapshots.docs) {
-            documentID = snapshot.id; // <-- Document ID
-          }
-          print(documentID.toString());*/
-        });
+        selectedCatList.forEach((cat) {});
       } on Exception catch (e) {
         // TODO
       }
