@@ -18,6 +18,7 @@ class SetUser extends StatefulWidget {
 }
 
 class _SetUserState extends State<SetUser> {
+  final formKey = GlobalKey<FormState>();
   final firstnameControler = TextEditingController();
   final lastnameControler = TextEditingController();
   final Storage storage = Storage();
@@ -35,112 +36,125 @@ class _SetUserState extends State<SetUser> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Text(
-            "Welcome",
-            style: TextStyle(
-              fontFamily: "Crimson Pro",
-              fontWeight: FontWeight.bold,
-              fontSize: 35,
-              color: Color.fromARGB(255, 233, 64, 87),
-            ),
-          ),
-          SizedBox(height: size.height * 0.03),
-          Stack(
-            alignment: Alignment.bottomRight,
-            children: <Widget>[
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    //child: Image.network(imgUrl)),
-                    child: Image.asset("assets/login/user.png")),
+        body: Form(
+          key: formKey,
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Text(
+              "Welcome",
+              style: TextStyle(
+                fontFamily: "Crimson Pro",
+                fontWeight: FontWeight.bold,
+                fontSize: 35,
+                color: Color.fromARGB(255, 233, 64, 87),
               ),
-              IconButton(
-                  icon: const Icon(Icons.photo_camera),
-                  onPressed: () async {
-                    final results = await FilePicker.platform.pickFiles(
-                        allowMultiple: false,
-                        type: FileType.custom,
-                        allowedExtensions: ['png', 'jpg']);
-                    if (results == null) {
-                      Utils.showSnackBar('No file selected');
-                    } else {
-                      final path = results.files.single.path!;
-                      storage.uploadFile(path, user.uid);
-                      //imgUrl = storage.downloadFile(user.uid) as String;
-                    }
-                  },
-                  style: IconButton.styleFrom(
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    disabledBackgroundColor: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.12),
-                    hoverColor: Theme.of(context)
-                        .colorScheme
-                        .onPrimary
-                        .withOpacity(0.08),
-                    focusColor: Theme.of(context)
-                        .colorScheme
-                        .onPrimary
-                        .withOpacity(0.12),
-                    highlightColor: Theme.of(context)
-                        .colorScheme
-                        .onPrimary
-                        .withOpacity(0.12),
-                  )),
-            ],
-          ),
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(horizontal: 40),
-            child: TextField(
-              controller: firstnameControler,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: "Name"),
             ),
-          ),
-          SizedBox(height: size.height * 0.03),
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(horizontal: 40),
-            child: TextField(
-              controller: lastnameControler,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: "Surname"),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 40.0),
-            width: 300,
-            child: ElevatedButton(
-                onPressed: setProfile,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 233, 64, 87),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  elevation: 0,
-                  padding: (size.width <= 550)
-                      ? const EdgeInsets.symmetric(horizontal: 70, vertical: 20)
-                      : const EdgeInsets.symmetric(
-                          horizontal: 70, vertical: 25),
+            SizedBox(height: size.height * 0.03),
+            Stack(
+              alignment: Alignment.bottomRight,
+              children: <Widget>[
+                SizedBox(
+                  height: 150,
+                  width: 150,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      //child: Image.network(imgUrl)),
+                      child: Image.asset("assets/login/user.png")),
                 ),
-                child: const Text(
-                  "Continue",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 255, 255, 255),
+                IconButton(
+                    icon: const Icon(Icons.photo_camera),
+                    onPressed: () async {
+                      final results = await FilePicker.platform.pickFiles(
+                          allowMultiple: false,
+                          type: FileType.custom,
+                          allowedExtensions: ['png', 'jpg']);
+                      if (results == null) {
+                        Utils.showSnackBar('No file selected');
+                      } else {
+                        final path = results.files.single.path!;
+                        storage.uploadFile(path, user.uid);
+                        //imgUrl = storage.downloadFile(user.uid) as String;
+                      }
+                    },
+                    style: IconButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      disabledBackgroundColor: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.12),
+                      hoverColor: Theme.of(context)
+                          .colorScheme
+                          .onPrimary
+                          .withOpacity(0.08),
+                      focusColor: Theme.of(context)
+                          .colorScheme
+                          .onPrimary
+                          .withOpacity(0.12),
+                      highlightColor: Theme.of(context)
+                          .colorScheme
+                          .onPrimary
+                          .withOpacity(0.12),
+                    )),
+              ],
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(horizontal: 40),
+              child: TextFormField(
+                controller: firstnameControler,
+                textInputAction: TextInputAction.next,
+                decoration: const InputDecoration(labelText: "Name"),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) =>
+                    value != null && value.isEmpty ? 'Enter valid Name' : null,
+              ),
+            ),
+            SizedBox(height: size.height * 0.03),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(horizontal: 40),
+              child: TextFormField(
+                controller: lastnameControler,
+                textInputAction: TextInputAction.next,
+                decoration: const InputDecoration(labelText: "Surname"),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) => value != null && value.isEmpty
+                    ? 'Enter valid Surname'
+                    : null,
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 40.0),
+              width: 300,
+              child: ElevatedButton(
+                  onPressed: setProfile,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 233, 64, 87),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 0,
+                    padding: (size.width <= 550)
+                        ? const EdgeInsets.symmetric(
+                            horizontal: 70, vertical: 20)
+                        : const EdgeInsets.symmetric(
+                            horizontal: 70, vertical: 25),
                   ),
-                )),
-          ),
-        ]));
+                  child: const Text(
+                    "Continue",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                    ),
+                  )),
+            ),
+          ]),
+        ));
   }
 
   Future setProfile() async {
+    final isValid = formKey.currentState!.validate();
+    if (!isValid) return;
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -154,8 +168,6 @@ class _SetUserState extends State<SetUser> {
           profileImageURL: imgUrl);
       final json = addUser.toJson();
       await docUser.set(json);
-
-      // ignore: use_build_context_synchronously
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Intrest()));
     } on FirebaseAuthException catch (e) {

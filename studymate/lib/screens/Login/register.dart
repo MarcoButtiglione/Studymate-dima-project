@@ -8,7 +8,6 @@ import 'package:studymate/screens/Login/login.dart';
 
 import '../Authenticated/FirstLogin/setUser.dart';
 
-
 class Register extends StatefulWidget {
   const Register({super.key});
 

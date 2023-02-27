@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,8 @@ class Intrest extends StatefulWidget {
 }
 
 class _IntrestState extends State<Intrest> {
-  List<Category> selected = [];
+  List<String> selectedCatList = [];
+  List<String> cat = [];
   Stream<List<Category>> readCategory() => FirebaseFirestore.instance
       .collection('categories')
       .snapshots()
@@ -25,14 +28,15 @@ class _IntrestState extends State<Intrest> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: Padding(
-            padding: EdgeInsets.only(top: 50, bottom: 40, left: 30, right: 30),
+            padding:
+                const EdgeInsets.only(top: 70, bottom: 40, left: 30, right: 30),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 50),
+                      padding: const EdgeInsets.only(top: 100),
                       child: Column(children: const [
                         Text(
                           "Your Course of interest",
@@ -52,7 +56,7 @@ class _IntrestState extends State<Intrest> {
                     ),
                   ),
                   Expanded(
-                      flex: 7,
+                      flex: 6,
                       child: FutureBuilder<List<Category>>(
                           future: readCategory().first,
                           builder: (context, snapshot) {
@@ -60,11 +64,19 @@ class _IntrestState extends State<Intrest> {
                               return const Text('Something went wrong!');
                             } else if (snapshot.hasData) {
                               final categories = snapshot.data!;
-                              return GridView.count(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: (1 / .4),
-                                  children:
-                                      categories.map(buildCategory).toList());
+                              cat = [];
+                              categories.forEach((item) {
+                                cat.add(item.name);
+                              });
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: MultiSelectChip(cat,
+                                    onSelectionChanged: (selectedList) {
+                                  setState(() {
+                                    selectedCatList = selectedList;
+                                  });
+                                }),
+                              );
                             } else {
                               return const Center(
                                   child: CircularProgressIndicator());
@@ -73,9 +85,9 @@ class _IntrestState extends State<Intrest> {
                   Expanded(
                     flex: 2,
                     child: Padding(
-                      padding: EdgeInsets.all(35),
+                      padding: const EdgeInsets.all(35),
                       child: ElevatedButton(
-                        onPressed: () => {},
+                        onPressed: saveSelected,
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               const Color.fromARGB(255, 233, 64, 87),
@@ -100,65 +112,70 @@ class _IntrestState extends State<Intrest> {
                 ])));
   }
 
-  Widget buildCategory(Category cat) => Container(
-        height: 10,
-        margin: const EdgeInsets.all(7),
-        decoration: BoxDecoration(
-            color: (selected.contains(cat))
-                ? const Color.fromARGB(255, 233, 64, 87)
-                : const Color.fromARGB(255, 255, 255, 255),
-            border: Border.all(
-              color: const Color.fromARGB(255, 233, 64, 87),
-              width: 3,
-            ),
-            borderRadius: const BorderRadius.all(Radius.circular(20))),
-        child: Center(
-            child: TextButton(
-          onPressed: () {
+  Future saveSelected() async {
+    List<Category> temp = [];
+    if (selectedCatList.isNotEmpty) {
+      try {
+        selectedCatList.forEach((element) async {
+          final cat = FirebaseFirestore.instance
+              .collection('Category')
+              .where('name', isEqualTo: element);
+
+          temp.add(cat.get() as Category);
+          /*var querySnapshots = await cat.get();
+          var documentID;
+          for (var snapshot in querySnapshots.docs) {
+            documentID = snapshot.id; // <-- Document ID
+          }
+          print(documentID.toString());*/
+        });
+      } on Exception catch (e) {
+        // TODO
+      }
+    }
+  }
+}
+
+class MultiSelectChip extends StatefulWidget {
+  final List<String> catList;
+  final Function(List<String>) onSelectionChanged;
+  MultiSelectChip(this.catList, {required this.onSelectionChanged});
+
+  @override
+  _MultiSelectChipState createState() => _MultiSelectChipState();
+}
+
+class _MultiSelectChipState extends State<MultiSelectChip> {
+  List<String> selectedChoices = [];
+
+  _buildChoiceList() {
+    List<Widget> choices = [];
+
+    widget.catList.forEach((item) {
+      choices.add(Container(
+        padding: const EdgeInsets.all(2.0),
+        child: ChoiceChip(
+          label: Text(item),
+          selected: selectedChoices.contains(item),
+          onSelected: (selected) {
             setState(() {
-              selected.add(cat);
-              print(selected[0].name);
+              selectedChoices.contains(item)
+                  ? selectedChoices.remove(item)
+                  : selectedChoices.add(item);
+              widget.onSelectionChanged(selectedChoices);
             });
           },
-          style: TextButton.styleFrom(
-            backgroundColor: (selected.contains(cat))
-                ? const Color.fromARGB(255, 233, 64, 87)
-                : const Color.fromARGB(255, 255, 255, 255),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
-          child: Text(cat.name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: (selected.contains(cat))
-                    ? const Color.fromARGB(255, 255, 255, 255)
-                    : const Color.fromARGB(255, 233, 64, 87),
-              )),
-        )),
-      );
+        ),
+      ));
+    });
 
-  /* Future addInterest() async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()));
-    try {
-      final docUser = FirebaseFirestore.instance.collection('users').doc();
-      final addUser = Users(
-          id: user.uid,
-          firstname: firstnameControler.text.trim(),
-          lastname: lastnameControler.text.trim(),
-          profileImageURL: imgUrl);
-      final json = addUser.toJson();
-      await docUser.set(json);
+    return choices;
+  }
 
-      // ignore: use_build_context_synchronously
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Intrest()));
-    } on FirebaseAuthException catch (e) {
-      Utils.showSnackBar(e.message);
-      Navigator.of(context).pop();
-    }
-  }*/
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: _buildChoiceList(),
+    );
+  }
 }

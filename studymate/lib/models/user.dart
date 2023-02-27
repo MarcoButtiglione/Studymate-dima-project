@@ -23,4 +23,5 @@ class Users {
         'profileImage': profileImageURL,
         'userRating': userRating,
       };
+  
 }
