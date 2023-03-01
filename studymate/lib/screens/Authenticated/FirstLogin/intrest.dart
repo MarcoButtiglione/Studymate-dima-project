@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:studymate/models/category.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
 
+import '../../../component/utils.dart';
+import '../../../models/user.dart';
+
 class Intrest extends StatefulWidget {
   @override
   _IntrestState createState() => _IntrestState();
@@ -108,13 +111,26 @@ class _IntrestState extends State<Intrest> {
   }
 
   Future saveSelected() async {
-    List<Category> temp = [];
-    if (selectedCatList.isNotEmpty) {
-      try {
-        selectedCatList.forEach((cat) {});
-      } on Exception catch (e) {
-        // TODO
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()));
+    try {
+      if (selectedCatList.isNotEmpty) {
+        final docUser =
+            FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+        await docUser.set(
+            {'categoriesOfInterest': selectedCatList}, SetOptions(merge: true));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Authenticated()));
+      } else {
+        Utils.showSnackBar("select at least one course of interest");
+        Navigator.of(context).pop();
       }
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+      Navigator.of(context).pop();
     }
   }
 }

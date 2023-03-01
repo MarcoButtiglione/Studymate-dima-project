@@ -1,12 +1,8 @@
-import 'dart:io';
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studymate/component/storage.dart';
 import 'package:studymate/screens/Authenticated/FirstLogin/intrest.dart';
-import 'package:studymate/screens/Authenticated/authenticated.dart';
 import 'package:file_picker/file_picker.dart';
 
 import '../../../component/utils.dart';
@@ -24,6 +20,7 @@ class _SetUserState extends State<SetUser> {
   final Storage storage = Storage();
   late String imgUrl = "assets/login/user.png";
   final user = FirebaseAuth.instance.currentUser!;
+
   @override
   void dispose() {
     firstnameControler.dispose();
@@ -160,12 +157,13 @@ class _SetUserState extends State<SetUser> {
         barrierDismissible: false,
         builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
-      final docUser = FirebaseFirestore.instance.collection('users').doc();
+      final docUser =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
       final addUser = Users(
-          id: user.uid,
           firstname: firstnameControler.text.trim(),
           lastname: lastnameControler.text.trim(),
-          profileImageURL: imgUrl);
+          profileImageURL: imgUrl,
+          userRating: 0);
       final json = addUser.toJson();
       await docUser.set(json);
       Navigator.push(

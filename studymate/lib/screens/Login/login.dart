@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:studymate/component/utils.dart';
-import 'package:studymate/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:studymate/provider/google_sign_in.dart';
 import 'package:studymate/screens/Login/register.dart';
