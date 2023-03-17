@@ -160,6 +160,7 @@ class _SetUserState extends State<SetUser> {
       final docUser =
           FirebaseFirestore.instance.collection('users').doc(user.uid);
       final addUser = Users(
+          id: user.uid,
           firstname: firstnameControler.text.trim(),
           lastname: lastnameControler.text.trim(),
           profileImageURL: imgUrl,

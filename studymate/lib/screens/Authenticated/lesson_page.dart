@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studymate/screens/Authenticated/chat_page.dart';
+import 'package:studymate/screens/Authenticated/Chat/chat_page.dart';
 import 'package:studymate/screens/Authenticated/other_profile_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../models/user.dart';
 
 class LessonPage extends StatelessWidget {
   const LessonPage({super.key});
@@ -154,7 +157,9 @@ class LessonPage extends StatelessWidget {
                                   Icon(
                                     Icons.pin_drop,
                                   ),
-                                  SizedBox(width: 10,),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
                                   Text("1 km")
                                 ],
                               ),

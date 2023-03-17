@@ -2,7 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:studymate/screens/Authenticated/chat_page.dart';
+import 'package:studymate/screens/Authenticated/Chat/chat_page.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
 import 'package:studymate/screens/Authenticated/lesson_page.dart';
 import 'package:studymate/screens/Authenticated/notification_page.dart';
@@ -54,7 +54,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(_createRoute(const ChatPage()));
+                  Navigator.of(context).push(_createRoute(ChatPage()));
                 },
               ),
             ]),
@@ -210,11 +210,12 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 13)),
             const SizedBox(height: 30),
-                        const SizedBox(height: 15),
+            const SizedBox(height: 15),
             const LessonCard(
               lessonName: "Machine Learning",
               userName: "Robert Jackson",
-              userImageURL: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
+              userImageURL:
+                  "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
               date: "Thursday 26/01/2023",
               location: "Milan",
             ),
@@ -222,7 +223,8 @@ class HomePage extends StatelessWidget {
             const LessonCard(
               lessonName: "Fisica tecnica",
               userName: "Mark Crosby",
-              userImageURL: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+              userImageURL:
+                  "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
               date: "Thursday 26/01/2023",
               location: "Milan",
             ),
@@ -230,7 +232,8 @@ class HomePage extends StatelessWidget {
             const LessonCard(
               lessonName: "Analisi 1",
               userName: "Stephen King",
-              userImageURL: "https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+              userImageURL:
+                  "https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
               date: "Thursday 26/01/2023",
               location: "Milan",
             ),
@@ -238,11 +241,11 @@ class HomePage extends StatelessWidget {
             const LessonCard(
               lessonName: "Teoria dei segnali",
               userName: "Mario Rossi",
-              userImageURL: "https://images.unsplash.com/photo-1541752171745-4176eee47556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
+              userImageURL:
+                  "https://images.unsplash.com/photo-1541752171745-4176eee47556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
               date: "Thursday 26/01/2023",
               location: "Milan",
             ),
-          
 
             //--------------------
           ],
