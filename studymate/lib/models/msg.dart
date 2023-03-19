@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Msg {
-  final String id;
-  final String chatId;
+  final String? id;
+  final String? chatId;
   final String? from_uid;
   final String? to_uid;
   final String? content;
@@ -10,8 +10,8 @@ class Msg {
   final bool view;
 
   Msg({
-    required this.id,
-    required this.chatId,
+    this.id,
+    this.chatId,
     this.from_uid,
     this.to_uid,
     this.content,
@@ -32,8 +32,8 @@ class Msg {
 
   Map<String, dynamic> toFirestore() {
     return {
-      'id': id,
-      "chatId": chatId,
+      if (id != null) 'id': id,
+      if (chatId != null) "chatId": chatId,
       if (from_uid != null) "from_uid": from_uid,
       if (to_uid != null) "to_uid": to_uid,
       if (content != null) "content": content,

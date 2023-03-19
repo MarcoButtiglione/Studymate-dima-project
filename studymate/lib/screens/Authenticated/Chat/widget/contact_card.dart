@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../lesson_page.dart';
+import '../../lesson_page.dart';
 
 class ContactCard extends StatelessWidget {
   final String? id;
@@ -72,7 +72,7 @@ class ContactCard extends StatelessWidget {
                       ? ((view == true)
                           ? const Icon(
                               Icons.done_all,
-                              color: Color.fromARGB(255, 233, 64, 87),
+                              color: Colors.indigo,
                               size: 20,
                             )
                           : const Icon(

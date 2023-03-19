@@ -2,7 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:studymate/screens/Authenticated/Chat/chat_page.dart';
+import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
 import 'package:studymate/screens/Authenticated/lesson_page.dart';
 import 'package:studymate/screens/Authenticated/notification_page.dart';
@@ -54,7 +54,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(_createRoute(ChatPage()));
+                  Navigator.of(context).push(_createRoute(ChatsPage()));
                 },
               ),
             ]),

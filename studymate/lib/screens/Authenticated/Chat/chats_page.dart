@@ -3,16 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:studymate/models/msg.dart';
 import 'package:studymate/models/user.dart';
-import 'package:studymate/screens/Authenticated/common_widgets/contact_card.dart';
+import 'package:studymate/screens/Authenticated/Chat/chat_msg.dart';
+import 'package:studymate/screens/Authenticated/authenticated.dart';
+import 'package:studymate/screens/Authenticated/Chat/widget/contact_card.dart';
 import '../../../models/chat.dart';
-import '../Chat/autocomplete_searchbar.dart';
+import 'widget/autocomplete_searchbar.dart';
 
-class ChatPage extends StatefulWidget {
+class ChatsPage extends StatefulWidget {
   @override
   _ChatState createState() => _ChatState();
 }
 
-class _ChatState extends State<ChatPage> {
+class _ChatState extends State<ChatsPage> {
   final user = FirebaseAuth.instance.currentUser!;
 
   Stream<List<Chat>> readChat() => FirebaseFirestore.instance
@@ -41,45 +43,52 @@ class _ChatState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        //appBar: AppBar(),
         body: SingleChildScrollView(
-          child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  Row(children: const <Widget>[
-                    Expanded(
-                      flex: 9,
-                      child: Text("Messages",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    )
-                  ]),
-                  AutocompleteSearchbar(),
-                  const SizedBox(height: 10),
-                  StreamBuilder<List<Chat>>(
-                      stream: readChat(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return const Text('Something went wrong!');
-                        } else if (snapshot.hasData) {
-                          final chat = snapshot.data!;
-                          return ListView(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              children: chat.map(buildChat).toList());
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      }),
-                ],
-              )),
-        ));
+      child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 50),
+              Row(children: <Widget>[
+                IconButton(
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Authenticated())),
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      size: 20,
+                    )),
+                const Expanded(
+                    child: Text("Messages",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ))),
+              ]),
+              const SizedBox(height: 10),
+              AutocompleteSearchbar(),
+              StreamBuilder<List<Chat>>(
+                  stream: readChat(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Text('Something went wrong!');
+                    } else if (snapshot.hasData) {
+                      final chat = snapshot.data!;
+                      return ListView(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          children: chat.map(buildChat).toList());
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  }),
+            ],
+          )),
+    ));
   }
 
   Widget buildChat(Chat chat) {
@@ -101,10 +110,12 @@ class _ChatState extends State<ChatPage> {
                     return const Text('Something went wrong!');
                   } else if (snapshot.hasData) {
                     final msg = snapshot.data!;
+                    if (msg.isEmpty) {
+                      return SizedBox();
+                    }
                     if (msg.first.from_uid == user.uid) {
-                      print(msg.first.addtime!.toDate().toString());
                       return InkWell(
-                          onTap: () => openChat(chat.id, false),
+                          onTap: () => openChat(chat.id, 0, users.first),
                           child: ContactCard(
                               id: chat.id,
                               firstname: users.first.firstname,
@@ -121,7 +132,7 @@ class _ChatState extends State<ChatPage> {
                         }
                       });
                       return InkWell(
-                          onTap: () => openChat(chat.id, true),
+                          onTap: () => openChat(chat.id, num, users.first),
                           child: ContactCard(
                               id: chat.id,
                               firstname: users.first.firstname,
@@ -141,9 +152,13 @@ class _ChatState extends State<ChatPage> {
         });
   }
 
-  Future openChat(String id, bool view) async {
-    if (view == true) {
-      try {
+  Future openChat(String id, num num_msg, Users reciver) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()));
+    try {
+      if (num_msg > 0) {
         var col = FirebaseFirestore.instance.collection('msg');
         var msg = col
             .where('chatId', isEqualTo: id)
@@ -155,9 +170,16 @@ class _ChatState extends State<ChatPage> {
         msg.forEach((element) {
           col.doc(element.first.id).update({'view': true});
         });
-      } on Exception catch (e) {
-        print(e);
       }
-    } else {}
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChatMsg(
+                    chatId: id,
+                    reciver: reciver,
+                  )));
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 }

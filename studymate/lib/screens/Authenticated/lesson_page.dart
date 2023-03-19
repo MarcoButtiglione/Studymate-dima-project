@@ -1,13 +1,39 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studymate/screens/Authenticated/Chat/chat_page.dart';
+import 'package:studymate/component/utils.dart';
+import 'package:studymate/models/chat.dart';
+import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/other_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/user.dart';
+import 'Chat/chat_msg.dart';
 
-class LessonPage extends StatelessWidget {
+class LessonPage extends StatefulWidget {
   const LessonPage({super.key});
+  @override
+  _LessonState createState() => _LessonState();
+}
+
+class _LessonState extends State<LessonPage> {
+  final user = FirebaseAuth.instance.currentUser!;
+
+  Stream<List<Users>> readUser(String userId) => FirebaseFirestore.instance
+      .collection('users')
+      .where('id', isEqualTo: userId)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
+
+  Stream<List<Chat>> readChat(String userId) => FirebaseFirestore.instance
+      .collection('chat')
+      .where('member', arrayContains: [userId, user.uid])
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Chat.fromFirestore(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
@@ -268,28 +294,14 @@ class LessonPage extends StatelessWidget {
                       child: IconButton(
                           icon: const Icon(Icons.message_outlined),
                           onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20))),
-                              builder: (context) => Container(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const FlutterLogo(size: 120),
-                                    const FlutterLogo(size: 120),
-                                    const FlutterLogo(size: 120),
-                                    ElevatedButton(
-                                      child: const Text("Close"),
-                                      onPressed: () => Navigator.pop(context),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
+                            Users reciver = Users(
+                                firstname: "Dounia",
+                                lastname: "Faouzi",
+                                profileImageURL:
+                                    'https://firebasestorage.googleapis.com/v0/b/my-firebase-3b25d.appspot.com/o/Categories%2FBiomedica.jpg?alt=media&token=3a9a75f4-654d-4c7f-8e75-d7acfac31d88',
+                                id: 'qlM14qJEK5hdzszAIJ12H8q3z5L2',
+                                userRating: 0);
+                            send(reciver);
                           },
                           style: messageButtonStyle()),
                     ),
@@ -323,6 +335,38 @@ class LessonPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future send(Users reciver) async {
+    try {
+      List<Chat> chats = await readChat(reciver.id).first;
+      Chat chat;
+      if (chats.isEmpty) {
+        String docId = "";
+        final docChat = FirebaseFirestore.instance.collection('chat');
+        await docChat.add({}).then((DocumentReference doc) {
+          docId = doc.id;
+        });
+        List<String> member = [reciver.id, user.uid];
+        final addChat = Chat(member: member, id: docId);
+        final json = addChat.toFirestore();
+        await docChat.doc(docId).set(json);
+        chat = addChat;
+      } else {
+        chat = chats.first;
+        print(chat.id);
+      }
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChatMsg(
+                    chatId: chat.id,
+                    reciver: reciver,
+                  )));
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+      Navigator.of(context).pop();
+    }
   }
 }
 

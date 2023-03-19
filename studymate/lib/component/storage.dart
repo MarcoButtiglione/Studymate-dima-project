@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:studymate/component/utils.dart';
 
 class Storage {
   final storage = FirebaseStorage.instance;
