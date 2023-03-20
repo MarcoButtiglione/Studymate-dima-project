@@ -109,6 +109,9 @@ class ContactCard extends StatelessWidget {
               const Divider(
                 color: Colors.grey,
               ),
+              const SizedBox(
+                height: 20,
+              )
             ],
           ),
         ),

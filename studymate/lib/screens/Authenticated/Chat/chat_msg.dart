@@ -20,7 +20,6 @@ class ChatMsg extends StatefulWidget {
 
 class _MsgState extends State<ChatMsg> {
   final user = FirebaseAuth.instance.currentUser!;
-  final formKey = GlobalKey<FormState>();
   final contentController = TextEditingController();
   var message;
   ScrollController _scrollController = ScrollController();
@@ -158,9 +157,6 @@ class _MsgState extends State<ChatMsg> {
 
     List<Msg> temp = [];
     List<List<Msg>> grouped = [];
-    print(msgs.first.content);
-    print(msgs.last.content);
-    print(msgs.first.chatId);
     msgs.forEach((element) {
       if (element.addtime!.toDate().day == d!.toDate().day &&
           element.addtime!.toDate().month == d!.toDate().month &&
@@ -234,6 +230,16 @@ class _MsgState extends State<ChatMsg> {
         view: message.view,
       );
     } else {
+      if (message.view == false) {
+        try {
+          FirebaseFirestore.instance
+              .collection('msg')
+              .doc(message.id)
+              .update({'view': true});
+        } catch (e) {
+          print(e);
+        }
+      }
       return ReciviedMessage(
         message: message.content,
         addTime: message.addtime,
