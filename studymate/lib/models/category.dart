@@ -6,6 +6,8 @@ class Category {
     required this.name,
     required this.imageURL,
   });
-  static Category fromJson(Map<String, dynamic> json) =>
-      Category(name: json['name'], imageURL: json['imageURL']);
+  static Category fromJson(Map<String, dynamic> json) => Category(
+        name: json['name'],
+        imageURL: json['imageURL'],
+      );
 }

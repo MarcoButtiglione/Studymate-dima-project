@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:studymate/models/lesson.dart';
 
+import '../../component/utils.dart';
 import '../../models/category.dart';
 
 Stream<List<Category>> readCategory() => FirebaseFirestore.instance
@@ -10,7 +13,7 @@ Stream<List<Category>> readCategory() => FirebaseFirestore.instance
     .snapshots()
     .map((snapshot) =>
         snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
-        
+
 class NewLessonPage extends StatefulWidget {
   @override
   State<NewLessonPage> createState() => _NewLessonPageState();
@@ -18,11 +21,12 @@ class NewLessonPage extends StatefulWidget {
 
 class _NewLessonPageState extends State<NewLessonPage> {
   final _formKey = GlobalKey<FormState>();
+  final user = FirebaseAuth.instance.currentUser!;
 
   final titleController = TextEditingController();
-  String? category;
-  String? date;
-  String? startingTime;
+  String category = "";
+  String date = "";
+  String startingTime = "";
   int duration = 1;
   final desciptionController = TextEditingController();
 
@@ -57,6 +61,23 @@ class _NewLessonPageState extends State<NewLessonPage> {
     });
   }
 
+  Future send({required Lesson lesson}) async {
+    try {
+      String docId = "";
+      final docLesson = FirebaseFirestore.instance.collection('lessons');
+      await docLesson.add({}).then((DocumentReference doc) {
+        docId = doc.id;
+      });
+      final json = lesson.toFirestore();
+      await docLesson.doc(docId).set(json);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Lesson added!')),
+      );
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -65,147 +86,194 @@ class _NewLessonPageState extends State<NewLessonPage> {
         child: Form(
           key: _formKey,
           child: StreamBuilder<List<Category>>(
-            stream: readCategory(),
-            builder: (context, snapshot) {
-              return Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Row(children: const <Widget>[
-                    Text("Create a lesson",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ]),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: titleController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                      labelText: "Title",
-                      hintText: "Type the title of your lesson",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  DropdownCategory(callbackCategory),
-                  const SizedBox(height: 10),
-                  DataPicker(callbackDate),
-                  const SizedBox(height: 10),
-                  StartingTimePicker(callbackStartingTime),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: const [
-                      Text("Lesson duration",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ],
-                  ),
-                  Row(
+              stream: readCategory(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text("Something went wrong!");
+                } else if (snapshot.hasData) {
+                  final categories = snapshot.data!;
+                  return Column(
                     children: [
-                      Expanded(
-                        flex: 9,
-                        child: SliderDuration(callbackDuration),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          duration.toString() + "h",
+                      const SizedBox(height: 60),
+                      Row(children: const <Widget>[
+                        Text("Create a lesson",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ]),
+                      const Text(
+                          "Here you can create your lesson. Give lessons to other people in the community to receive points that you can spend on other community lessons.",
                           textAlign: TextAlign.left,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
+                          style: TextStyle(fontSize: 13)),
+                      const SizedBox(height: 40),
+                      TextFormField(
+                        controller: titleController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        decoration: InputDecoration(
+                          labelText: "Title",
+                          hintText: "Type the title of your lesson",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
                           ),
                         ),
                       ),
+                      const SizedBox(height: 10),
+                      DropdownCategory(callbackCategory, categories),
+                      const SizedBox(height: 10),
+                      DataPicker(callbackDate),
+                      const SizedBox(height: 10),
+                      StartingTimePicker(callbackStartingTime),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: const [
+                          Text("Lesson duration",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 9,
+                            child: SliderDuration(callbackDuration),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              duration.toString() + "h",
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: desciptionController,
+                        keyboardType: TextInputType.multiline,
+                        minLines: 5,
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                          //labelText: "Description",
+                          hintText: "Type the description of your lesson",
+
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 233, 64, 87),
+                              ),
+                              onPressed: () {
+                                // Validate returns true if the form is valid, or false otherwise.
+                                if (_formKey.currentState!.validate()) {
+                                  /*
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Processing Data')),
+                                  );
+                                  */
+                                  var sT = DateTime.parse(
+                                      date + " " + startingTime + ":00.0000");
+                                  var eT = DateTime.parse(date +
+                                          " " +
+                                          startingTime +
+                                          ":00.0000")
+                                      .add(Duration(hours: duration));
+                                  if (sT.isAfter(DateTime.now())) {
+                                    if (DateUtils.isSameDay(sT, eT)) {
+                                      final lesson = Lesson(
+                                        title: titleController.text,
+                                        location: "Milan",
+                                        startingDateTime: sT.toString(),
+                                        endingDateTime: eT.toString(),
+                                        description: desciptionController.text,
+                                        userTutor: user.uid,
+                                        category: category,
+                                      );
+                                      send(lesson: lesson);
+                                    } else {
+                                      Utils.showSnackBar(
+                                          "The end of the lesson have to be in the same day.");
+                                    }
+                                  } else {
+                                    Utils.showSnackBar(
+                                        "You cannot select a starting time in the past.");
+                                  }
+                                }
+                              },
+                              child: const Text('Submit',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    controller: desciptionController,
-                    keyboardType: TextInputType.multiline,
-                    minLines: 5,
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      //labelText: "Description",
-                      hintText: "Type the description of your lesson",
-          
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey[300]!),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Validate returns true if the form is valid, or false otherwise.
-                      if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
-                        print(titleController.text);
-                        print(category);
-                        print(date);
-                        print(startingTime);
-                        print(duration);
-                        print(desciptionController.text);
-                      }
-                    },
-                    child: const Text('Submit'),
-                  ),
-                ],
-              );
-            }
-          ),
+                  );
+                  ;
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
         ),
       ),
     );
   }
 }
 
-const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
-
 class DropdownCategory extends StatefulWidget {
   Function callback;
-  DropdownCategory(this.callback, {super.key});
+  List<Category> categories;
+  DropdownCategory(this.callback, this.categories, {super.key});
 
   @override
   State<DropdownCategory> createState() => _DropdownCategoryState();
@@ -250,10 +318,11 @@ class _DropdownCategoryState extends State<DropdownCategory> {
           });
           widget.callback(value);
         },
-        items: list.map<DropdownMenuItem<String>>((String value) {
+        items: widget.categories
+            .map<DropdownMenuItem<String>>((Category category) {
           return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
+            value: category.name,
+            child: Text(category.name),
           );
         }).toList(),
       ),
@@ -285,7 +354,10 @@ class _DataPickerState extends State<DataPicker> {
       controller: _date,
       keyboardType: TextInputType.datetime,
       decoration: InputDecoration(
-        icon: const Icon(Icons.calendar_today_rounded),
+        icon: const Icon(
+          Icons.calendar_today_rounded,
+          color: const Color.fromARGB(255, 233, 64, 87),
+        ),
         labelText: "Date",
         hintText: "Select the date of your lesson",
         border: OutlineInputBorder(
@@ -305,7 +377,7 @@ class _DataPickerState extends State<DataPicker> {
         DateTime? pickeddate = await showDatePicker(
             context: context,
             initialDate: DateTime.now(),
-            firstDate: DateTime(2000),
+            firstDate: DateTime.now(),
             lastDate: DateTime(2100));
         if (pickeddate != null) {
           setState(() {
@@ -342,7 +414,10 @@ class _StartingTimePickerState extends State<StartingTimePicker> {
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
-        icon: const Icon(Icons.timer_outlined),
+        icon: const Icon(
+          Icons.timer_outlined,
+          color: const Color.fromARGB(255, 233, 64, 87),
+        ),
         labelText: "Starting time",
         hintText: "Select the starting time of your lesson",
         border: OutlineInputBorder(

@@ -2,26 +2,42 @@ import 'package:studymate/models/category.dart';
 import 'package:studymate/models/user.dart';
 
 class Lesson {
-  final String lessonName;
+  final String title;
   final String location;
-  final String date;
-  final String startingTime;
-  final String endingTime;
+  final String startingDateTime;
+  final String endingDateTime;
   final String description;
-  final int userRating;
+  final String userTutor;
+  final String category;
 
-  final Users userTutor;
-  final Category category;
+  Lesson({
+    required this.title,
+    required this.location,
+    required this.startingDateTime,
+    required this.endingDateTime,
+    required this.description,
+    required this.userTutor,
+    required this.category,
+  });
+  static Lesson fromJson(Map<String, dynamic> json) => Lesson(
+        title: json['title'],
+        location: json['location'],
+        startingDateTime: json['startingDateTime'],
+        endingDateTime: json['endingDateTime'],
+        description: json['description'],
+        userTutor: json['userTutor'],
+        category: json['category'],
+      );
 
-  Lesson(
-    this.lessonName,
-    this.location,
-    this.date,
-    this.startingTime,
-    this.endingTime,
-    this.description,
-    this.userRating,
-    this.userTutor,
-    this.category,
-  );
+  Map<String, dynamic> toFirestore() {
+    return {
+      "title": title,
+      "location": location,
+      "startingDateTime": startingDateTime,
+      "endingDateTime": endingDateTime,
+      "description": description,
+      "userTutor": userTutor,
+      "category": category,
+    };
+  }
 }

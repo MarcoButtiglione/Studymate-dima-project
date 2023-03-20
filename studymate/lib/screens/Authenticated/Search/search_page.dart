@@ -70,7 +70,7 @@ class _SearchPageState extends State<SearchPage> {
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
             ]),
-            /*
+            
             SizedBox(
               height: 180.0,
               child: StreamBuilder<List<Category>>(
@@ -95,7 +95,7 @@ class _SearchPageState extends State<SearchPage> {
                 }),
               ),
             ),
-            */
+            
             const SizedBox(height: 10),
             const Divider(
               color: Colors.grey,
