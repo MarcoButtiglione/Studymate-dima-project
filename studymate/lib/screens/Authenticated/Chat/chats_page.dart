@@ -53,10 +53,9 @@ class _ChatState extends State<ChatsPage> {
               const SizedBox(height: 50),
               Row(children: <Widget>[
                 IconButton(
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Authenticated())),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     icon: const Icon(
                       Icons.arrow_back_ios,
                       size: 20,
@@ -115,7 +114,7 @@ class _ChatState extends State<ChatsPage> {
                     }
                     if (msg.first.from_uid == user.uid) {
                       return InkWell(
-                          onTap: () => openChat(chat.id, 0, users.first),
+                          onTap: () => openChat(chat.id, users.first),
                           child: ContactCard(
                               id: chat.id,
                               firstname: users.first.firstname,
@@ -132,7 +131,7 @@ class _ChatState extends State<ChatsPage> {
                         }
                       });
                       return InkWell(
-                          onTap: () => openChat(chat.id, num, users.first),
+                          onTap: () => openChat(chat.id, users.first),
                           child: ContactCard(
                               id: chat.id,
                               firstname: users.first.firstname,
@@ -152,25 +151,13 @@ class _ChatState extends State<ChatsPage> {
         });
   }
 
-  Future openChat(String id, num num_msg, Users reciver) async {
-    showDialog(
+  Future openChat(String id, Users reciver) async {
+    /*showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => const Center(child: CircularProgressIndicator()));
+    */
     try {
-      if (num_msg > 0) {
-        var col = FirebaseFirestore.instance.collection('msg');
-        var msg = col
-            .where('chatId', isEqualTo: id)
-            .where('view', isEqualTo: false)
-            .snapshots()
-            .map((snapshot) => snapshot.docs
-                .map((doc) => Msg.fromFirestore(doc.data()))
-                .toList());
-        msg.forEach((element) {
-          col.doc(element.first.id).update({'view': true});
-        });
-      }
       Navigator.push(
           context,
           MaterialPageRoute(

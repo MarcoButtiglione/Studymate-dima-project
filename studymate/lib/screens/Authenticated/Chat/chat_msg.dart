@@ -58,8 +58,9 @@ class _MsgState extends State<ChatMsg> {
               child: Row(
                 children: [
                   IconButton(
-                      onPressed: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ChatsPage())),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       icon: const Icon(Icons.arrow_back_ios)),
                   SizedBox(
                     height: 50,
