@@ -143,11 +143,11 @@ class _ChatState extends State<ChatsPage> {
                               msg_num: num));
                     }
                   } else {
-                    return Center(child: CircularProgressIndicator());
+                    return SizedBox();
                   }
                 });
           } else {
-            return Center(child: CircularProgressIndicator());
+            return SizedBox();
           }
         });
   }
