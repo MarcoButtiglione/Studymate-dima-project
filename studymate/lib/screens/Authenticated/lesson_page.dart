@@ -21,20 +21,6 @@ class LessonPage extends StatefulWidget {
 class _LessonState extends State<LessonPage> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  Stream<List<Users>> readUser(String userId) => FirebaseFirestore.instance
-      .collection('users')
-      .where('id', isEqualTo: userId)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
-
-  Stream<List<Chat>> readChat(String userId) => FirebaseFirestore.instance
-      .collection('chat')
-      .where('member', arrayContains: [userId, user.uid])
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Chat.fromFirestore(doc.data())).toList());
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -337,9 +323,17 @@ class _LessonState extends State<LessonPage> {
     );
   }
 
+  Stream<List<Chat>> readChat(List<String> users) => FirebaseFirestore.instance
+      .collection('chat')
+      .where('member', isEqualTo: users)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Chat.fromFirestore(doc.data())).toList());
+
   Future send(Users reciver) async {
     try {
-      List<Chat> chats = await readChat(reciver.id).first;
+      List<String> users = [reciver.id, user.uid];
+      List<Chat> chats = await readChat(users).first;
       Chat chat;
       if (chats.isEmpty) {
         String docId = "";
@@ -354,7 +348,6 @@ class _LessonState extends State<LessonPage> {
         chat = addChat;
       } else {
         chat = chats.first;
-        print(chat.id);
       }
       Navigator.push(
           context,

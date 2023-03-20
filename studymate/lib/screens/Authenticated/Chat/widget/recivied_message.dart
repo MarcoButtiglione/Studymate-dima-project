@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'dart:math';
 
 import 'custom_shape.dart';
@@ -53,7 +54,7 @@ class ReciviedMessage extends StatelessWidget {
                   style: const TextStyle(color: Colors.black, fontSize: 14),
                 ),
                 Text(
-                  "${addTime!.toDate().hour}:${addTime!.toDate().minute}",
+                  DateFormat.Hm().format(addTime!.toDate()),
                   style: const TextStyle(color: Colors.black, fontSize: 14),
                   textAlign: TextAlign.left,
                 ),

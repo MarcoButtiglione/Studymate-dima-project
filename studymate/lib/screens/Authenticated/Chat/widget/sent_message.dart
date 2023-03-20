@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'custom_shape.dart';
 
@@ -48,8 +49,7 @@ class SentMessage extends StatelessWidget {
                     ),
                     Text.rich(TextSpan(children: [
                       TextSpan(
-                          text:
-                              "${addTime!.toDate().hour}:${addTime!.toDate().minute}",
+                          text: DateFormat.Hm().format(addTime!.toDate()),
                           style: const TextStyle(
                               color: Colors.white, fontSize: 14)),
                       const WidgetSpan(

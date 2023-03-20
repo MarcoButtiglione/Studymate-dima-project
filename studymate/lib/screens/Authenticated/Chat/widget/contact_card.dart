@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../lesson_page.dart';
 
@@ -59,8 +60,8 @@ class ContactCard extends StatelessWidget {
                                   Timestamp.now().toDate().month ||
                               last_time!.toDate().day <
                                   Timestamp.now().toDate().day
-                          ? "${last_time!.toDate().day}/${last_time!.toDate().month}/23"
-                          : "${last_time!.toDate().hour}:${last_time!.toDate().minute}",
+                          ? DateFormat.yMd().format(last_time!.toDate())
+                          : DateFormat.Hm().format(last_time!.toDate()),
                       textAlign: TextAlign.right,
                       style: const TextStyle(
                           color: Color.fromARGB(255, 47, 47, 47))),

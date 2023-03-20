@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:intl/message_format.dart';
 import 'package:studymate/models/user.dart';
 import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
@@ -73,7 +74,9 @@ class _MsgState extends State<ChatMsg> {
                   ),
                   const SizedBox(width: 20),
                   Text(
-                    "${widget.reciver.firstname}\n${widget.reciver.lastname}",
+                    (widget.reciver.firstname.length < 20)
+                        ? "${widget.reciver.firstname} ${widget.reciver.lastname}"
+                        : "${widget.reciver.firstname} \n ${widget.reciver.lastname}",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       fontSize: 16,
@@ -205,7 +208,7 @@ class _MsgState extends State<ChatMsg> {
                   padding: const EdgeInsets.only(
                       top: 5, bottom: 5, left: 20, right: 20),
                   child: Text(
-                    "${list.first.addtime!.toDate().day}/${list.first.addtime!.toDate().month}/${list.first.addtime!.toDate().year}",
+                    DateFormat.yMd().format(list.first.addtime!.toDate()),
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
@@ -248,7 +251,7 @@ class _MsgState extends State<ChatMsg> {
   }
 
   Future send() async {
-    if (contentController.text.isNotEmpty) {
+    if (contentController.text != "") {
       try {
         String docId = "";
         final docUser = FirebaseFirestore.instance.collection('msg');
