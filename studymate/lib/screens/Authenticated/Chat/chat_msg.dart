@@ -59,7 +59,7 @@ class _MsgState extends State<ChatMsg> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Delete'),
+              child: const Text('Confirm'),
               onPressed: () async {
                 var messages = msgs(widget.chatId);
 
@@ -72,7 +72,7 @@ class _MsgState extends State<ChatMsg> {
                   }
                 });
                 FirebaseFirestore.instance
-                    .collection('confirm')
+                    .collection('chat')
                     .doc(widget.chatId)
                     .delete();
                 Navigator.of(context).popUntil((route) => route.isFirst);
@@ -335,7 +335,6 @@ class _MsgState extends State<ChatMsg> {
       });
       docUser.doc(docId).update({'id': docId});
       contentController.clear();
-      num = (num! - 1);
       FirebaseFirestore.instance.collection('chat').doc(widget.chatId).update({
         'num_msg': num! + 1,
         'last_msg': addMsg.content,

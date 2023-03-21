@@ -97,15 +97,24 @@ class _ChatState extends State<ChatsPage> {
             if (chat.last_msg != null) {
               return InkWell(
                   onTap: () => openChat(chat, users.first),
-                  child: ContactCard(
-                      id: chat.id,
-                      firstname: users.first.firstname,
-                      lastname: users.first.lastname,
-                      userImageURL: users.first.profileImageURL,
-                      last_msg: chat.last_msg,
-                      last_time: chat.last_time,
-                      msg_num: chat.num_msg,
-                      view: chat.view));
+                  child: (user.uid == chat.from_uid)
+                      ? ContactCard(
+                          id: chat.id,
+                          firstname: users.first.firstname,
+                          lastname: users.first.lastname,
+                          userImageURL: users.first.profileImageURL,
+                          last_msg: chat.last_msg,
+                          last_time: chat.last_time,
+                          view: chat.view)
+                      : ContactCard(
+                          id: chat.id,
+                          firstname: users.first.firstname,
+                          lastname: users.first.lastname,
+                          userImageURL: users.first.profileImageURL,
+                          last_msg: chat.last_msg,
+                          last_time: chat.last_time,
+                          msg_num: chat.num_msg,
+                        ));
             } else {
               return SizedBox();
             }

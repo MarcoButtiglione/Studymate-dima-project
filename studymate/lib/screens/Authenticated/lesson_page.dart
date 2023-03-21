@@ -334,6 +334,8 @@ class _LessonState extends State<LessonPage> {
     try {
       List<String> users = [reciver.id, user.uid];
       List<Chat> chats = await readChat(users).first;
+      print(chats.length);
+      print("AAAAAAAAA");
       Chat chat;
       if (chats.isEmpty) {
         String docId = "";
