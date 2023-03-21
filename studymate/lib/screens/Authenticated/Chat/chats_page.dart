@@ -68,13 +68,16 @@ class _ChatState extends State<ChatsPage> {
                       return const Text('Something went wrong!');
                     } else if (snapshot.hasData) {
                       final chat = snapshot.data!;
-                      return ListView(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          children: chat.map(buildChat).toList());
+                      if (chat.isNotEmpty) {
+                        return ListView(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            children: chat.map(buildChat).toList());
+                      } else {
+                        return SizedBox();
+                      }
                     } else {
-                      return SizedBox();
-                      //return Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator());
                     }
                   }),
             ],
@@ -125,6 +128,7 @@ class _ChatState extends State<ChatsPage> {
   }
 
   Future openChat(Chat chat, Users reciver) async {
+    Center(child: CircularProgressIndicator());
     try {
       Navigator.push(
           context,

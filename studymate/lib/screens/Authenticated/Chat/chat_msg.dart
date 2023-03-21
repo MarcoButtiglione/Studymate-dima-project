@@ -13,7 +13,7 @@ import '../../../models/chat.dart';
 import '../../../models/msg.dart';
 
 class ChatMsg extends StatefulWidget {
-  final String chatId;
+  final String? chatId;
   final int? num_msg;
   final Users reciver;
   const ChatMsg(
@@ -61,7 +61,7 @@ class _MsgState extends State<ChatMsg> {
             TextButton(
               child: const Text('Confirm'),
               onPressed: () async {
-                var messages = msgs(widget.chatId);
+                var messages = msgs(widget.chatId!);
 
                 messages.forEach((element) {
                   if (element.isNotEmpty) {
@@ -149,7 +149,7 @@ class _MsgState extends State<ChatMsg> {
             ),
             Expanded(
                 child: StreamBuilder<List<Msg>>(
-                    stream: msgs(widget.chatId),
+                    stream: msgs(widget.chatId!),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return const Text('Something went wrong!');
@@ -335,8 +335,10 @@ class _MsgState extends State<ChatMsg> {
       });
       docUser.doc(docId).update({'id': docId});
       contentController.clear();
+      print("AAAAAA");
+      num = num! + 1;
       FirebaseFirestore.instance.collection('chat').doc(widget.chatId).update({
-        'num_msg': num! + 1,
+        'num_msg': num,
         'last_msg': addMsg.content,
         'last_time': addMsg.addtime,
         'from_uid': addMsg.from_uid,

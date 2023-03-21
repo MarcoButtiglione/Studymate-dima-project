@@ -5,7 +5,7 @@ import 'msg.dart';
 
 class Chat {
   final List<dynamic>? member;
-  final String id;
+  final String? id;
   final String? from_uid;
   final String? last_msg;
   final Timestamp? last_time;
@@ -19,7 +19,7 @@ class Chat {
     this.view,
     this.member,
     this.num_msg,
-    required this.id,
+    this.id,
   });
 
   factory Chat.fromFirestore(Map<String, dynamic> json) {
@@ -36,7 +36,7 @@ class Chat {
 
   Map<String, dynamic> toFirestore() {
     return {
-      "id": id,
+      if (id != null) "id": id,
       if (member != null) "member": member,
       if (last_msg != null) "last_msg": last_msg,
       if (last_time != null) "last_time": last_time,
