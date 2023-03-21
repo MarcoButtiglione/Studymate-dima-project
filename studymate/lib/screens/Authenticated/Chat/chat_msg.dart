@@ -23,6 +23,7 @@ class ChatMsg extends StatefulWidget {
 }
 
 class _MsgState extends State<ChatMsg> {
+  late int? num = widget.num_msg;
   final user = FirebaseAuth.instance.currentUser!;
   final contentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -71,7 +72,7 @@ class _MsgState extends State<ChatMsg> {
                   }
                 });
                 FirebaseFirestore.instance
-                    .collection('chat')
+                    .collection('confirm')
                     .doc(widget.chatId)
                     .delete();
                 Navigator.of(context).popUntil((route) => route.isFirst);
@@ -301,7 +302,7 @@ class _MsgState extends State<ChatMsg> {
               .collection('msg')
               .doc(message.id)
               .update({'view': true});
-          widget.num_msg != 0;
+          num = 0;
           FirebaseFirestore.instance
               .collection('chat')
               .doc(widget.chatId)
@@ -334,9 +335,9 @@ class _MsgState extends State<ChatMsg> {
       });
       docUser.doc(docId).update({'id': docId});
       contentController.clear();
-      widget.num_msg != widget.num_msg! - 1;
+      num = (num! - 1);
       FirebaseFirestore.instance.collection('chat').doc(widget.chatId).update({
-        'num_msg': widget.num_msg! + 1,
+        'num_msg': num! + 1,
         'last_msg': addMsg.content,
         'last_time': addMsg.addtime,
         'from_uid': addMsg.from_uid,
