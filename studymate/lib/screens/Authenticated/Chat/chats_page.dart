@@ -31,15 +31,6 @@ class _ChatState extends State<ChatsPage> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
 
-  Stream<List<Msg>> lastMsg(String chatId) => FirebaseFirestore.instance
-      .collection('msg')
-      .where('chatId', isEqualTo: chatId)
-      .orderBy('addtime', descending: true)
-      .limit(11)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Msg.fromFirestore(doc.data())).toList());
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +73,8 @@ class _ChatState extends State<ChatsPage> {
                           shrinkWrap: true,
                           children: chat.map(buildChat).toList());
                     } else {
-                      return Center(child: CircularProgressIndicator());
+                      return SizedBox();
+                      //return Center(child: CircularProgressIndicator());
                     }
                   }),
             ],
@@ -102,67 +94,35 @@ class _ChatState extends State<ChatsPage> {
             return const Text('Something went wrong!');
           } else if (snapshot.hasData) {
             final users = snapshot.data!;
-            return StreamBuilder(
-                stream: lastMsg(chat.id),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text('Something went wrong!');
-                  } else if (snapshot.hasData) {
-                    final msg = snapshot.data!;
-                    if (msg.isEmpty) {
-                      return SizedBox();
-                    }
-                    if (msg.first.from_uid == user.uid) {
-                      return InkWell(
-                          onTap: () => openChat(chat.id, users.first),
-                          child: ContactCard(
-                              id: chat.id,
-                              firstname: users.first.firstname,
-                              lastname: users.first.lastname,
-                              userImageURL: users.first.profileImageURL,
-                              last_msg: msg.first.content,
-                              last_time: msg.first.addtime,
-                              view: msg.first.view));
-                    } else {
-                      int num = 0;
-                      msg.forEach((element) {
-                        if (element.view == false) {
-                          num++;
-                        }
-                      });
-                      return InkWell(
-                          onTap: () => openChat(chat.id, users.first),
-                          child: ContactCard(
-                              id: chat.id,
-                              firstname: users.first.firstname,
-                              lastname: users.first.lastname,
-                              userImageURL: users.first.profileImageURL,
-                              last_msg: msg.first.content,
-                              last_time: msg.first.addtime,
-                              msg_num: num));
-                    }
-                  } else {
-                    return SizedBox();
-                  }
-                });
+            if (chat.last_msg != null) {
+              return InkWell(
+                  onTap: () => openChat(chat, users.first),
+                  child: ContactCard(
+                      id: chat.id,
+                      firstname: users.first.firstname,
+                      lastname: users.first.lastname,
+                      userImageURL: users.first.profileImageURL,
+                      last_msg: chat.last_msg,
+                      last_time: chat.last_time,
+                      msg_num: chat.num_msg,
+                      view: chat.view));
+            } else {
+              return SizedBox();
+            }
           } else {
             return SizedBox();
           }
         });
   }
 
-  Future openChat(String id, Users reciver) async {
-    /*showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()));
-    */
+  Future openChat(Chat chat, Users reciver) async {
     try {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => ChatMsg(
-                    chatId: id,
+                    num_msg: chat.num_msg,
+                    chatId: chat.id,
                     reciver: reciver,
                   )));
     } on Exception catch (e) {

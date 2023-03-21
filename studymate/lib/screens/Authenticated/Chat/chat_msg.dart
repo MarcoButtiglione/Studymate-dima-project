@@ -9,12 +9,15 @@ import 'package:studymate/screens/Authenticated/Chat/widget/recivied_message.dar
 import 'package:studymate/screens/Authenticated/Chat/widget/sent_message.dart';
 
 import '../../../component/utils.dart';
+import '../../../models/chat.dart';
 import '../../../models/msg.dart';
 
 class ChatMsg extends StatefulWidget {
   final String chatId;
+  final int? num_msg;
   final Users reciver;
-  const ChatMsg({super.key, required this.chatId, required this.reciver});
+  const ChatMsg(
+      {super.key, required this.chatId, required this.reciver, this.num_msg});
   @override
   _MsgState createState() => _MsgState();
 }
@@ -22,10 +25,11 @@ class ChatMsg extends StatefulWidget {
 class _MsgState extends State<ChatMsg> {
   final user = FirebaseAuth.instance.currentUser!;
   final contentController = TextEditingController();
-  var message;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   _scrollToEnd() async {
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
   }
 
   @override
@@ -95,7 +99,7 @@ class _MsgState extends State<ChatMsg> {
                       if (snapshot.hasError) {
                         return const Text('Something went wrong!');
                       } else if (snapshot.hasData) {
-                        message = snapshot.data!;
+                        var message = snapshot.data!;
                         if (message.isEmpty) {
                           return SizedBox();
                         } else {
@@ -114,6 +118,7 @@ class _MsgState extends State<ChatMsg> {
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       controller: contentController,
+                      onTap: _scrollToEnd,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: const Color.fromARGB(255, 255, 255, 255),
@@ -130,12 +135,14 @@ class _MsgState extends State<ChatMsg> {
                 ),
                 IconButton(
                     onPressed: () {
-                      send();
-                      if (message == null) {
-                        _scrollController.animateTo(
-                            _scrollController.position.maxScrollExtent,
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeOut);
+                      if (contentController.text != "") {
+                        send();
+                        if (_scrollController.hasClients) {
+                          _scrollController.animateTo(
+                              _scrollController.position.maxScrollExtent,
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeOut);
+                        }
                       }
                     },
                     icon: Container(
@@ -240,6 +247,11 @@ class _MsgState extends State<ChatMsg> {
               .collection('msg')
               .doc(message.id)
               .update({'view': true});
+          widget.num_msg != 0;
+          FirebaseFirestore.instance
+              .collection('chat')
+              .doc(widget.chatId)
+              .update({'num_msg': 0, 'view': true});
         } catch (e) {
           print(e);
         }
@@ -252,28 +264,33 @@ class _MsgState extends State<ChatMsg> {
   }
 
   Future send() async {
-    if (contentController.text != "") {
-      try {
-        String docId = "";
-        final docUser = FirebaseFirestore.instance.collection('msg');
-        await docUser.add({}).then((DocumentReference doc) {
-          docId = doc.id;
-        });
-        final addMsg = Msg(
-            id: docId,
-            view: false,
-            chatId: widget.chatId,
-            addtime: Timestamp.now(),
-            from_uid: user.uid,
-            to_uid: widget.reciver.id,
-            content: contentController.text);
-        final json = addMsg.toFirestore();
-        await docUser.doc(docId).set(json);
-        contentController.clear();
-      } on FirebaseAuthException catch (e) {
-        Utils.showSnackBar(e.message);
-        Navigator.of(context).pop();
-      }
+    try {
+      String docId = "";
+      final docUser = FirebaseFirestore.instance.collection('msg');
+      final addMsg = Msg(
+          view: false,
+          chatId: widget.chatId,
+          addtime: Timestamp.now(),
+          from_uid: user.uid,
+          to_uid: widget.reciver.id,
+          content: contentController.text);
+      final json = addMsg.toFirestore();
+      await docUser.add(json).then((DocumentReference doc) {
+        docId = doc.id;
+      });
+      docUser.doc(docId).update({'id': docId});
+      contentController.clear();
+      widget.num_msg != widget.num_msg! - 1;
+      FirebaseFirestore.instance.collection('chat').doc(widget.chatId).update({
+        'num_msg': widget.num_msg! + 1,
+        'last_msg': addMsg.content,
+        'last_time': addMsg.addtime,
+        'from_uid': addMsg.from_uid,
+        'view': false
+      });
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+      Navigator.of(context).pop();
     }
   }
 }

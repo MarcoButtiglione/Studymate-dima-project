@@ -85,7 +85,7 @@ class ContactCard extends StatelessWidget {
                   Expanded(
                       child: Text(
                           " ${last_msg!.length < 70 ? last_msg : "${last_msg!.substring(0, 67)}..."}")),
-                  (msg_num != null && msg_num! > 0)
+                  (msg_num! > 0)
                       ? SizedBox(
                           height: 25,
                           width: 25,

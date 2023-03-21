@@ -342,7 +342,7 @@ class _LessonState extends State<LessonPage> {
           docId = doc.id;
         });
         List<String> member = [reciver.id, user.uid];
-        final addChat = Chat(member: member, id: docId);
+        final addChat = Chat(member: member, id: docId, num_msg: 0);
         final json = addChat.toFirestore();
         await docChat.doc(docId).set(json);
         chat = addChat;
@@ -353,6 +353,7 @@ class _LessonState extends State<LessonPage> {
           context,
           MaterialPageRoute(
               builder: (context) => ChatMsg(
+                    num_msg: 0,
                     chatId: chat.id,
                     reciver: reciver,
                   )));
