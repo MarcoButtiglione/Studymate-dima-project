@@ -46,6 +46,49 @@ class _MsgState extends State<ChatMsg> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Msg.fromFirestore(doc.data())).toList());
 
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete chat'),
+          content: const SingleChildScrollView(
+            child: Text('Are you sure you want to delete this chat?'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () async {
+                var messages = msgs(widget.chatId);
+
+                messages.forEach((element) {
+                  if (element.isNotEmpty) {
+                    FirebaseFirestore.instance
+                        .collection('msg')
+                        .doc(element.first.id)
+                        .delete();
+                  }
+                });
+                FirebaseFirestore.instance
+                    .collection('chat')
+                    .doc(widget.chatId)
+                    .delete();
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,17 +121,28 @@ class _MsgState extends State<ChatMsg> {
                     ),
                   ),
                   const SizedBox(width: 20),
-                  Text(
-                    (widget.reciver.firstname.length < 20)
-                        ? "${widget.reciver.firstname} ${widget.reciver.lastname}"
-                        : "${widget.reciver.firstname} \n ${widget.reciver.lastname}",
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 0, 0, 0),
+                  Expanded(
+                    child: Text(
+                      (widget.reciver.firstname.length +
+                                  widget.reciver.lastname.length <
+                              15)
+                          ? "${widget.reciver.firstname} ${widget.reciver.lastname}"
+                          : "${widget.reciver.firstname} \n ${widget.reciver.lastname}",
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
                     ),
                   ),
+                  IconButton(
+                      onPressed: _showMyDialog,
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Color.fromARGB(255, 233, 64, 87),
+                        size: 20,
+                      )),
                 ],
               ),
             ),
