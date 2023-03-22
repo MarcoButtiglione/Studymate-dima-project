@@ -339,10 +339,8 @@ class _LessonState extends State<LessonPage> {
       if (chats.isEmpty) {
         final docChat = FirebaseFirestore.instance.collection('chat');
         List<String> member = [reciver.id, user.uid];
-        String docId = "";
         await docChat.add({}).then((DocumentReference doc) {
-          docId = doc.id;
-          chat = Chat(member: member, num_msg: 0, delete: [], id: doc.id);
+          chat = Chat(member: member, num_msg: 0, id: doc.id);
           final json = chat.toFirestore();
           docChat.doc(doc.id).update(json);
         });

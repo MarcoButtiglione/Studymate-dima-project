@@ -97,7 +97,7 @@ class _ChatState extends State<ChatsPage> {
             return const Text('Something went wrong!');
           } else if (snapshot.hasData) {
             final users = snapshot.data!;
-            if (chat.last_msg != null && !chat.delete!.contains(user.uid)) {
+            if (chat.last_msg != null) {
               return InkWell(
                   onTap: () => openChat(chat, users.first),
                   child: (user.uid == chat.from_uid)
