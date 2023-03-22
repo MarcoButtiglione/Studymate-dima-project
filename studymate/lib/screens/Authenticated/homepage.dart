@@ -1,13 +1,33 @@
 import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:studymate/functions/routingAnimation.dart';
+import 'package:studymate/models/lesson.dart';
 import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
 import 'package:studymate/screens/Authenticated/lesson_page.dart';
 import 'package:studymate/screens/Authenticated/notification_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final user = FirebaseAuth.instance.currentUser!;
+
+  Stream<List<Lesson>> readLessons(String userId) => FirebaseFirestore.instance
+      .collection('lessons')
+      .where('userTutor', isNotEqualTo: userId)
+      //.orderBy('addtime', descending: true)
+      //.limit(10)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Lesson.fromJson(doc.data())).toList());
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -39,7 +59,7 @@ class HomePage extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.of(context)
-                      .push(_createRoute(const NotificationPage()));
+                      .push(createRoute(const NotificationPage()));
                 },
               ),
               const SizedBox(width: 10),
@@ -54,7 +74,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(_createRoute(ChatsPage()));
+                  Navigator.of(context).push(createRoute(ChatsPage()));
                 },
               ),
             ]),
@@ -210,43 +230,34 @@ class HomePage extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 13)),
             const SizedBox(height: 30),
-            const SizedBox(height: 15),
-            const LessonCard(
-              lessonName: "Machine Learning",
-              userName: "Robert Jackson",
-              userImageURL:
-                  "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
-              date: "Thursday 26/01/2023",
-              location: "Milan",
-            ),
-            const SizedBox(height: 15),
-            const LessonCard(
-              lessonName: "Fisica tecnica",
-              userName: "Mark Crosby",
-              userImageURL:
-                  "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-              date: "Thursday 26/01/2023",
-              location: "Milan",
-            ),
-            const SizedBox(height: 15),
-            const LessonCard(
-              lessonName: "Analisi 1",
-              userName: "Stephen King",
-              userImageURL:
-                  "https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-              date: "Thursday 26/01/2023",
-              location: "Milan",
-            ),
-            const SizedBox(height: 15),
-            const LessonCard(
-              lessonName: "Teoria dei segnali",
-              userName: "Mario Rossi",
-              userImageURL:
-                  "https://images.unsplash.com/photo-1541752171745-4176eee47556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              date: "Thursday 26/01/2023",
-              location: "Milan",
-            ),
-
+            StreamBuilder<List<Lesson>>(
+                stream: readLessons(user.uid),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text("Something went wrong!");
+                  } else if (snapshot.hasData) {
+                    final lessons = snapshot.data!;
+                    return Column(
+                      children: lessons
+                          .map(
+                            (lesson) => LessonCard(
+                              lessonName: lesson.title,
+                              userName: lesson.userTutor,
+                              userImageURL:
+                                  "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
+                              date: "Thursday 26/01/2023",
+                              location: lesson.location,
+                            ),
+                          )
+                          .toList(),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                })),
+            
             //--------------------
           ],
         ),
@@ -318,7 +329,7 @@ class SuggestedItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(_createRoute(const LessonPage()));
+        Navigator.of(context).push(createRoute(const LessonPage()));
       },
       child: Row(
         children: [
@@ -361,20 +372,4 @@ class SuggestedItem extends StatelessWidget {
   }
 }
 
-Route _createRoute(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
 
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}

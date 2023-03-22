@@ -19,53 +19,57 @@ class LessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(_createRoute(const LessonPage()));
-      },
-      child: Row(
-        children: [
-          SizedBox(
-            height: 70,
-            width: 70,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(35),
-              child: Image(
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                    userImageURL),
+    return Column(
+      children: [
+        const SizedBox(height: 15),
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(_createRoute(const LessonPage()));
+          },
+          child: Row(
+            children: [
+              SizedBox(
+                height: 70,
+                width: 70,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(35),
+                  child: Image(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(userImageURL),
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  children:  [
-                    Text(
-                      lessonName,
-                      textAlign: TextAlign.left,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          lessonName,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(userName),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text("$date, $location"),
+                      ],
                     ),
                   ],
                 ),
-                Row(
-                  children:  [
-                    Text(userName),
-                  ],
-                ),
-                Row(
-                  children:  [
-                    Text("$date, $location"),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

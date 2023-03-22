@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:studymate/models/lesson.dart';
+import 'package:studymate/screens/Authenticated/hoursselection_page.dart';
 
 import '../../component/utils.dart';
+import '../../functions/routingAnimation.dart';
 import '../../models/category.dart';
 
 Stream<List<Category>> readCategory() => FirebaseFirestore.instance
@@ -67,7 +69,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
       setState(() {
         isBusy = true;
       });
-      
+
       String docId = "";
       final docLesson = FirebaseFirestore.instance.collection('lessons');
       await docLesson.add({}).then((DocumentReference doc) {
@@ -77,14 +79,13 @@ class _NewLessonPageState extends State<NewLessonPage> {
       await docLesson.doc(docId).set(json);
       setState(() {
         isBusy = false;
-        duration=1;
+        duration = 1;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Lesson added!')),
       );
       titleController.clear();
       desciptionController.clear();
-      
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
     }
@@ -123,7 +124,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                 "Here you can create your lesson. Give lessons to other people in the community to receive points that you can spend on other community lessons.",
                                 textAlign: TextAlign.left,
                                 style: TextStyle(fontSize: 13)),
-                            const SizedBox(height: 40),
+                            const SizedBox(height: 30),
                             TextFormField(
                               controller: titleController,
                               validator: (value) {
@@ -156,7 +157,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                             ),
                             const SizedBox(height: 10),
                             DropdownCategory(callbackCategory, categories),
-                            const SizedBox(height: 10),
+                            /*
                             DataPicker(callbackDate),
                             const SizedBox(height: 10),
                             StartingTimePicker(callbackStartingTime),
@@ -190,6 +191,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                 ),
                               ],
                             ),
+                            */
                             const SizedBox(height: 10),
                             TextFormField(
                               validator: (value) {
@@ -202,8 +204,8 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                   AutovalidateMode.onUserInteraction,
                               controller: desciptionController,
                               keyboardType: TextInputType.multiline,
-                              minLines: 5,
-                              maxLines: 5,
+                              minLines: 7,
+                              maxLines: 7,
                               decoration: InputDecoration(
                                 //labelText: "Description",
                                 hintText: "Type the description of your lesson",
@@ -237,41 +239,18 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                     onPressed: () {
                                       // Validate returns true if the form is valid, or false otherwise.
                                       if (_formKey.currentState!.validate()) {
-                                        /*
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Processing Data')),
-                                  );
-                                  */
-                                        var sT = DateTime.parse(date +
-                                            " " +
-                                            startingTime +
-                                            ":00.0000");
-                                        var eT = DateTime.parse(date +
-                                                " " +
-                                                startingTime +
-                                                ":00.0000")
-                                            .add(Duration(hours: duration));
-                                        if (sT.isAfter(DateTime.now())) {
-                                          if (DateUtils.isSameDay(sT, eT)) {
-                                            final lesson = Lesson(
-                                              title: titleController.text,
-                                              location: "Milan",
-                                              startingDateTime: sT.toString(),
-                                              endingDateTime: eT.toString(),
-                                              description:
-                                                  desciptionController.text,
-                                              userTutor: user.uid,
-                                              category: category,
-                                            );
-                                            send(lesson: lesson);
-                                          } else {
-                                            Utils.showSnackBar(
-                                                "The end of the lesson have to be in the same day.");
-                                          }
-                                        } else {
-                                          Utils.showSnackBar(
-                                              "You cannot select a starting time in the past.");
-                                        }
+                                        final lesson = Lesson(
+                                          title: titleController.text,
+                                          location: "Milan",
+                                          description:
+                                              desciptionController.text,
+                                          userTutor: user.uid,
+                                          category: category,
+                                        );
+                                        send(lesson: lesson);
+                                      } else {
+                                        Navigator.of(context).push(createRoute(
+                                            const HoursSelectionPage()));
                                       }
                                     },
                                     child: const Text('Submit',
