@@ -13,17 +13,15 @@ import '../../../models/chat.dart';
 import '../../../models/msg.dart';
 
 class ChatMsg extends StatefulWidget {
-  final String? chatId;
-  final int? num_msg;
+  final Chat? chat;
   final Users reciver;
-  const ChatMsg(
-      {super.key, required this.chatId, required this.reciver, this.num_msg});
+  const ChatMsg({super.key, this.chat, required this.reciver});
   @override
   _MsgState createState() => _MsgState();
 }
 
 class _MsgState extends State<ChatMsg> {
-  late int? num = widget.num_msg;
+  late int? num = widget.chat!.num_msg;
   final user = FirebaseAuth.instance.currentUser!;
   final contentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -39,15 +37,15 @@ class _MsgState extends State<ChatMsg> {
     super.dispose();
   }
 
-  Stream<List<Msg>> msgs(String chatId) => FirebaseFirestore.instance
+  Stream<List<Msg>> msgs() => FirebaseFirestore.instance
       .collection('msg')
-      .where('chatId', isEqualTo: chatId)
+      .where('chatId', isEqualTo: widget.chat!.id)
       .orderBy('addtime', descending: true)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Msg.fromFirestore(doc.data())).toList());
 
-  Future<void> _showMyDialog() async {
+  Future showMyDialog() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -61,20 +59,31 @@ class _MsgState extends State<ChatMsg> {
             TextButton(
               child: const Text('Confirm'),
               onPressed: () async {
-                var messages = msgs(widget.chatId!);
+                if (!widget.chat!.delete!.contains(user.uid)) {
+                  List<dynamic> deletes = [user.uid, widget.chat!.delete];
+                  if (widget.chat!.delete == widget.chat!.member) {
+                    var messages = msgs();
 
-                messages.forEach((element) {
-                  if (element.isNotEmpty) {
+                    messages.forEach((element) {
+                      if (element.isNotEmpty) {
+                        FirebaseFirestore.instance
+                            .collection('msg')
+                            .doc(element.first.id)
+                            .delete();
+                      }
+                    });
                     FirebaseFirestore.instance
-                        .collection('msg')
-                        .doc(element.first.id)
+                        .collection('chat')
+                        .doc(widget.chat!.id)
                         .delete();
+                  } else {
+                    FirebaseFirestore.instance
+                        .collection('chat')
+                        .doc(widget.chat!.id)
+                        .update({'delete': deletes});
                   }
-                });
-                FirebaseFirestore.instance
-                    .collection('chat')
-                    .doc(widget.chatId)
-                    .delete();
+                }
+
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
             ),
@@ -138,7 +147,7 @@ class _MsgState extends State<ChatMsg> {
                     ),
                   ),
                   IconButton(
-                      onPressed: _showMyDialog,
+                      onPressed: showMyDialog,
                       icon: const Icon(
                         Icons.delete,
                         color: Color.fromARGB(255, 233, 64, 87),
@@ -149,7 +158,7 @@ class _MsgState extends State<ChatMsg> {
             ),
             Expanded(
                 child: StreamBuilder<List<Msg>>(
-                    stream: msgs(widget.chatId!),
+                    stream: msgs(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return const Text('Something went wrong!');
@@ -305,7 +314,7 @@ class _MsgState extends State<ChatMsg> {
           num = 0;
           FirebaseFirestore.instance
               .collection('chat')
-              .doc(widget.chatId)
+              .doc(widget.chat!.id)
               .update({'num_msg': 0, 'view': true});
         } catch (e) {
           print(e);
@@ -324,7 +333,7 @@ class _MsgState extends State<ChatMsg> {
       final docUser = FirebaseFirestore.instance.collection('msg');
       final addMsg = Msg(
           view: false,
-          chatId: widget.chatId,
+          chatId: widget.chat!.id,
           addtime: Timestamp.now(),
           from_uid: user.uid,
           to_uid: widget.reciver.id,
@@ -337,7 +346,10 @@ class _MsgState extends State<ChatMsg> {
       contentController.clear();
       print("AAAAAA");
       num = num! + 1;
-      FirebaseFirestore.instance.collection('chat').doc(widget.chatId).update({
+      FirebaseFirestore.instance
+          .collection('chat')
+          .doc(widget.chat!.id)
+          .update({
         'num_msg': num,
         'last_msg': addMsg.content,
         'last_time': addMsg.addtime,

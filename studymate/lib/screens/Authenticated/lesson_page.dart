@@ -334,29 +334,27 @@ class _LessonState extends State<LessonPage> {
     try {
       List<String> users = [reciver.id, user.uid];
       List<Chat> chats = await readChat(users).first;
-      String chatId;
+      Chat chat = Chat();
       print(chats.length);
       if (chats.isEmpty) {
         final docChat = FirebaseFirestore.instance.collection('chat');
         List<String> member = [reciver.id, user.uid];
-        final addChat = Chat(member: member, num_msg: 0);
-        final json = addChat.toFirestore();
         String docId = "";
-        await docChat.add(json).then((DocumentReference doc) {
+        await docChat.add({}).then((DocumentReference doc) {
           docId = doc.id;
-          docChat.doc(doc.id).update({'id': doc.id});
+          chat = Chat(member: member, num_msg: 0, delete: [], id: doc.id);
+          final json = chat.toFirestore();
+          docChat.doc(doc.id).update(json);
         });
-        chatId = docId;
       } else {
-        chatId = chats.first.id!;
+        chat = chats.first;
       }
-      print(chatId);
+      // ignore: use_build_context_synchronously
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => ChatMsg(
-                    num_msg: 0,
-                    chatId: chatId,
+                    chat: chat,
                     reciver: reciver,
                   )));
     } on FirebaseAuthException catch (e) {

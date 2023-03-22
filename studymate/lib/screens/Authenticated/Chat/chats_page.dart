@@ -97,7 +97,7 @@ class _ChatState extends State<ChatsPage> {
             return const Text('Something went wrong!');
           } else if (snapshot.hasData) {
             final users = snapshot.data!;
-            if (chat.last_msg != null) {
+            if (chat.last_msg != null && !chat.delete!.contains(user.uid)) {
               return InkWell(
                   onTap: () => openChat(chat, users.first),
                   child: (user.uid == chat.from_uid)
@@ -134,8 +134,7 @@ class _ChatState extends State<ChatsPage> {
           context,
           MaterialPageRoute(
               builder: (context) => ChatMsg(
-                    num_msg: chat.num_msg,
-                    chatId: chat.id,
+                    chat: chat,
                     reciver: reciver,
                   )));
     } on Exception catch (e) {
