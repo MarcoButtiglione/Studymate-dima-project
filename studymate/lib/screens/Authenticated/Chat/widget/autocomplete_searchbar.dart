@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
+import '../../../../models/user.dart';
+
 class AutocompleteSearchbar extends StatefulWidget {
+  final List<Users> users;
+
+  const AutocompleteSearchbar({super.key, required this.users});
   @override
   _AutocompleteSearchbarState createState() => _AutocompleteSearchbarState();
 }
@@ -15,32 +20,12 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
 
   late TextEditingController controller;
 
-  Future fetchAutoCompleteData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final String stringData = await rootBundle.loadString("assets/data.json");
-
-    final List<dynamic> json = jsonDecode(stringData);
-
-    final List<String> jsonStringData = json.cast<String>();
-
-    setState(() {
-      isLoading = false;
-      autoCompleteData = jsonStringData;
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    fetchAutoCompleteData();
-  }
-
   @override
   Widget build(BuildContext context) {
+    widget.users.forEach(
+      (element) =>
+          autoCompleteData.add("${element.firstname} ${element.lastname}"),
+    );
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(

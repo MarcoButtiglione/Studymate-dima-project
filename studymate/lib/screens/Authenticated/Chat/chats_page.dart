@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:studymate/models/msg.dart';
 import 'package:studymate/models/user.dart';
 import 'package:studymate/screens/Authenticated/Chat/chat_msg.dart';
-import 'package:studymate/screens/Authenticated/authenticated.dart';
 import 'package:studymate/screens/Authenticated/Chat/widget/contact_card.dart';
 import '../../../models/chat.dart';
 import 'widget/autocomplete_searchbar.dart';
@@ -16,7 +14,7 @@ class ChatsPage extends StatefulWidget {
 
 class _ChatState extends State<ChatsPage> {
   final user = FirebaseAuth.instance.currentUser!;
-
+  final List<Users> usrs = [];
   Stream<List<Chat>> readChat() => FirebaseFirestore.instance
       .collection('chat')
       .where('member', arrayContains: user.uid)
@@ -60,7 +58,9 @@ class _ChatState extends State<ChatsPage> {
                         ))),
               ]),
               const SizedBox(height: 10),
-              AutocompleteSearchbar(),
+              AutocompleteSearchbar(
+                users: usrs,
+              ),
               StreamBuilder<List<Chat>>(
                   stream: readChat(),
                   builder: (context, snapshot) {
@@ -97,6 +97,7 @@ class _ChatState extends State<ChatsPage> {
             return const Text('Something went wrong!');
           } else if (snapshot.hasData) {
             final users = snapshot.data!;
+            usrs.add(users.first);
             if (chat.last_msg != null) {
               return InkWell(
                   onTap: () => openChat(chat, users.first),

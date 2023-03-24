@@ -5,8 +5,8 @@ class Users {
   String id;
   final String firstname;
   final String lastname;
-  late String profileImageURL;
-  late List<String> categoriesOfInterest;
+  final String profileImageURL;
+  final List<dynamic>? categoriesOfInterest;
   final int userRating;
 
   Users({
@@ -15,6 +15,7 @@ class Users {
     required this.lastname,
     required this.profileImageURL,
     required this.userRating,
+    this.categoriesOfInterest,
   });
 
   Map<String, dynamic> toJson() => {
@@ -26,10 +27,10 @@ class Users {
       };
 
   static Users fromJson(Map<String, dynamic> json) => Users(
-        id: json['id'],
-        firstname: json['firstname'],
-        lastname: json['lastname'],
-        profileImageURL: json['profileImage'],
-        userRating: json['userRating'],
-      );
+      id: json['id'],
+      firstname: json['firstname'],
+      lastname: json['lastname'],
+      profileImageURL: json['profileImage'],
+      userRating: json['userRating'],
+      categoriesOfInterest: json['categoriesOfInterest']);
 }

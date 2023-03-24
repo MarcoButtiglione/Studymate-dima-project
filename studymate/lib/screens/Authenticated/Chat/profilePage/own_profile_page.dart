@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studymate/provider/google_sign_in.dart';
+import 'package:studymate/screens/Authenticated/Chat/profilePage/updateInterest.dart';
 import 'package:studymate/screens/Login/login.dart';
+
+import '../../../../models/user.dart';
 
 class OwnProfilePage extends StatefulWidget {
   @override
@@ -12,10 +16,36 @@ class OwnProfilePage extends StatefulWidget {
 
 class _OwnProfilePageState extends State<OwnProfilePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
+    Stream<List<Users>> readUsers() => FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: user.uid)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
+    return FutureBuilder(
+        future: readUsers().first,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Something went wrong!');
+          } else if (snapshot.hasData) {
+            var users = snapshot.data!;
+
+            return _buildPage(users.first);
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
+  }
+
+  Widget _buildPage(Users us) {
+    List<String> interest = [];
+    us.categoriesOfInterest!.forEach((element) {
+      interest.add(element.toString());
+    });
     return Center(
       child: SingleChildScrollView(
         child: Padding(
@@ -33,9 +63,8 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                     width: 150,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
-                      child: const Image(
-                        image: NetworkImage(
-                            'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'),
+                      child: Image(
+                        image: NetworkImage(us.profileImageURL),
                       ),
                     ),
                   ),
@@ -96,7 +125,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                   children: <Widget>[
                     TextFormField(
                       enabled: false,
-                      initialValue: user.email,
+                      initialValue: us.firstname,
                       decoration: InputDecoration(
                         labelText: "First name",
                         border: OutlineInputBorder(
@@ -116,7 +145,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                     const SizedBox(height: 10),
                     TextFormField(
                       enabled: false,
-                      initialValue: 'Rogers',
+                      initialValue: us.lastname,
                       decoration: InputDecoration(
                         labelText: "Last name",
                         border: OutlineInputBorder(
@@ -137,12 +166,25 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                 ),
               ),
               const SizedBox(height: 50),
-              Row(children: const <Widget>[
-                Text("Modify your interests",
-                    textAlign: TextAlign.left,
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-              ]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => updateInterest(
+                                    interest: interest,
+                                  )));
+                    },
+                    child: const Text("Modify your interests",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
               Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(top: 20),

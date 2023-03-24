@@ -18,7 +18,6 @@ class _SetUserState extends State<SetUser> {
   final firstnameControler = TextEditingController();
   final lastnameControler = TextEditingController();
   final Storage storage = Storage();
-  late String imgUrl = "assets/login/user.png";
   final user = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -163,7 +162,8 @@ class _SetUserState extends State<SetUser> {
           id: user.uid,
           firstname: firstnameControler.text.trim(),
           lastname: lastnameControler.text.trim(),
-          profileImageURL: imgUrl,
+          profileImageURL:
+              'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
           userRating: 0);
       final json = addUser.toJson();
       await docUser.set(json);
