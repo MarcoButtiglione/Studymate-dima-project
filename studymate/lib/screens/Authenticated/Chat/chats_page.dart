@@ -14,13 +14,7 @@ class ChatsPage extends StatefulWidget {
 
 class _ChatState extends State<ChatsPage> {
   final user = FirebaseAuth.instance.currentUser!;
-  final List<Users> usrs = [];
-  Stream<List<Chat>> readChat() => FirebaseFirestore.instance
-      .collection('chat')
-      .where('member', arrayContains: user.uid)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Chat.fromFirestore(doc.data())).toList());
+  late String selected = "";
 
   Stream<List<Users>> readUser(String userId) => FirebaseFirestore.instance
       .collection('users')
@@ -28,6 +22,13 @@ class _ChatState extends State<ChatsPage> {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
+
+  Stream<List<Chat>> readChat() => FirebaseFirestore.instance
+      .collection('chat')
+      .where('member', arrayContains: user.uid)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Chat.fromFirestore(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +59,11 @@ class _ChatState extends State<ChatsPage> {
                         ))),
               ]),
               const SizedBox(height: 10),
-              AutocompleteSearchbar(
-                users: usrs,
-              ),
+              AutocompleteSearchbar(onSelectionChanged: (selectedUser) {
+                setState(() {
+                  selected = selectedUser;
+                });
+              }),
               StreamBuilder<List<Chat>>(
                   stream: readChat(),
                   builder: (context, snapshot) {
@@ -97,11 +100,19 @@ class _ChatState extends State<ChatsPage> {
             return const Text('Something went wrong!');
           } else if (snapshot.hasData) {
             final users = snapshot.data!;
-            usrs.add(users.first);
+            String firstname = "", lastname = "";
             if (chat.last_msg != null) {
+              if (selected != "") {
+                firstname = selected.split(' ')[0];
+                lastname = selected.split(' ')[1];
+              }
               return InkWell(
                   onTap: () => openChat(chat, users.first),
-                  child: (user.uid == chat.from_uid)
+                  child: (user.uid == chat.from_uid &&
+                          ((selected != "" &&
+                                  users.first.firstname == firstname &&
+                                  users.first.lastname == lastname) ||
+                              selected == ""))
                       ? ContactCard(
                           id: chat.id,
                           firstname: users.first.firstname,

@@ -1,31 +1,66 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
+import '../../../../models/chat.dart';
 import '../../../../models/user.dart';
 
 class AutocompleteSearchbar extends StatefulWidget {
-  final List<Users> users;
-
-  const AutocompleteSearchbar({super.key, required this.users});
+  final Function(String) onSelectionChanged;
+  const AutocompleteSearchbar({super.key, required this.onSelectionChanged});
   @override
   _AutocompleteSearchbarState createState() => _AutocompleteSearchbarState();
 }
 
 class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
   bool isLoading = false;
+  final user = FirebaseAuth.instance.currentUser!;
 
-  late List<String> autoCompleteData;
-
+  List<String> autoCompleteData = [];
   late TextEditingController controller;
+
+  CollectionReference _chatRef = FirebaseFirestore.instance.collection('chat');
+  CollectionReference _userRef = FirebaseFirestore.instance.collection('users');
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    QuerySnapshot querySnapshot =
+        await _chatRef.where('member', arrayContains: user.uid).get();
+
+    final allData = querySnapshot.docs.map((doc) => doc.get("member")).toList();
+    List<String> members = [];
+    allData.forEach((element) async {
+      var m = element
+          .toString()
+          .substring(1, element.toString().length - 1)
+          .split(',');
+
+      if (m[0] == user.uid) {
+        members.add(m[1].substring(1));
+      } else {
+        members.add(m[0]);
+      }
+    });
+    members.forEach((element) async {
+      querySnapshot = await _userRef.where('id', isEqualTo: element).get();
+      if (querySnapshot.size > 0) {
+        final allData1 = querySnapshot.docs
+            .map((doc) => "${doc.get('firstname')} ${doc.get('lastname')}");
+        autoCompleteData.add(allData1.first);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    widget.users.forEach(
-      (element) =>
-          autoCompleteData.add("${element.firstname} ${element.lastname}"),
-    );
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -68,7 +103,7 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
               );
             },
             onSelected: (selectedString) {
-              print(selectedString);
+              setState(() => widget.onSelectionChanged(selectedString));
             },
             fieldViewBuilder:
                 (context, controller, focusNode, onEditingComplete) {

@@ -4,7 +4,7 @@ class Msg {
   final String? id;
   final String? chatId;
   final String? from_uid;
-  final String? to_uid;
+  // final String? to_uid;
   final String? content;
   final Timestamp? addtime;
   final bool view;
@@ -13,7 +13,7 @@ class Msg {
     this.id,
     this.chatId,
     this.from_uid,
-    this.to_uid,
+    // this.to_uid,
     this.content,
     this.addtime,
     this.view = false,
@@ -24,7 +24,7 @@ class Msg {
         id: json['id'],
         chatId: json['chatId'],
         from_uid: json['from_uid'],
-        to_uid: json['to_uid'],
+        //  to_uid: json['to_uid'],
         content: json['content'],
         addtime: json['addtime'],
         view: json['view']);
@@ -35,7 +35,7 @@ class Msg {
       if (id != null) 'id': id,
       if (chatId != null) "chatId": chatId,
       if (from_uid != null) "from_uid": from_uid,
-      if (to_uid != null) "to_uid": to_uid,
+      //  if (to_uid != null) "to_uid": to_uid,
       if (content != null) "content": content,
       if (addtime != null) "addtime": addtime,
       "view": view,

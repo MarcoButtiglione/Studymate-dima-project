@@ -278,7 +278,7 @@ class _MsgState extends State<ChatMsg> {
           chatId: widget.chat!.id,
           addtime: Timestamp.now(),
           from_uid: user.uid,
-          to_uid: widget.reciver.id,
+          //to_uid: widget.reciver.id,
           content: contentController.text);
       final json = addMsg.toFirestore();
       await docUser.add(json).then((DocumentReference doc) {
@@ -286,7 +286,6 @@ class _MsgState extends State<ChatMsg> {
       });
       docUser.doc(docId).update({'id': docId});
       contentController.clear();
-      print("AAAAAA");
       num = num! + 1;
       FirebaseFirestore.instance
           .collection('chat')
