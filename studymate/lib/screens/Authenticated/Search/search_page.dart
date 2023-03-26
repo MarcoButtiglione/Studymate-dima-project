@@ -108,7 +108,8 @@ class _SearchPageState extends State<SearchPage> {
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
             ]),
             const SizedBox(height: 15),
-            const LessonCard(
+            /*
+            LessonCard(
               lessonName: "Machine Learning",
               userName: "Robert Jackson",
               userImageURL:
@@ -143,6 +144,7 @@ class _SearchPageState extends State<SearchPage> {
               date: "Thursday 26/01/2023",
               location: "Milan",
             ),
+            */
           ],
         ),
       ),

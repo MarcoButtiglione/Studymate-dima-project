@@ -1,73 +1,134 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/lesson.dart';
+import '../../../models/user.dart';
 import '../lesson_page.dart';
 
-class LessonCard extends StatelessWidget {
-  final String lessonName;
-  final String userName;
-  final String userImageURL;
-  final String date;
-  final String location;
+class LessonCard extends StatefulWidget {
+  final Lesson lesson;
+
   const LessonCard({
     super.key,
-    required this.lessonName,
-    required this.userName,
-    required this.userImageURL,
-    required this.date,
-    required this.location,
+    required this.lesson,
   });
+
+  @override
+  State<LessonCard> createState() => _LessonCardState();
+}
+
+class _LessonCardState extends State<LessonCard> {
+  Users? user;
+
+  Stream<List<Users>> readUser() => FirebaseFirestore.instance
+      .collection('users')
+      .where('id', isEqualTo: widget.lesson.userTutor)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         const SizedBox(height: 15),
-        InkWell(
-          onTap: () {
-            Navigator.of(context).push(_createRoute(const LessonPage()));
-          },
-          child: Row(
-            children: [
-              SizedBox(
-                height: 70,
-                width: 70,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(35),
-                  child: Image(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(userImageURL),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
+        StreamBuilder<List<Users>>(
+          stream: readUser(),
+          builder: ((context, snapshot) {
+            if (snapshot.hasError) {
+              return const Text("Something went wrong!");
+            } else if (snapshot.hasData) {
+              final user = snapshot.data!.first;
+              return InkWell(
+                onTap: () {
+                  Navigator.of(context).push(_createRoute(LessonPage(
+                    lesson: widget.lesson,
+                    user: user,
+                  )));
+                },
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          lessonName,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
+                    SizedBox(
+                      height: 70,
+                      width: 70,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(35),
+                        child: Image(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(user.profileImageURL),
                         ),
-                      ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Text(userName),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("$date, $location"),
-                      ],
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                widget.lesson.title,
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(user.firstname + " " + user.lastname),
+                            ],
+                          ),
+                          Row(
+                            children:  [
+                              Icon(
+                                user.userRating >= 1
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                size: 13,
+                                color:const  Color.fromARGB(255, 101, 101, 101),
+                              ),
+                              Icon(
+                                user.userRating >= 2
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                size: 13,
+                                color: const Color.fromARGB(255, 101, 101, 101),
+                              ),
+                              Icon(
+                                user.userRating >= 3
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                size: 13,
+                                color: const Color.fromARGB(255, 101, 101, 101),
+                              ),
+                              Icon(
+                                user.userRating >= 4
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                size: 13,
+                                color: const Color.fromARGB(255, 101, 101, 101),
+                              ),
+                              Icon(
+                                user.userRating >= 5
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                size: 13,
+                                color: const Color.fromARGB(255, 101, 101, 101),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
+              );
+            } else {
+              return const Center(
+                  //child: CircularProgressIndicator(),
+                  );
+            }
+          }),
         ),
       ],
     );

@@ -22,16 +22,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  Stream<List<Lesson>> readLessons(String userId,String category) => FirebaseFirestore.instance
-      .collection('lessons')
-      .where('userTutor', isNotEqualTo: userId)
-      .where('category',isEqualTo: category)
+  Stream<List<Lesson>> readLessons(String userId, String category) =>
+      FirebaseFirestore.instance
+          .collection('lessons')
+          .where('userTutor', isNotEqualTo: userId)
+          .where('category', isEqualTo: category)
 
-      //.orderBy('addtime', descending: true)
-      //.limit(10)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Lesson.fromJson(doc.data())).toList());
+          //.orderBy('addtime', descending: true)
+          //.limit(10)
+          .snapshots()
+          .map((snapshot) =>
+              snapshot.docs.map((doc) => Lesson.fromJson(doc.data())).toList());
 
   Stream<List<Users>> readUser(String userId) => FirebaseFirestore.instance
       .collection('users')
@@ -254,10 +255,9 @@ class _HomePageState extends State<HomePage> {
                       children: categories!
                           .map(
                             (category) => StreamBuilder<List<Lesson>>(
-                                stream: readLessons(user.uid,category),
+                                stream: readLessons(user.uid, category),
                                 builder: ((context, snapshot) {
                                   if (snapshot.hasError) {
-                                    
                                     return const Text("Something went wrong!");
                                   } else if (snapshot.hasData) {
                                     final lessons = snapshot.data!;
@@ -265,27 +265,21 @@ class _HomePageState extends State<HomePage> {
                                       children: lessons
                                           .map(
                                             (lesson) => LessonCard(
-                                              lessonName: lesson.title,
-                                              userName: lesson.userTutor,
-                                              userImageURL:
-                                                  "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
-                                              date: "Thursday 26/01/2023",
-                                              location: lesson.location,
+                                              lesson: lesson,
                                             ),
                                           )
                                           .toList(),
                                     );
                                   } else {
                                     return const Center(
-                                      //child: CircularProgressIndicator(),
-                                    );
+                                        //child: CircularProgressIndicator(),
+                                        );
                                   }
                                 })),
                           )
                           .toList(),
                     );
                   } else {
-                    
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
@@ -351,56 +345,6 @@ class SmallFilledCardExample extends StatelessWidget {
           height: 70,
           width: 70,
         ),
-      ),
-    );
-  }
-}
-
-class SuggestedItem extends StatelessWidget {
-  const SuggestedItem({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(createRoute(const LessonPage()));
-      },
-      child: Row(
-        children: [
-          SizedBox(
-            height: 70,
-            width: 70,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(35),
-              child: const Image(
-                image: NetworkImage(
-                    'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'),
-              ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  children: const [
-                    Text(
-                      "Machine Learning",
-                      textAlign: TextAlign.left,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: const [
-                    Text("Thursday 26/01/2023, Milan"),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

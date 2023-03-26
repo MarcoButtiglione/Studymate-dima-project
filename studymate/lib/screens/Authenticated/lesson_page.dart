@@ -4,320 +4,394 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studymate/component/utils.dart';
+import 'package:studymate/models/category.dart';
 import 'package:studymate/models/chat.dart';
 import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/other_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../models/lesson.dart';
 import '../../models/user.dart';
 import 'Chat/chat_msg.dart';
 
 class LessonPage extends StatefulWidget {
-  const LessonPage({super.key});
+  Lesson lesson;
+  Users user;
+  LessonPage({super.key, required this.lesson, required this.user});
   @override
   _LessonState createState() => _LessonState();
 }
 
 class _LessonState extends State<LessonPage> {
-  final user = FirebaseAuth.instance.currentUser!;
+  final userFirebase = FirebaseAuth.instance.currentUser!;
+
+  Stream<List<Category>> readCategory() => FirebaseFirestore.instance
+      .collection('categories')
+      .where('name', isEqualTo: widget.lesson.category)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Lesson"),
-      ),
-      body: Container(
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                width: 150,
-                height: 250,
-                color: Theme.of(context).colorScheme.secondary,
-                child: Image.network(
-                  'https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332&q=80',
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 20,
-              left: 30,
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(_createRoute(const OtherProfilePage()));
-                },
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(35),
-                        child: const Image(
-                          image: NetworkImage(
-                              'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Daniel Rogers",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              top: 200,
-              left: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(50.0),
-                    topLeft: Radius.circular(50.0),
-                  ),
-                  color: Theme.of(context).colorScheme.background,
-                ),
+      body: SafeArea(
+        child: Container(
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Machine Learning",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
+                child: Container(
+                  width: 150,
+                  height: 600,
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  child: StreamBuilder<List<Category>>(
+                      stream: readCategory(),
+                      builder: ((context, snapshot) {
+                        if (snapshot.hasError) {
+                          return const Text("Something went wrong!");
+                        } else if (snapshot.hasData) {
+                          final category = snapshot.data!.first;
+                          return Image.network(
+                            category.imageURL,
+                            fit: BoxFit.fill,
+                          );
+                        } else {
+                          return const Center(
+                              //child: CircularProgressIndicator(),
+                              );
+                        }
+                      })),
+                ),
+              ),
+              Positioned(
+                top: 20,
+                left: 20,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop(context);
+                  },
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10.0),
+                        topLeft: Radius.circular(10.0),
+                        bottomLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                      ),
+                      color: Color.fromARGB(211, 255, 255, 255),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: Center(
+                          child: Icon(
+                            Icons.arrow_back_ios_new,
                           ),
                         ),
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Computer science",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 20,
+                right: 20,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(_createRoute(const OtherProfilePage()));
+                  },
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10.0),
+                        topLeft: Radius.circular(10.0),
+                        bottomLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                      ),
+                      color: Color.fromARGB(211, 255, 255, 255),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(35),
+                              child: Image(
+                                image:
+                                    NetworkImage(widget.user.profileImageURL),
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Location",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Milano, MI",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: 15,
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            widget.user.firstname + " " + widget.user.lastname,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 46, 46, 46),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 300,
+                left: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(50.0),
+                      topLeft: Radius.circular(50.0),
+                    ),
+                    color: Theme.of(context).colorScheme.background,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Padding(
+                    padding: const EdgeInsets.all(40.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              widget.lesson.title,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              widget.lesson.category,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Location",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.only(
-                                  topRight: Radius.circular(10.0),
-                                  topLeft: Radius.circular(10.0),
-                                  bottomLeft: Radius.circular(10.0),
-                                  bottomRight: Radius.circular(10.0),
-                                ),
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
-                              ),
-                              width: 100,
-                              height: 50,
-                              padding: const EdgeInsets.all(10),
-                              child: Row(
-                                children: const [
-                                  Icon(
-                                    Icons.pin_drop,
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      "Milano, MI",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ),
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text("1 km")
                                 ],
                               ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Date",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(10.0),
+                                    topLeft: Radius.circular(10.0),
+                                    bottomLeft: Radius.circular(10.0),
+                                    bottomRight: Radius.circular(10.0),
+                                  ),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                ),
+                                width: 100,
+                                height: 50,
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  children: const [
+                                    Icon(
+                                      Icons.pin_drop,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text("1 km")
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
-                        ),
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "26/01/2023, 16:00-17:00",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
+                          const SizedBox(
+                            height: 25,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "About",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam suscipit dictum nunc ac euismod. Ut a tristique magna, eget lobortis enim.",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 15,
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Date",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "User rating",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "26/01/2023, 16:00-17:00",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
                           ),
-                        ),
-                        Row(
-                          children: const [
-                            Icon(
-                              Icons.star,
-                              color: Color.fromARGB(255, 101, 101, 101),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "About",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
-                            Icon(
-                              Icons.star,
-                              color: Color.fromARGB(255, 101, 101, 101),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              widget.lesson.description,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                fontSize: 15,
+                              ),
                             ),
-                            Icon(
-                              Icons.star,
-                              color: Color.fromARGB(255, 101, 101, 101),
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "User rating",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
-                            Icon(
-                              Icons.star_border,
-                              color: Color.fromARGB(255, 101, 101, 101),
-                            ),
-                            Icon(
-                              Icons.star_border,
-                              color: Color.fromARGB(255, 101, 101, 101),
-                            ),
-                          ],
-                        ),
-                      ],
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                widget.user.userRating >= 1
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: const Color.fromARGB(255, 101, 101, 101),
+                              ),
+                              Icon(
+                                widget.user.userRating >= 2
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: const Color.fromARGB(255, 101, 101, 101),
+                              ),
+                              Icon(
+                                widget.user.userRating >= 3
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: const Color.fromARGB(255, 101, 101, 101),
+                              ),
+                              Icon(
+                                widget.user.userRating >= 4
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: const Color.fromARGB(255, 101, 101, 101),
+                              ),
+                              Icon(
+                                widget.user.userRating >= 5
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: const Color.fromARGB(255, 101, 101, 101),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 150,
-              left: 0,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment
-                      .center, //Center Row contents horizontally,
+              Positioned(
+                top: 250,
+                left: 0,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment
+                        .center, //Center Row contents horizontally,
 
-                  children: [
-                    SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: IconButton(
-                          icon: const Icon(Icons.message_outlined),
-                          onPressed: () {
-                            Users reciver = Users(
-                                firstname: "Dounia",
-                                lastname: "Faouzi",
-                                profileImageURL:
-                                    'https://firebasestorage.googleapis.com/v0/b/my-firebase-3b25d.appspot.com/o/Categories%2FBiomedica.jpg?alt=media&token=3a9a75f4-654d-4c7f-8e75-d7acfac31d88',
-                                id: 'qlM14qJEK5hdzszAIJ12H8q3z5L2',
-                                userRating: 0);
-                            send(reciver);
-                          },
-                          style: messageButtonStyle()),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    const SizedBox(
-                      width: 90,
-                      height: 90,
-                      child: SendRequestToggleButton(
-                        isEnabled: true,
-                        getDefaultStyle: sendRequestButtonStyle,
+                    children: [
+                      SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: IconButton(
+                            icon: const Icon(Icons.message_outlined),
+                            onPressed: () {
+                              Users receiver = widget.user;
+                              send(receiver);
+                            },
+                            style: messageButtonStyle()),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    const SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: SavedToggleButton(
-                        isEnabled: true,
-                        getDefaultStyle: savedButtonStyle,
+                      const SizedBox(
+                        width: 20,
                       ),
-                    ),
-                  ],
+                      const SizedBox(
+                        width: 90,
+                        height: 90,
+                        child: SendRequestToggleButton(
+                          isEnabled: true,
+                          getDefaultStyle: sendRequestButtonStyle,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: SavedToggleButton(
+                          isEnabled: true,
+                          getDefaultStyle: savedButtonStyle,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -332,13 +406,13 @@ class _LessonState extends State<LessonPage> {
 
   Future send(Users reciver) async {
     try {
-      List<String> users = [reciver.id, user.uid];
+      List<String> users = [reciver.id, userFirebase.uid];
       List<Chat> chats = await readChat(users).first;
       Chat chat = Chat();
       print(chats.length);
       if (chats.isEmpty) {
         final docChat = FirebaseFirestore.instance.collection('chat');
-        List<String> member = [reciver.id, user.uid];
+        List<String> member = [reciver.id, userFirebase.uid];
         await docChat.add({}).then((DocumentReference doc) {
           chat = Chat(member: member, num_msg: 0, id: doc.id);
           final json = chat.toFirestore();
