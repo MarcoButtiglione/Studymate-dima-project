@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +23,12 @@ class NewLessonPage extends StatefulWidget {
 }
 
 class _NewLessonPageState extends State<NewLessonPage> {
+  @override
+  void initState() {
+    print("UNA VOLTA");
+    super.initState();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final user = FirebaseAuth.instance.currentUser!;
   bool isBusy = false;
@@ -239,18 +246,33 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                     onPressed: () {
                                       // Validate returns true if the form is valid, or false otherwise.
                                       if (_formKey.currentState!.validate()) {
-                                        final lesson = Lesson(
-                                          title: titleController.text,
-                                          location: "Milan",
-                                          description:
-                                              desciptionController.text,
-                                          userTutor: user.uid,
-                                          category: category,
-                                        );
-                                        send(lesson: lesson);
+                                        FirebaseFirestore.instance
+                                            .collection('timeslots')
+                                            .where('userId',
+                                                isEqualTo: user.uid)
+                                            .get()
+                                            .then((querySnapshot) {
+                                          if (querySnapshot.docs.isNotEmpty) {
+                                            // Do something if the document exists
+                                            final lesson = Lesson(
+                                              title: titleController.text,
+                                              location: "Milan",
+                                              description:
+                                                  desciptionController.text,
+                                              userTutor: user.uid,
+                                              category: category,
+                                            );
+                                            send(lesson: lesson);
+                                          } else {
+                                            // Do something if the document does not exist
+                                            Navigator.of(context).push(
+                                                createRoute(
+                                                    const HoursSelectionPage()));
+                                          }
+                                        });
                                       } else {
-                                        Navigator.of(context).push(createRoute(
-                                            const HoursSelectionPage()));
+                                        //Navigator.of(context).push(createRoute(
+                                        //  const HoursSelectionPage()));
                                       }
                                     },
                                     child: const Text('Submit',

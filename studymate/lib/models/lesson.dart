@@ -1,5 +1,3 @@
-import 'package:studymate/models/category.dart';
-import 'package:studymate/models/user.dart';
 
 class Lesson {
   final String title;
@@ -11,7 +9,6 @@ class Lesson {
   Lesson({
     required this.title,
     required this.location,
-
     required this.description,
     required this.userTutor,
     required this.category,
