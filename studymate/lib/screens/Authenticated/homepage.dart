@@ -5,7 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:studymate/functions/routingAnimation.dart';
+import 'package:studymate/models/category.dart';
 import 'package:studymate/models/lesson.dart';
+import 'package:studymate/models/user.dart';
+
 import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
 import 'package:studymate/screens/Authenticated/lesson_page.dart';
@@ -19,14 +22,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  Stream<List<Lesson>> readLessons(String userId) => FirebaseFirestore.instance
+  Stream<List<Lesson>> readLessons(String userId,String category) => FirebaseFirestore.instance
       .collection('lessons')
       .where('userTutor', isNotEqualTo: userId)
+      .where('category',isEqualTo: category)
+
       //.orderBy('addtime', descending: true)
       //.limit(10)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Lesson.fromJson(doc.data())).toList());
+
+  Stream<List<Users>> readUser(String userId) => FirebaseFirestore.instance
+      .collection('users')
+      .where('id', isEqualTo: userId)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
@@ -230,34 +242,56 @@ class _HomePageState extends State<HomePage> {
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 13)),
             const SizedBox(height: 30),
-            StreamBuilder<List<Lesson>>(
-                stream: readLessons(user.uid),
+            StreamBuilder<List<Users>>(
+                stream: readUser(user.uid),
                 builder: ((context, snapshot) {
                   if (snapshot.hasError) {
                     return const Text("Something went wrong!");
                   } else if (snapshot.hasData) {
-                    final lessons = snapshot.data!;
+                    final categories =
+                        snapshot.data!.first.categoriesOfInterest;
                     return Column(
-                      children: lessons
+                      children: categories!
                           .map(
-                            (lesson) => LessonCard(
-                              lessonName: lesson.title,
-                              userName: lesson.userTutor,
-                              userImageURL:
-                                  "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
-                              date: "Thursday 26/01/2023",
-                              location: lesson.location,
-                            ),
+                            (category) => StreamBuilder<List<Lesson>>(
+                                stream: readLessons(user.uid,category),
+                                builder: ((context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    
+                                    return const Text("Something went wrong!");
+                                  } else if (snapshot.hasData) {
+                                    final lessons = snapshot.data!;
+                                    return Column(
+                                      children: lessons
+                                          .map(
+                                            (lesson) => LessonCard(
+                                              lessonName: lesson.title,
+                                              userName: lesson.userTutor,
+                                              userImageURL:
+                                                  "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
+                                              date: "Thursday 26/01/2023",
+                                              location: lesson.location,
+                                            ),
+                                          )
+                                          .toList(),
+                                    );
+                                  } else {
+                                    return const Center(
+                                      //child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                })),
                           )
                           .toList(),
                     );
                   } else {
+                    
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
-                })),
-            
+                }))
+
             //--------------------
           ],
         ),
@@ -371,5 +405,3 @@ class SuggestedItem extends StatelessWidget {
     );
   }
 }
-
-
