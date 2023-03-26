@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../component/utils.dart';
+
 List<String> hours = [
   "00:00",
   "01:00",
@@ -31,6 +33,15 @@ List<String> hours = [
   "23:00",
   "24:00",
 ];
+List<String> day = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 class HoursSelectionPage extends StatefulWidget {
   const HoursSelectionPage({super.key});
@@ -40,25 +51,289 @@ class HoursSelectionPage extends StatefulWidget {
 }
 
 class _HoursSelectionPageState extends State<HoursSelectionPage> {
-  List<List<SelectedHourField>> selectedHour =
-      List<List<SelectedHourField>>.filled(7, [], growable: false);
+  List<List<SelectedHourField>> selectedHourWeek=List<List<SelectedHourField>>.filled(7, [], growable: false);
+  
+  List<SelectedHourField> selectedHourMon = [];
+  List<SelectedHourField> selectedHourTue = [];
+  List<SelectedHourField> selectedHourWed = [];
+  List<SelectedHourField> selectedHourThu = [];
+  List<SelectedHourField> selectedHourFri = [];
+  List<SelectedHourField> selectedHourSat = [];
+  List<SelectedHourField> selectedHourSun = [];
+
+  List<SelectedHourField> getListOfDay(int day) {
+    List<SelectedHourField> list = [];
+    switch (day) {
+      case 0:
+        list = selectedHourMon;
+        break;
+      case 1:
+        list = selectedHourTue;
+        break;
+      case 2:
+        list = selectedHourWed;
+        break;
+      case 3:
+        list = selectedHourThu;
+        break;
+      case 4:
+        list = selectedHourFri;
+        break;
+      case 5:
+        list = selectedHourSat;
+        break;
+      case 6:
+        list = selectedHourSun;
+        break;
+    }
+    return list;
+  }
+
+  bool checkingOverlappingFrom(String newValue, int index, int day) {
+    List<SelectedHourField> listToCheck = getListOfDay(day);
+    bool isOverlapped = false;
+    int indexOfFrom = hours.indexOf(newValue);
+    if (listToCheck[index].to != null) {
+      int indexOfTo = hours.indexOf(listToCheck[index].to!);
+      //CONTROLLARE SE IL VALORE FROM E TO OVERLAPPANO COMPLETAMENTE INTERVALLI PRECEDENTI
+      for (var i = 0; i < listToCheck.length - 1; i++) {
+        if (indexOfFrom <= hours.indexOf(listToCheck[i].from!) &&
+            indexOfTo >= hours.indexOf(listToCheck[i].to!)) {
+          isOverlapped = true;
+        }
+      }
+    }
+    //CONTROLLARE SE IL VALORE FROM SI TROVA TRA DUE PRECEDENTI
+    for (var i = 0; i < listToCheck.length - 1; i++) {
+      if (indexOfFrom >= hours.indexOf(listToCheck[i].from!) &&
+          indexOfFrom < hours.indexOf(listToCheck[i].to!)) {
+        isOverlapped = true;
+      }
+    }
+    return isOverlapped;
+  }
+
+  bool checkingOverlappingTo(String newValue, int index, int day) {
+    List<SelectedHourField> listToCheck = getListOfDay(day);
+    bool isOverlapped = false;
+    int indexOfTo = hours.indexOf(newValue);
+    if (listToCheck[index].from != null) {
+      int indexOfFrom = hours.indexOf(listToCheck[index].from!);
+      //CONTROLLARE SE IL VALORE FROM E TO OVERLAPPANO COMPLETAMENTE INTERVALLI PRECEDENTI
+      for (var i = 0; i < listToCheck.length - 1; i++) {
+        if (indexOfFrom <= hours.indexOf(listToCheck[i].from!) &&
+            indexOfTo >= hours.indexOf(listToCheck[i].to!)) {
+          isOverlapped = true;
+        }
+      }
+    }
+    //CONTROLLARE SE IL VALORE FROM SI TROVA TRA DUE PRECEDENTI
+    for (var i = 0; i < listToCheck.length - 1; i++) {
+      if (indexOfTo >= hours.indexOf(listToCheck[i].from!) &&
+          indexOfTo < hours.indexOf(listToCheck[i].to!)) {
+        isOverlapped = true;
+      }
+    }
+    return isOverlapped;
+  }
 
   void callbackRemoveForm(int day, int index) {
-    setState(() {
-      selectedHour[day].removeAt(index);
-    });
+    //DA FARE, SE SI OVERLAPPA E ELIMINO UNO PRECEDENTE IL BOOLEANO SI BUGGA
+    switch (day) {
+      case 0:
+        setState(() {
+          selectedHourMon.removeAt(index);
+        });
+        break;
+      case 1:
+        setState(() {
+          selectedHourTue.removeAt(index);
+        });
+        break;
+      case 2:
+        setState(() {
+          selectedHourWed.removeAt(index);
+        });
+        break;
+      case 3:
+        setState(() {
+          selectedHourThu.removeAt(index);
+        });
+        break;
+      case 4:
+        setState(() {
+          selectedHourFri.removeAt(index);
+        });
+        break;
+      case 5:
+        setState(() {
+          selectedHourSat.removeAt(index);
+        });
+        break;
+      case 6:
+        setState(() {
+          selectedHourSun.removeAt(index);
+        });
+        break;
+    }
   }
 
   void callbackSetFrom(int day, int index, String value) {
-    setState(() {
-      selectedHour[day][index].from = value;
-    });
+    bool isValid = true;
+    List<SelectedHourField> list = getListOfDay(day);
+
+    if (list[index].to != null) {
+      if (hours.indexOf(value) >= hours.indexOf(list[index].to!)) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Incorrect time entered"),
+          duration: Duration(seconds: 1),
+          backgroundColor: Color.fromARGB(255, 255, 68, 35),
+        ));
+
+        isValid = false;
+      }
+    }
+    if (list.length >= 2) {
+      bool isOverlapped = checkingOverlappingFrom(value, index, day);
+      if (isOverlapped) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Incorrect time entered. Possible overlaps."),
+          duration: Duration(seconds: 1),
+          backgroundColor: Color.fromARGB(255, 255, 68, 35),
+        ));
+        isValid = false;
+      }
+    }
+
+    switch (day) {
+      case 0:
+        setState(() {
+          selectedHourMon[index].from = value;
+          selectedHourMon[index].fromIndex = hours.indexOf(value);
+          selectedHourMon[index].isValid = isValid;
+        });
+        break;
+      case 1:
+        setState(() {
+          selectedHourTue[index].isValid = isValid;
+          selectedHourTue[index].from = value;
+          selectedHourTue[index].fromIndex = hours.indexOf(value);
+        });
+        break;
+      case 2:
+        setState(() {
+          selectedHourWed[index].isValid = isValid;
+          selectedHourWed[index].from = value;
+          selectedHourWed[index].fromIndex = hours.indexOf(value);
+        });
+        break;
+      case 3:
+        setState(() {
+          selectedHourThu[index].isValid = isValid;
+          selectedHourThu[index].from = value;
+          selectedHourThu[index].fromIndex = hours.indexOf(value);
+        });
+        break;
+      case 4:
+        setState(() {
+          selectedHourFri[index].isValid = isValid;
+          selectedHourFri[index].from = value;
+          selectedHourFri[index].fromIndex = hours.indexOf(value);
+        });
+        break;
+      case 5:
+        setState(() {
+          selectedHourSat[index].isValid = isValid;
+          selectedHourSat[index].from = value;
+          selectedHourSat[index].fromIndex = hours.indexOf(value);
+        });
+        break;
+      case 6:
+        setState(() {
+          selectedHourSun[index].isValid = isValid;
+          selectedHourSun[index].from = value;
+          selectedHourSun[index].fromIndex = hours.indexOf(value);
+        });
+        break;
+    }
   }
 
   void callbackSetTo(int day, int index, String value) {
-    setState(() {
-      selectedHour[day][index].to = value;
-    });
+    bool isValid = true;
+    List<SelectedHourField> list = getListOfDay(day);
+    if (list[index].from != null) {
+      if (hours.indexOf(value) <= hours.indexOf(list[index].from!)) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Incorrect time entered."),
+          duration: Duration(seconds: 1),
+          backgroundColor: Color.fromARGB(255, 255, 68, 35),
+        ));
+        isValid = false;
+      }
+    }
+    if (list.length >= 2) {
+      bool isOverlapped = checkingOverlappingTo(value, index, day);
+      if (isOverlapped) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Incorrect time entered. Possible overlaps."),
+          duration: Duration(seconds: 1),
+          backgroundColor: Color.fromARGB(255, 255, 68, 35),
+        ));
+        isValid = false;
+      }
+    }
+
+    switch (day) {
+      case 0:
+        setState(() {
+          selectedHourMon[index].isValid = isValid;
+          selectedHourMon[index].to = value;
+          selectedHourMon[index].toIndex = hours.indexOf(value);
+        });
+        break;
+      case 1:
+        setState(() {
+          selectedHourTue[index].isValid = isValid;
+          selectedHourTue[index].to = value;
+          selectedHourTue[index].toIndex = hours.indexOf(value);
+        });
+        break;
+      case 2:
+        setState(() {
+          selectedHourWed[index].isValid = isValid;
+          selectedHourWed[index].to = value;
+          selectedHourWed[index].toIndex = hours.indexOf(value);
+        });
+        break;
+      case 3:
+        setState(() {
+          selectedHourThu[index].isValid = isValid;
+          selectedHourThu[index].to = value;
+          selectedHourThu[index].toIndex = hours.indexOf(value);
+        });
+        break;
+      case 4:
+        setState(() {
+          selectedHourFri[index].isValid = isValid;
+          selectedHourFri[index].to = value;
+          selectedHourFri[index].toIndex = hours.indexOf(value);
+        });
+        break;
+      case 5:
+        setState(() {
+          selectedHourSat[index].isValid = isValid;
+          selectedHourSat[index].to = value;
+          selectedHourSat[index].toIndex = hours.indexOf(value);
+        });
+        break;
+      case 6:
+        setState(() {
+          selectedHourSun[index].isValid = isValid;
+          selectedHourSun[index].to = value;
+          selectedHourSun[index].toIndex = hours.indexOf(value);
+        });
+        break;
+    }
   }
 
   @override
@@ -84,7 +359,6 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 13)),
               const SizedBox(height: 30),
-        
               Row(children: const <Widget>[
                 Text("Monday",
                     textAlign: TextAlign.left,
@@ -95,9 +369,16 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
               ]),
               Column(
                 children:
-                    selectedHour[0].map<FromToField>((SelectedHourField field) {
-                  return FromToField(0, selectedHour[0].indexOf(field), field,
-                      callbackRemoveForm, callbackSetFrom, callbackSetTo);
+                    selectedHourMon.map<FromToField>((SelectedHourField field) {
+                  return FromToField(
+                      0,
+                      selectedHourMon.indexOf(field),
+                      field,
+                      callbackRemoveForm,
+                      callbackSetFrom,
+                      callbackSetTo,
+                      selectedHourMon.indexOf(field) ==
+                          (selectedHourMon.length - 1));
                 }).toList(),
               ),
               const SizedBox(
@@ -113,15 +394,27 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                       textStyle: const TextStyle(fontSize: 15),
                     ),
                     onPressed: () {
-                      setState(() {
-                        selectedHour[0].add(SelectedHourField());
-                      });
+                      if (selectedHourMon.isNotEmpty) {
+                        if (selectedHourMon.last.isValid &&
+                            selectedHourMon.last.from != null &&
+                            selectedHourMon.last.to != null) {
+                          setState(() {
+                            selectedHourMon.add(SelectedHourField());
+                          });
+                        } else {
+                          Utils.showSnackBar(
+                              "Fill out the previous form first.");
+                        }
+                      } else {
+                        setState(() {
+                          selectedHourMon.add(SelectedHourField());
+                        });
+                      }
                     },
                     label: Text('Add a new time slot'),
                   ),
                 ],
               ),
-           
               Row(children: const <Widget>[
                 Text("Tuesday",
                     textAlign: TextAlign.left,
@@ -132,9 +425,16 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
               ]),
               Column(
                 children:
-                    selectedHour[1].map<FromToField>((SelectedHourField field) {
-                  return FromToField(1, selectedHour[1].indexOf(field), field,
-                      callbackRemoveForm, callbackSetFrom, callbackSetTo);
+                    selectedHourTue.map<FromToField>((SelectedHourField field) {
+                  return FromToField(
+                      1,
+                      selectedHourTue.indexOf(field),
+                      field,
+                      callbackRemoveForm,
+                      callbackSetFrom,
+                      callbackSetTo,
+                      selectedHourTue.indexOf(field) ==
+                          (selectedHourTue.length - 1));
                 }).toList(),
               ),
               const SizedBox(
@@ -151,7 +451,7 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        selectedHour[1].add(SelectedHourField());
+                        selectedHourTue.add(SelectedHourField());
                       });
                     },
                     label: Text('Add a new time slot'),
@@ -168,9 +468,16 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
               ]),
               Column(
                 children:
-                    selectedHour[2].map<FromToField>((SelectedHourField field) {
-                  return FromToField(2, selectedHour[2].indexOf(field), field,
-                      callbackRemoveForm, callbackSetFrom, callbackSetTo);
+                    selectedHourWed.map<FromToField>((SelectedHourField field) {
+                  return FromToField(
+                      2,
+                      selectedHourWed.indexOf(field),
+                      field,
+                      callbackRemoveForm,
+                      callbackSetFrom,
+                      callbackSetTo,
+                      selectedHourWed.indexOf(field) ==
+                          (selectedHourWed.length - 1));
                 }).toList(),
               ),
               const SizedBox(
@@ -187,7 +494,7 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        selectedHour[2].add(SelectedHourField());
+                        selectedHourWed.add(SelectedHourField());
                       });
                     },
                     label: Text('Add a new time slot'),
@@ -204,9 +511,16 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
               ]),
               Column(
                 children:
-                    selectedHour[3].map<FromToField>((SelectedHourField field) {
-                  return FromToField(3, selectedHour[3].indexOf(field), field,
-                      callbackRemoveForm, callbackSetFrom, callbackSetTo);
+                    selectedHourThu.map<FromToField>((SelectedHourField field) {
+                  return FromToField(
+                      3,
+                      selectedHourThu.indexOf(field),
+                      field,
+                      callbackRemoveForm,
+                      callbackSetFrom,
+                      callbackSetTo,
+                      selectedHourThu.indexOf(field) ==
+                          (selectedHourThu.length - 1));
                 }).toList(),
               ),
               const SizedBox(
@@ -223,7 +537,7 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        selectedHour[3].add(SelectedHourField());
+                        selectedHourThu.add(SelectedHourField());
                       });
                     },
                     label: Text('Add a new time slot'),
@@ -240,9 +554,16 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
               ]),
               Column(
                 children:
-                    selectedHour[4].map<FromToField>((SelectedHourField field) {
-                  return FromToField(4, selectedHour[4].indexOf(field), field,
-                      callbackRemoveForm, callbackSetFrom, callbackSetTo);
+                    selectedHourFri.map<FromToField>((SelectedHourField field) {
+                  return FromToField(
+                      4,
+                      selectedHourFri.indexOf(field),
+                      field,
+                      callbackRemoveForm,
+                      callbackSetFrom,
+                      callbackSetTo,
+                      selectedHourFri.indexOf(field) ==
+                          (selectedHourFri.length - 1));
                 }).toList(),
               ),
               const SizedBox(
@@ -259,7 +580,7 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        selectedHour[4].add(SelectedHourField());
+                        selectedHourFri.add(SelectedHourField());
                       });
                     },
                     label: Text('Add a new time slot'),
@@ -276,9 +597,16 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
               ]),
               Column(
                 children:
-                    selectedHour[5].map<FromToField>((SelectedHourField field) {
-                  return FromToField(5, selectedHour[5].indexOf(field), field,
-                      callbackRemoveForm, callbackSetFrom, callbackSetTo);
+                    selectedHourSat.map<FromToField>((SelectedHourField field) {
+                  return FromToField(
+                      5,
+                      selectedHourSat.indexOf(field),
+                      field,
+                      callbackRemoveForm,
+                      callbackSetFrom,
+                      callbackSetTo,
+                      selectedHourSat.indexOf(field) ==
+                          (selectedHourSat.length - 1));
                 }).toList(),
               ),
               const SizedBox(
@@ -295,7 +623,7 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        selectedHour[5].add(SelectedHourField());
+                        selectedHourSat.add(SelectedHourField());
                       });
                     },
                     label: Text('Add a new time slot'),
@@ -312,9 +640,16 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
               ]),
               Column(
                 children:
-                    selectedHour[6].map<FromToField>((SelectedHourField field) {
-                  return FromToField(6, selectedHour[6].indexOf(field), field,
-                      callbackRemoveForm, callbackSetFrom, callbackSetTo);
+                    selectedHourSun.map<FromToField>((SelectedHourField field) {
+                  return FromToField(
+                      6,
+                      selectedHourSun.indexOf(field),
+                      field,
+                      callbackRemoveForm,
+                      callbackSetFrom,
+                      callbackSetTo,
+                      selectedHourSun.indexOf(field) ==
+                          (selectedHourSun.length - 1));
                 }).toList(),
               ),
               const SizedBox(
@@ -331,7 +666,7 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                        selectedHour[6].add(SelectedHourField());
+                        selectedHourSun.add(SelectedHourField());
                       });
                     },
                     label: Text('Add a new time slot'),
@@ -444,24 +779,41 @@ class DropdownHours extends StatelessWidget {
   bool isFrom;
   int day;
   int index;
-  String? value;
+  SelectedHourField valueFromTo;
   Function callback;
-  DropdownHours(this.isFrom, this.day, this.index, this.value, this.callback,
+  bool isLastOne;
+
+  DropdownHours(this.isFrom, this.day, this.index, this.valueFromTo,
+      this.callback, this.isLastOne,
       {super.key});
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
       enableFeedback: false,
-      value: value,
+      value: isFrom ? valueFromTo.from : valueFromTo.to,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return '';
+          return "";
+        }
+        if (isFrom) {
+          if (valueFromTo.to != null) {
+            if (hours.indexOf(value) >= hours.indexOf(valueFromTo.to!)) {
+              return "";
+            }
+          }
+        } else {
+          if (valueFromTo.from != null) {
+            if (hours.indexOf(value) <= hours.indexOf(valueFromTo.from!)) {
+              return "";
+            }
+          }
         }
         return null;
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
+        errorStyle: const TextStyle(height: 0),
         labelText: isFrom ? "From" : "To",
         hintText: "--:--",
         border: OutlineInputBorder(
@@ -477,11 +829,11 @@ class DropdownHours extends StatelessWidget {
           borderSide: BorderSide(color: Colors.grey[300]!),
         ),
       ),
-      onChanged: (String? value) {
-        // This is called when the user selects an item.
-        callback(day, index, value);
-        //widget.callback(value);
-      },
+      onChanged: isLastOne
+          ? (String? value) {
+              callback(day, index, value);
+            }
+          : null,
       items: hours.map<DropdownMenuItem<String>>((String hour) {
         return DropdownMenuItem<String>(
           value: hour,
@@ -499,9 +851,10 @@ class FromToField extends StatelessWidget {
   Function callbackRemoveForm;
   Function callbackSetFrom;
   Function callbackSetTo;
+  bool isLastOne;
 
   FromToField(this.day, this.index, this.field, this.callbackRemoveForm,
-      this.callbackSetFrom, this.callbackSetTo,
+      this.callbackSetFrom, this.callbackSetTo, this.isLastOne,
       {super.key});
   @override
   Widget build(BuildContext context) {
@@ -514,11 +867,11 @@ class FromToField extends StatelessWidget {
           children: [
             Expanded(
                 child: DropdownHours(
-                    true, day, index, field.from, callbackSetFrom)),
+                    true, day, index, field, callbackSetFrom, isLastOne)),
             const VerticalDivider(width: 20),
             Expanded(
-                child:
-                    DropdownHours(false, day, index, field.to, callbackSetTo)),
+                child: DropdownHours(
+                    false, day, index, field, callbackSetTo, isLastOne)),
             IconButton(
               onPressed: () {
                 callbackRemoveForm(day, index);
@@ -537,5 +890,17 @@ class FromToField extends StatelessWidget {
 class SelectedHourField {
   String? from;
   String? to;
+  int? fromIndex;
+  int? toIndex;
+  bool isValid = true;
   SelectedHourField();
+}
+
+class ListSelectedHours {
+  String day;
+  List<SelectedHourField> list;
+  ListSelectedHours({
+    required this.day,
+    required this.list,
+  });
 }
