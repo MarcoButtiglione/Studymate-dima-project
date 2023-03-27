@@ -9,8 +9,8 @@ import '../../../../models/chat.dart';
 import '../../../../models/user.dart';
 
 class AutocompleteSearchbar extends StatefulWidget {
-  final Function(String) onSelectionChanged;
-  const AutocompleteSearchbar({super.key, required this.onSelectionChanged});
+  final Function(String) onSelected;
+  const AutocompleteSearchbar({super.key, required this.onSelected});
   @override
   _AutocompleteSearchbarState createState() => _AutocompleteSearchbarState();
 }
@@ -35,7 +35,11 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
     QuerySnapshot querySnapshot =
         await _chatRef.where('member', arrayContains: user.uid).get();
 
-    final allData = querySnapshot.docs.map((doc) => doc.get("member")).toList();
+    final allData = querySnapshot.docs.map((doc) {
+      if (doc.get("last_msg") != "") {
+        return doc.get("member");
+      }
+    }).toList();
     List<String> members = [];
     allData.forEach((element) async {
       var m = element
@@ -45,8 +49,10 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
 
       if (m[0] == user.uid) {
         members.add(m[1].substring(1));
+        print(m[1]);
       } else {
         members.add(m[0]);
+        print(m[1]);
       }
     });
     members.forEach((element) async {
@@ -103,12 +109,11 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
               );
             },
             onSelected: (selectedString) {
-              setState(() => widget.onSelectionChanged(selectedString));
+              setState(() => widget.onSelected(selectedString));
             },
             fieldViewBuilder:
                 (context, controller, focusNode, onEditingComplete) {
               this.controller = controller;
-
               return TextField(
                 controller: controller,
                 focusNode: focusNode,
@@ -127,7 +132,15 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
                     borderSide: BorderSide(color: Colors.grey[300]!),
                   ),
                   hintText: "Search",
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: IconButton(
+                      onPressed: () {
+                        controller.clear();
+                        widget.onSelected("");
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        size: 20,
+                      )),
                 ),
               );
             },

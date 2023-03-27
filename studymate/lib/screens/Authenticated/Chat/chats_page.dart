@@ -59,9 +59,10 @@ class _ChatState extends State<ChatsPage> {
                         ))),
               ]),
               const SizedBox(height: 10),
-              AutocompleteSearchbar(onSelectionChanged: (selectedUser) {
+              AutocompleteSearchbar(onSelected: (selectedUser) {
                 setState(() {
                   selected = selectedUser;
+                  print(selectedUser);
                 });
               }),
               StreamBuilder<List<Chat>>(
@@ -103,33 +104,55 @@ class _ChatState extends State<ChatsPage> {
             String firstname = "", lastname = "";
             if (chat.last_msg != null) {
               if (selected != "") {
-                firstname = selected.split(' ')[0];
-                lastname = selected.split(' ')[1];
+                if (users.first.firstname.toLowerCase() ==
+                        selected.split(' ')[0] &&
+                    users.first.lastname.toLowerCase() ==
+                        selected.split(' ')[1]) {
+                  return InkWell(
+                      onTap: () => openChat(chat, users.first),
+                      child: user.uid == chat.from_uid
+                          ? ContactCard(
+                              id: chat.id,
+                              firstname: users.first.firstname,
+                              lastname: users.first.lastname,
+                              userImageURL: users.first.profileImageURL,
+                              last_msg: chat.last_msg,
+                              last_time: chat.last_time,
+                              view: chat.view)
+                          : ContactCard(
+                              id: chat.id,
+                              firstname: users.first.firstname,
+                              lastname: users.first.lastname,
+                              userImageURL: users.first.profileImageURL,
+                              last_msg: chat.last_msg,
+                              last_time: chat.last_time,
+                              msg_num: chat.num_msg,
+                            ));
+                } else {
+                  return SizedBox();
+                }
+              } else {
+                return InkWell(
+                    onTap: () => openChat(chat, users.first),
+                    child: user.uid == chat.from_uid
+                        ? ContactCard(
+                            id: chat.id,
+                            firstname: users.first.firstname,
+                            lastname: users.first.lastname,
+                            userImageURL: users.first.profileImageURL,
+                            last_msg: chat.last_msg,
+                            last_time: chat.last_time,
+                            view: chat.view)
+                        : ContactCard(
+                            id: chat.id,
+                            firstname: users.first.firstname,
+                            lastname: users.first.lastname,
+                            userImageURL: users.first.profileImageURL,
+                            last_msg: chat.last_msg,
+                            last_time: chat.last_time,
+                            msg_num: chat.num_msg,
+                          ));
               }
-              return InkWell(
-                  onTap: () => openChat(chat, users.first),
-                  child: (user.uid == chat.from_uid &&
-                          ((selected != "" &&
-                                  users.first.firstname == firstname &&
-                                  users.first.lastname == lastname) ||
-                              selected == ""))
-                      ? ContactCard(
-                          id: chat.id,
-                          firstname: users.first.firstname,
-                          lastname: users.first.lastname,
-                          userImageURL: users.first.profileImageURL,
-                          last_msg: chat.last_msg,
-                          last_time: chat.last_time,
-                          view: chat.view)
-                      : ContactCard(
-                          id: chat.id,
-                          firstname: users.first.firstname,
-                          lastname: users.first.lastname,
-                          userImageURL: users.first.profileImageURL,
-                          last_msg: chat.last_msg,
-                          last_time: chat.last_time,
-                          msg_num: chat.num_msg,
-                        ));
             } else {
               return SizedBox();
             }
