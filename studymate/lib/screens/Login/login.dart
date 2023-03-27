@@ -1,13 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:studymate/component/utils.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:studymate/provider/google_sign_in.dart';
+import 'package:studymate/provider/AuthService.dart';
 import 'package:studymate/screens/Login/register.dart';
 import 'package:studymate/screens/Login/reset.dart';
 
+import '../../provider/authentication.dart';
 import '../Authenticated/authenticated.dart';
 
 class Login extends StatefulWidget {
@@ -181,10 +184,7 @@ class _LoginState extends State<Login> {
                           barrierDismissible: false,
                           builder: (context) =>
                               const Center(child: CircularProgressIndicator()));
-                      final provider = Provider.of<GoogleSignInProvider>(
-                          context,
-                          listen: false);
-                      provider.googleLogin(context);
+                      Authentication.signInWithGoogle(context: context);
                     },
                     child: Container(
                         margin: const EdgeInsets.only(top: 40.0),
@@ -249,4 +249,20 @@ class _LoginState extends State<Login> {
       Navigator.of(context).pop();
     }
   }
+
+  /*googleLogin() async {
+    try {
+      final GoogleSignInAccount? googleUser =
+          await GoogleSignIn(scopes: <String>["email"]).signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
+      final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } on Exception catch (e) {
+      print(e);
+      //Navigator.of(context).pop();
+    }
+  }*/
 }

@@ -49,10 +49,8 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
 
       if (m[0] == user.uid) {
         members.add(m[1].substring(1));
-        print(m[1]);
       } else {
         members.add(m[0]);
-        print(m[1]);
       }
     });
     members.forEach((element) async {

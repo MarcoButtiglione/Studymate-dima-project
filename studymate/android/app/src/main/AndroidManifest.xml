@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.studymate">
+   <uses-permission android:name="android.permission.INTERENT"/>
    <application
         android:label="StudyMate"
         android:name="${applicationName}"

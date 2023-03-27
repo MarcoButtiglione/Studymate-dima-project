@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:studymate/provider/google_sign_in.dart';
+import 'package:studymate/provider/AuthService.dart';
+import 'package:studymate/provider/authentication.dart';
 import 'package:studymate/screens/Authenticated/Chat/profilePage/updateInterest.dart';
 import 'package:studymate/screens/Login/login.dart';
 
@@ -190,11 +192,8 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                 margin: const EdgeInsets.only(top: 20),
                 child: GestureDetector(
                   onTap: () {
-                    final provider = Provider.of<GoogleSignInProvider>(context,
-                        listen: false);
-                    provider.logout();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Login()));
+                    Authentication.signOutWithGoogle(context: context);
+                    Navigator.of(context).popUntil((route) => route.isFirst);
                   },
                   child: const Text("Logout",
                       style: TextStyle(
@@ -209,4 +208,14 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
       ),
     );
   }
+
+  /*logout() async {
+    FirebaseAuth.instance.signOut();
+    GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: <String>['email'],
+    );
+    if (await googleSignIn.isSignedIn()) {
+      googleSignIn.signOut();
+    }
+  }*/
 }
