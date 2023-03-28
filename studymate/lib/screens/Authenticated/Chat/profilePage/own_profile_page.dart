@@ -19,6 +19,7 @@ class OwnProfilePage extends StatefulWidget {
 class _OwnProfilePageState extends State<OwnProfilePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final user = FirebaseAuth.instance.currentUser!;
+  bool _isSigningOut = false;
 
   @override
   Widget build(BuildContext context) {
@@ -187,21 +188,31 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                   ),
                 ],
               ),
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(top: 20),
-                child: GestureDetector(
-                  onTap: () {
-                    Authentication.signOutWithGoogle(context: context);
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  },
-                  child: const Text("Logout",
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 233, 64, 87))),
-                ),
-              ),
+              _isSigningOut
+                  ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Color.fromARGB(255, 233, 64, 87)),
+                    )
+                  : Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(top: 20),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isSigningOut = true;
+                          });
+                          Authentication.signOutWithGoogle(context: context);
+                          setState(() {
+                            _isSigningOut = true;
+                          });
+                        },
+                        child: const Text("Logout",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 233, 64, 87))),
+                      ),
+                    ),
             ],
           ),
         ),

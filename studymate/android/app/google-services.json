@@ -14,8 +14,12 @@
       },
       "oauth_client": [
         {
-          "client_id": "500936321305-ljhbrf25r05btp47lcqnc2frmt4kb6ti.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "500936321305-p88jho33h0uge96hq9410u9llve462v1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.studymate",
+            "certificate_hash": "99a399a9633d337fa105c2a17e93875e364a326b"
+          }
         }
       ],
       "api_key": [
@@ -25,12 +29,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "500936321305-ljhbrf25r05btp47lcqnc2frmt4kb6ti.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

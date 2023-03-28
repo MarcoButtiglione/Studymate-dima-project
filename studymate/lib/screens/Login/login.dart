@@ -21,6 +21,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _isSigningIn = false;
 
   @override
   void dispose() {
@@ -177,51 +178,63 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ]),
-                  GestureDetector(
-                    onTap: () {
-                      Authentication.signInWithGoogle(context: context);
-                    },
-                    child: Container(
-                        margin: const EdgeInsets.only(top: 40.0),
-                        width: 300,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Color.fromARGB(156, 105, 102, 121),
-                                spreadRadius: 2),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              "assets/login/google.png",
-                              height: 32,
-                              width: 32,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(
-                                left: 26,
-                                top: 8,
-                                right: 58,
-                                bottom: 5,
+                  _isSigningIn
+                      ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Color.fromARGB(255, 233, 64, 87)),
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isSigningIn = true;
+                            });
+                            Authentication.signInWithGoogle(context: context);
+                            setState(() {
+                              _isSigningIn = false;
+                            });
+                          },
+                          child: Container(
+                              margin: const EdgeInsets.only(top: 40.0),
+                              width: 300,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                                boxShadow: const [
+                                  BoxShadow(
+                                      color: Color.fromARGB(156, 105, 102, 121),
+                                      spreadRadius: 2),
+                                ],
                               ),
-                              child: Text(
-                                "Sign Up with Google",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    color: Color.fromARGB(156, 105, 102, 121)),
-                              ),
-                            )
-                          ],
-                        )),
-                  )
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    "assets/login/google.png",
+                                    height: 32,
+                                    width: 32,
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 26,
+                                      top: 8,
+                                      right: 58,
+                                      bottom: 5,
+                                    ),
+                                    child: Text(
+                                      "Sign Up with Google",
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: Color.fromARGB(
+                                              156, 105, 102, 121)),
+                                    ),
+                                  )
+                                ],
+                              )),
+                        )
                 ],
               )),
         ]));
@@ -244,20 +257,4 @@ class _LoginState extends State<Login> {
       Navigator.of(context).pop();
     }
   }
-
-  /*googleLogin() async {
-    try {
-      final GoogleSignInAccount? googleUser =
-          await GoogleSignIn(scopes: <String>["email"]).signIn();
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
-      final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
-    } on Exception catch (e) {
-      print(e);
-      //Navigator.of(context).pop();
-    }
-  }*/
 }
