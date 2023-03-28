@@ -56,7 +56,6 @@ class Authentication {
 
         try {
           await auth.signInWithCredential(credential);
-          Navigator.of(context).popUntil((route) => route.isFirst);
         } on FirebaseAuthException catch (e) {
           if (e.code == 'account-exists-with-different-credential') {
             utilities.showAlertDialog(context, "Attention!",

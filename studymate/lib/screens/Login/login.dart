@@ -179,11 +179,6 @@ class _LoginState extends State<Login> {
                   ]),
                   GestureDetector(
                     onTap: () {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) =>
-                              const Center(child: CircularProgressIndicator()));
                       Authentication.signInWithGoogle(context: context);
                     },
                     child: Container(
