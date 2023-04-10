@@ -1,5 +1,5 @@
-
 class Lesson {
+  final String? id;
   final String title;
   final String location;
   final String description;
@@ -7,6 +7,7 @@ class Lesson {
   final String category;
 
   Lesson({
+    this.id,
     required this.title,
     required this.location,
     required this.description,
@@ -14,6 +15,7 @@ class Lesson {
     required this.category,
   });
   static Lesson fromJson(Map<String, dynamic> json) => Lesson(
+        id: json['id'],
         title: json['title'],
         location: json['location'],
         description: json['description'],
@@ -23,6 +25,7 @@ class Lesson {
 
   Map<String, dynamic> toFirestore() {
     return {
+      "id": id,
       "title": title,
       "location": location,
       "description": description,

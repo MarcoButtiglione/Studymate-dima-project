@@ -79,11 +79,12 @@ class _NewLessonPageState extends State<NewLessonPage> {
 
       String docId = "";
       final docLesson = FirebaseFirestore.instance.collection('lessons');
-      await docLesson.add({}).then((DocumentReference doc) {
+      final json = lesson.toFirestore();
+      await docLesson.add(json).then((DocumentReference doc) {
         docId = doc.id;
       });
-      final json = lesson.toFirestore();
-      await docLesson.doc(docId).set(json);
+
+      await docLesson.doc(docId).update({'id': docId});
       setState(() {
         isBusy = false;
         duration = 1;

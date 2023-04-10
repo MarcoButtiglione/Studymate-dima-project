@@ -1,17 +1,15 @@
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:studymate/functions/routingAnimation.dart';
-import 'package:studymate/models/category.dart';
 import 'package:studymate/models/lesson.dart';
 import 'package:studymate/models/user.dart';
-
+import 'common_widgets/nextLession_card.dart';
+import 'common_widgets/nextTutoring_card.dart';
 import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
-import 'package:studymate/screens/Authenticated/lesson_page.dart';
 import 'package:studymate/screens/Authenticated/notification_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,9 +25,6 @@ class _HomePageState extends State<HomePage> {
           .collection('lessons')
           .where('userTutor', isNotEqualTo: userId)
           .where('category', isEqualTo: category)
-
-          //.orderBy('addtime', descending: true)
-          //.limit(10)
           .snapshots()
           .map((snapshot) =>
               snapshot.docs.map((doc) => Lesson.fromJson(doc.data())).toList());
@@ -94,137 +89,20 @@ class _HomePageState extends State<HomePage> {
             //--------------------
             //Your next lesson
             const SizedBox(height: 20),
-            Row(children: const <Widget>[
-              Text("Your next lesson",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  )),
-            ]),
-            Row(
-              children: <Widget>[
-                const Expanded(
-                  flex: 9,
-                  child: NextFilledCardExample(),
-                ),
-                Expanded(
-                    flex: 3,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text("1"),
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.remove_red_eye,
-                              color: Colors.grey,
-                              size: 25.0,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 7),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text("1"),
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.star,
-                              color: Colors.grey,
-                              size: 25.0,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.mode,
-                                color: Colors.grey,
-                                size: 25.0,
-                              ),
-                              onPressed: () {
-                                //
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
-              ],
+            NextLessionCard(
+              user: user,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             const Divider(
               color: Colors.grey,
             ),
             //--------------------
             //Your next tutoring
-            const SizedBox(height: 20),
-            Row(children: const <Widget>[
-              Text("Your next tutoring",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  )),
-            ]),
-            Row(
-              children: <Widget>[
-                const Expanded(
-                  flex: 9,
-                  child: NextFilledCardExample(),
-                ),
-                Expanded(
-                    flex: 3,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text("1"),
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.remove_red_eye,
-                              color: Colors.grey,
-                              size: 25.0,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 7),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Text("1"),
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.star,
-                              color: Colors.grey,
-                              size: 25.0,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.mode,
-                                color: Colors.grey,
-                                size: 25.0,
-                              ),
-                              onPressed: () {
-                                //
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
-              ],
+
+            NextTutoringCard(
+              user: user,
             ),
+
             const SizedBox(height: 20),
             const Divider(
               color: Colors.grey,
