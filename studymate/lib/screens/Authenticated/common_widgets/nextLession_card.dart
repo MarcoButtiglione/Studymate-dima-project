@@ -49,7 +49,6 @@ class _nextLessionState extends State<NextLessionCard> {
             var schedule = snapshot.data!;
             if (schedule.isNotEmpty) {
               return Column(children: [
-                const SizedBox(height: 20),
                 Row(children: const <Widget>[
                   Text("Your next lession",
                       textAlign: TextAlign.left,
@@ -60,7 +59,7 @@ class _nextLessionState extends State<NextLessionCard> {
                 ]),
                 SizedBox(height: 10),
                 FutureBuilder(
-                    future: readUser(schedule.first.studentId).first,
+                    future: readUser(schedule.first.tutorId).first,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         var users = snapshot.data!;

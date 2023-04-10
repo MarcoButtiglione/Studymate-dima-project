@@ -48,7 +48,6 @@ class _nextTutoringState extends State<NextTutoringCard> {
             var schedule = snapshot.data!;
             if (schedule.isNotEmpty) {
               return Column(children: [
-                const SizedBox(height: 20),
                 Row(children: const <Widget>[
                   Text("Your next tutoring",
                       textAlign: TextAlign.left,
