@@ -45,7 +45,8 @@ class ClassCard extends StatelessWidget {
                     .collection("scheduled")
                     .doc(id)
                     .delete();
-                Navigator.of(context).pop();
+
+                Navigator.pop(context, true);
               },
             ),
             TextButton(
