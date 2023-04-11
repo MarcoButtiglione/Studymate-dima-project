@@ -92,10 +92,7 @@ class _HomePageState extends State<HomePage> {
             NextLessionCard(
               user: user,
             ),
-            const SizedBox(height: 10),
-            const Divider(
-              color: Colors.grey,
-            ),
+
             //--------------------
             //Your next tutoring
 
