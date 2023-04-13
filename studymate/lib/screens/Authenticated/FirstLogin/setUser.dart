@@ -164,7 +164,9 @@ class _SetUserState extends State<SetUser> {
           lastname: lastnameControler.text.trim(),
           profileImageURL:
               'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
-          userRating: 0);
+          userRating: 0,
+          hours: 20,
+          numRating: 0);
       final json = addUser.toJson();
       await docUser.set(json);
       Navigator.push(

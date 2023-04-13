@@ -8,14 +8,18 @@ class Users {
   final String profileImageURL;
   final List<dynamic>? categoriesOfInterest;
   final int userRating;
+  final int hours;
+  final int numRating;
 
   Users({
+    required this.numRating,
     required this.id,
     required this.firstname,
     required this.lastname,
     required this.profileImageURL,
     required this.userRating,
     this.categoriesOfInterest,
+    required this.hours,
   });
 
   Map<String, dynamic> toJson() => {
@@ -24,6 +28,8 @@ class Users {
         'lastname': lastname,
         'profileImage': profileImageURL,
         'userRating': userRating,
+        'hours': hours,
+        'numRating': numRating
       };
 
   static Users fromJson(Map<String, dynamic> json) => Users(
@@ -32,5 +38,7 @@ class Users {
       lastname: json['lastname'],
       profileImageURL: json['profileImage'],
       userRating: json['userRating'],
-      categoriesOfInterest: json['categoriesOfInterest']);
+      categoriesOfInterest: json['categoriesOfInterest'],
+      hours: json['hours'],
+      numRating: json['numRating']);
 }

@@ -64,6 +64,8 @@ class _nextTutoringState extends State<NextTutoringCard> {
                       if (snapshot.hasData) {
                         var users = snapshot.data!;
                         return ClassCard(
+                          tutorId: schedule.first.tutorId,
+                          studentId: schedule.first.studentId,
                           id: schedule.first.id,
                           date: schedule.first.date,
                           title: schedule.first.title,
@@ -79,7 +81,11 @@ class _nextTutoringState extends State<NextTutoringCard> {
                       } else {
                         return SizedBox();
                       }
-                    })
+                    }),
+                const SizedBox(height: 20),
+                const Divider(
+                  color: Colors.grey,
+                ),
               ]);
             } else {
               return SizedBox();

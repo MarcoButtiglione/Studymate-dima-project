@@ -100,10 +100,6 @@ class _HomePageState extends State<HomePage> {
               user: user,
             ),
 
-            const SizedBox(height: 20),
-            const Divider(
-              color: Colors.grey,
-            ),
             //--------------------
             //Suggested for you
             const SizedBox(height: 20),

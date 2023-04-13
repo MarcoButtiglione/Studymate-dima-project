@@ -46,11 +46,14 @@ class _TutoringState extends State<NextTutoring> {
         await _userRef.where("id", isEqualTo: userId).get();
     var allData2 = querySnapshot2.docs.map((doc) {
       usrs.add(Users(
-          id: doc.get("id"),
-          firstname: doc.get("firstname"),
-          lastname: doc.get("lastname"),
-          profileImageURL: doc.get("profileImage"),
-          userRating: doc.get("userRating")));
+        id: doc.get("id"),
+        firstname: doc.get("firstname"),
+        lastname: doc.get("lastname"),
+        profileImageURL: doc.get("profileImage"),
+        userRating: doc.get("userRating"),
+        hours: doc.get("hours"),
+        numRating: doc.get("numRating"),
+      ));
     }).toList();
     users = usrs;
   }
@@ -189,6 +192,10 @@ class _TutoringState extends State<NextTutoring> {
                                                 schedules[index].date!.toDate(),
                                                 today))
                                             ? ClassCard(
+                                                tutorId:
+                                                    schedules[index].tutorId,
+                                                studentId:
+                                                    schedules[index].studentId,
                                                 id: schedules[index].id,
                                                 title: schedules[index].title,
                                                 firstname: users[0].firstname,

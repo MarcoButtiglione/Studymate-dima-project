@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:studymate/screens/Authenticated/qrCode/qrCodeGenerate.dart';
+import 'package:studymate/screens/Authenticated/qrCode/qrCodeScan.dart';
 
 import '../NextLesson/nextLession.dart';
 import '../NextTutoring/nextTutoring.dart';
@@ -8,6 +10,8 @@ import '../NextTutoring/nextTutoring.dart';
 class ClassCard extends StatelessWidget {
   final String? id;
   final String? title;
+  final String? tutorId;
+  final String? studentId;
   final String? firstname;
   final String? lastname;
   final String? userImageURL;
@@ -17,6 +21,8 @@ class ClassCard extends StatelessWidget {
   final bool? lessonPage;
   const ClassCard(
       {super.key,
+      this.tutorId,
+      this.studentId,
       required this.id,
       required this.title,
       required this.firstname,
@@ -118,6 +124,28 @@ class ClassCard extends StatelessWidget {
                         _showMyDialog(context);
                       },
                       icon: const Icon(Icons.delete,
+                          color: Color.fromARGB(255, 233, 64, 87), size: 20)),
+                  IconButton(
+                      onPressed: () {
+                        if (tutor!) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => QrCodeGenerate(
+                                        id: id,
+                                        studentId: studentId!,
+                                      )));
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => QrCodeScan(
+                                        id: id,
+                                        tutorId: tutorId,
+                                      )));
+                        }
+                      },
+                      icon: const Icon(Icons.qr_code,
                           color: Color.fromARGB(255, 233, 64, 87), size: 20)),
                 ],
               ),

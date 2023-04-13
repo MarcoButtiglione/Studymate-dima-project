@@ -50,7 +50,9 @@ class _LessionState extends State<NextLession> {
           firstname: doc.get("firstname"),
           lastname: doc.get("lastname"),
           profileImageURL: doc.get("profileImage"),
-          userRating: doc.get("userRating")));
+          userRating: doc.get("userRating"),
+          hours: doc.get("hours"),
+          numRating: doc.get("numRating")));
     }).toList();
     users = usrs;
   }
@@ -190,6 +192,10 @@ class _LessionState extends State<NextLession> {
                                                 schedules[index].date!.toDate(),
                                                 today))
                                             ? ClassCard(
+                                                tutorId:
+                                                    schedules[index].tutorId,
+                                                studentId:
+                                                    schedules[index].studentId,
                                                 id: schedules[index].id,
                                                 title: schedules[index].title,
                                                 firstname: users[0].firstname,
