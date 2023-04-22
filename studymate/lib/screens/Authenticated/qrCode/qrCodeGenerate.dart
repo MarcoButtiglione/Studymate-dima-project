@@ -80,26 +80,43 @@ class _QrCodeGenerateState extends State<QrCodeGenerate> {
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             var schedules = snapshot.data!;
+                            List<String> up = [];
                             if (schedules.isNotEmpty) {
+                              if (selectedTimeslot.isNotEmpty) {
+                                selectedTimeslot.forEach((element) {
+                                  if (schedules.first.timeslot!
+                                      .contains(element)) {
+                                    up.add(element);
+                                  }
+                                });
+                              }
+
+                              selectedTimeslot = up;
+
                               return SingleChildScrollView(
                                 scrollDirection: Axis.vertical,
-                                child:
+                                child: Column(
+                                  children: [
                                     MultiSelectChip(schedules.first.timeslot!,
                                         onSelectionChanged: (selectedList) {
-                                  setState(() {
-                                    selectedTimeslot = selectedList;
-                                  });
-                                }),
+                                      setState(() {
+                                        selectedTimeslot = selectedList;
+                                      });
+                                    }),
+                                    (selectedTimeslot.isNotEmpty)
+                                        ? QRImage(selectedTimeslot,
+                                            tutorId: user.uid,
+                                            studentId: widget.studentId,
+                                            id: widget.id)
+                                        : SizedBox(),
+                                  ],
+                                ),
                               );
                             }
                           }
                           return SizedBox();
                         },
                       ),
-                      QRImage(selectedTimeslot,
-                          tutorId: user.uid,
-                          studentId: widget.studentId,
-                          id: widget.id),
                     ]))));
   }
 }

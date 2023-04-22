@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:studymate/provider/AuthService.dart';
 
 import '../component/utilities.dart';
 import '../component/utils.dart';
@@ -56,6 +57,12 @@ class Authentication {
 
         try {
           await auth.signInWithCredential(credential);
+          User? user = FirebaseAuth.instance.currentUser;
+          if (user != null) {
+            // ignore: use_build_context_synchronously
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AuthService()));
+          }
         } on FirebaseAuthException catch (e) {
           if (e.code == 'account-exists-with-different-credential') {
             utilities.showAlertDialog(context, "Attention!",
@@ -81,6 +88,7 @@ class Authentication {
         await googleSignIn.signOut();
       }
       await FirebaseAuth.instance.signOut();
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (e) {
       utilities.showAlertDialog(
           context, "Attention!", "Error signing out. Try again.");

@@ -29,7 +29,8 @@ class Users {
         'profileImage': profileImageURL,
         'userRating': userRating,
         'hours': hours,
-        'numRating': numRating
+        'numRating': numRating,
+        'categoriesOfInterest': categoriesOfInterest
       };
 
   static Users fromJson(Map<String, dynamic> json) => Users(

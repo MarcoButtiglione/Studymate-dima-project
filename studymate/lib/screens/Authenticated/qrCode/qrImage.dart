@@ -17,17 +17,18 @@ class QRImage extends StatelessWidget {
   Widget build(BuildContext context) {
     String data = "";
     if (controller.isNotEmpty) {
-      print(controller);
-
       data =
           '{"id":"$id","studentId":"$studentId", "tutorId":"$tutorId","timeslot": [';
-      controller.forEach(
-        (element) {
-          data += '" $element ,"';
-        },
-      );
+      if (controller.length > 1) {
+        for (int i = 0; i < controller.length - 1; i++) {
+          data += '"${controller[i]}",';
+        }
+        data += '"${controller[controller.length - 1]}"';
+      } else {
+        data += '"${controller[0]}"';
+      }
+
       data += "]}";
-      print(data);
     }
     return Center(
       child: (data != "")

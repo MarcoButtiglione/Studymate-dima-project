@@ -156,8 +156,6 @@ class _SetUserState extends State<SetUser> {
         barrierDismissible: false,
         builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
-      final docUser =
-          FirebaseFirestore.instance.collection('users').doc(user.uid);
       final addUser = Users(
           id: user.uid,
           firstname: firstnameControler.text.trim(),
@@ -167,10 +165,8 @@ class _SetUserState extends State<SetUser> {
           userRating: 0,
           hours: 20,
           numRating: 0);
-      final json = addUser.toJson();
-      await docUser.set(json);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Intrest()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => Intrest(addUser: addUser)));
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
       Navigator.of(context).pop();

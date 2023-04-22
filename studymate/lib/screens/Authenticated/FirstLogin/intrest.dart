@@ -8,6 +8,9 @@ import '../../../component/utils.dart';
 import '../../../models/user.dart';
 
 class Intrest extends StatefulWidget {
+  final Users addUser;
+
+  const Intrest({super.key, required this.addUser});
   @override
   _IntrestState createState() => _IntrestState();
 }
@@ -119,9 +122,18 @@ class _IntrestState extends State<Intrest> {
       if (selectedCatList.isNotEmpty) {
         final docUser =
             FirebaseFirestore.instance.collection('users').doc(user.uid);
+        final toAdd = Users(
+            numRating: 0,
+            id: user.uid,
+            firstname: widget.addUser.firstname,
+            lastname: widget.addUser.lastname,
+            profileImageURL: widget.addUser.profileImageURL,
+            userRating: 0,
+            hours: 20,
+            categoriesOfInterest: selectedCatList);
+        final json = toAdd.toJson();
+        await docUser.set(json);
 
-        await docUser.set(
-            {'categoriesOfInterest': selectedCatList}, SetOptions(merge: true));
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Authenticated()));
       } else {

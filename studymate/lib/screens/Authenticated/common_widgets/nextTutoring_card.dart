@@ -24,7 +24,7 @@ class _nextTutoringState extends State<NextTutoringCard> {
           isGreaterThan: Timestamp.fromDate(DateTime.utc(
                   DateTime.now().year, DateTime.now().month, DateTime.now().day)
               .subtract(const Duration(days: 1))))
-      .orderBy('date', descending: true)
+      .orderBy('date', descending: false)
       .limit(1)
       .snapshots()
       .map(((snapshot) => snapshot.docs

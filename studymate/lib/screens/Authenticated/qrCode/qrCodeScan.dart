@@ -28,47 +28,89 @@ class QrCodeScan extends StatefulWidget {
 class _QrCodeScanState extends State<QrCodeScan> {
   final user = FirebaseAuth.instance.currentUser!;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  Widget message = Text("Center the Qr code.",
+      style: TextStyle(
+        fontFamily: "Crimson Pro",
+        fontSize: 16,
+        color: Color.fromARGB(255, 104, 104, 104),
+      ));
   Barcode? result;
-  bool review = true;
+  bool review = false;
   bool reviewed = false;
   QRViewController? controller;
-  double rating = 0;
+  int rating = 3;
   int numRating = 0;
   int userRating = 0;
+  int sHours = 0;
+  int tHours = 0;
   List<dynamic> timeslot = [];
   @override
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller!.pauseCamera();
+      if (controller != null) {
+        controller!.pauseCamera();
+      }
     } else if (Platform.isIOS) {
       controller!.resumeCamera();
     }
   }
 
-  int hours = 0;
+  @override
+  void initState() {
+    super.initState();
+    getHour(user.uid, widget.tutorId);
+    getRating(widget.tutorId);
+  }
+
   final CollectionReference _userRef =
       FirebaseFirestore.instance.collection('users');
+  final CollectionReference _scheduleRef =
+      FirebaseFirestore.instance.collection('scheduled');
 
-  Future<void> getHour(String? id) async {
+  Future<void> getHour(String? sId, String? tId) async {
+    QuerySnapshot querySnapshot2 =
+        await _userRef.where("id", isEqualTo: sId).get();
+    int h = 0;
+    var allData2 = querySnapshot2.docs.map((doc) {
+      h = doc.get("hours");
+    }).toList();
+    setState(() {
+      sHours = h;
+    });
+
+    querySnapshot2 = await _userRef.where("id", isEqualTo: tId).get();
+    int th = 0;
+    allData2 = querySnapshot2.docs.map((doc) {
+      th = doc.get("hours");
+    }).toList();
+    setState(() {
+      tHours = th;
+    });
+    QuerySnapshot querySnapshot3 =
+        await _scheduleRef.where("id", isEqualTo: widget.id).get();
+    List<dynamic> ts = [];
+    var allData3 = querySnapshot3.docs.map((doc) {
+      ts = doc.get("timeslot");
+    }).toList();
+    setState(() {
+      timeslot = ts;
+    });
+  }
+
+  Future<void> getRating(String? id) async {
     QuerySnapshot querySnapshot2 =
         await _userRef.where("id", isEqualTo: id).get();
-    int h = 0;
     int r = 0;
     int n = 0;
     var allData2 = querySnapshot2.docs.map((doc) {
-      h = doc.get("hours");
       r = doc.get("userRating");
       n = doc.get("numRating");
     }).toList();
     setState(() {
-      hours = h;
       userRating = r;
       numRating = n;
     });
-    print(userRating);
-    print(numRating);
-    print(hours);
   }
 
   Stream<List<Scheduled>> readScheduled() => FirebaseFirestore.instance
@@ -117,185 +159,143 @@ class _QrCodeScanState extends State<QrCodeScan> {
                               color: Color.fromARGB(255, 104, 104, 104),
                             )),
                       ),
-                      StreamBuilder(
-                        stream: readScheduled(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            var schedules = snapshot.data!;
-                            if (schedules.isNotEmpty) {
-                              timeslot = schedules.first.timeslot!;
-
-                              return Column(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.all(20),
-                                    height: 300,
-                                    width: 300,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: (review == false)
-                                          ? QRView(
-                                              key: qrKey,
-                                              onQRViewCreated: _onQRViewCreated,
-                                            )
-                                          : Container(
-                                              color: Color.fromARGB(
-                                                  163, 233, 64, 87),
-                                              child: const Icon(Icons.qr_code,
-                                                  color: Colors.white,
-                                                  size: 50),
-                                            ),
+                      Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.all(20),
+                            height: 300,
+                            width: 300,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: (review == false)
+                                  ? QRView(
+                                      key: qrKey,
+                                      onQRViewCreated: _onQRViewCreated,
+                                    )
+                                  : Container(
+                                      color: Color.fromARGB(163, 233, 64, 87),
+                                      child: const Icon(Icons.qr_code,
+                                          color: Colors.white, size: 50),
                                     ),
-                                  ),
-                                  (review == true)
-                                      ? Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            children: [
-                                              const Text("Review:",
-                                                  style: TextStyle(
-                                                    fontFamily: "Crimson Pro",
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20,
-                                                  )),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              (reviewed)
-                                                  ? const Text(
-                                                      "Hope you've enjoid your lesson feel free to leave a start review on the tutor.",
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            "Crimson Pro",
-                                                        fontSize: 16,
-                                                        color: Color.fromARGB(
-                                                            255, 104, 104, 104),
-                                                      ))
-                                                  : const Text(
-                                                      "Thanks for the review.",
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            "Crimson Pro",
-                                                        fontSize: 16,
-                                                        color: Color.fromARGB(
-                                                            255, 104, 104, 104),
-                                                      )),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              RatingBar.builder(
-                                                ignoreGestures:
-                                                    (reviewed) ? true : false,
-                                                initialRating: 3,
-                                                minRating: 1,
-                                                direction: Axis.horizontal,
-                                                allowHalfRating: false,
-                                                itemCount: 5,
-                                                itemSize: 30,
-                                                itemPadding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 4.0),
-                                                itemBuilder: (context, _) =>
-                                                    const Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
-                                                ),
-                                                onRatingUpdate: (rating) {
+                            ),
+                          ),
+                          (review == true)
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      const Text("Review:",
+                                          style: TextStyle(
+                                            fontFamily: "Crimson Pro",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          )),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      (reviewed)
+                                          ? const Text(
+                                              "Hope you've enjoid your lesson feel free to leave a start review on the tutor.",
+                                              style: TextStyle(
+                                                fontFamily: "Crimson Pro",
+                                                fontSize: 16,
+                                                color: Color.fromARGB(
+                                                    255, 104, 104, 104),
+                                              ))
+                                          : const Text("Thanks for the review.",
+                                              style: TextStyle(
+                                                fontFamily: "Crimson Pro",
+                                                fontSize: 16,
+                                                color: Color.fromARGB(
+                                                    255, 104, 104, 104),
+                                              )),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      RatingBar.builder(
+                                        ignoreGestures:
+                                            (reviewed) ? true : false,
+                                        initialRating: 3,
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: false,
+                                        itemCount: 5,
+                                        itemSize: 30,
+                                        itemPadding: const EdgeInsets.symmetric(
+                                            horizontal: 4.0),
+                                        itemBuilder: (context, _) => const Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                        onRatingUpdate: (r) {
+                                          setState(() {
+                                            rating = r.round();
+                                          });
+                                        },
+                                      ),
+                                      (!reviewed)
+                                          ? Padding(
+                                              padding: const EdgeInsets.all(35),
+                                              child: ElevatedButton(
+                                                onPressed: () async {
+                                                  int updateRating = 0;
+                                                  if (numRating > 0) {
+                                                    updateRating = ((numRating *
+                                                                    userRating +
+                                                                rating) /
+                                                            (numRating + 1))
+                                                        .round();
+                                                  } else {
+                                                    updateRating = rating;
+                                                  }
+                                                  FirebaseFirestore.instance
+                                                      .collection("users")
+                                                      .doc(widget.tutorId)
+                                                      .update({
+                                                    'userRating': updateRating,
+                                                    'numRating': numRating + 1
+                                                  });
                                                   setState(() {
-                                                    rating = rating;
+                                                    reviewed = true;
                                                   });
                                                 },
-                                              ),
-                                              (!reviewed)
-                                                  ? Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              35),
-                                                      child: ElevatedButton(
-                                                        onPressed: () async {
-                                                          await getHour(
-                                                              widget.tutorId);
-                                                          FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  'users')
-                                                              .doc(widget
-                                                                  .tutorId)
-                                                              .update({
-                                                            'rating': ((rating +
-                                                                        userRating) /
-                                                                    numRating)
-                                                                .round(),
-                                                            'numRating':
-                                                                numRating + 1
-                                                          });
-                                                          setState(() {
-                                                            reviewed = true;
-                                                          });
-                                                        },
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          backgroundColor:
-                                                              const Color
-                                                                      .fromARGB(
-                                                                  255,
-                                                                  233,
-                                                                  64,
-                                                                  87),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20),
-                                                          ),
-                                                          padding: (size.width <=
-                                                                  550)
-                                                              ? const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      50,
-                                                                  vertical: 20)
-                                                              : EdgeInsets.symmetric(
-                                                                  horizontal:
-                                                                      size.width *
-                                                                          0.2,
-                                                                  vertical: 25),
-                                                        ),
-                                                        child: const Text(
-                                                          "Continue",
-                                                          style: TextStyle(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    255,
-                                                                    255,
-                                                                    255),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : SizedBox(),
-                                            ],
-                                          ),
-                                        )
-                                      : Container(
-                                          padding: EdgeInsets.all(20),
-                                          child:
-                                              const Text("Center the Qr code.",
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      const Color.fromARGB(
+                                                          255, 233, 64, 87),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  ),
+                                                  padding: (size.width <= 550)
+                                                      ? const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 50,
+                                                          vertical: 20)
+                                                      : EdgeInsets.symmetric(
+                                                          horizontal:
+                                                              size.width * 0.2,
+                                                          vertical: 25),
+                                                ),
+                                                child: const Text(
+                                                  "Continue",
                                                   style: TextStyle(
-                                                    fontFamily: "Crimson Pro",
-                                                    fontSize: 16,
                                                     color: Color.fromARGB(
-                                                        255, 104, 104, 104),
-                                                  )),
-                                        ),
-                                ],
-                              );
-                            }
-                          }
-                          return const SizedBox();
-                        },
+                                                        255, 255, 255, 255),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                    ],
+                                  ),
+                                )
+                              : Container(
+                                  padding: EdgeInsets.all(20),
+                                  child: message,
+                                ),
+                        ],
                       )
                     ]))));
   }
@@ -307,8 +307,8 @@ class _QrCodeScanState extends State<QrCodeScan> {
       if (result != null) {
         String? data = result!.code;
         if (data!.contains("timeslot")) {
-          Map<String, dynamic> jsonData = json.decode(data);
-          List<String> selTimeslots = jsonData['timeslot'];
+          var jsonData = json.decode(data);
+          List<dynamic> selTimeslots = jsonData['timeslot'];
           String studentId = jsonData['studentId'];
           String tutId = jsonData['tutorId'];
           String scheduleId = jsonData['id'];
@@ -316,24 +316,20 @@ class _QrCodeScanState extends State<QrCodeScan> {
               scheduleId == widget.id &&
               tutId == widget.tutorId) {
             List<dynamic> newTimeslot = [];
+            timeslot.forEach((element) {
+              if (!selTimeslots.contains(element)) {
+                newTimeslot.add(element);
+              }
+            });
             try {
-              await getHour(widget.id);
-              FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(widget.tutorId)
-                  .update({'hours': hours + timeslot.length});
-              await getHour(widget.id);
-              FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(user.uid)
-                  .update({'hours': hours + timeslot.length});
-
-              timeslot.forEach((element) {
-                if (!selTimeslots.contains(element)) {
-                  newTimeslot.add(element);
-                }
-              });
-
+              if (sHours > 0) {
+                _userRef.doc(widget.tutorId).update(
+                    {'hours': tHours + selTimeslots.length}).whenComplete(() {
+                  _userRef
+                      .doc(user.uid)
+                      .update({'hours': sHours - selTimeslots.length});
+                });
+              }
               if (newTimeslot.isEmpty) {
                 FirebaseFirestore.instance
                     .collection('scheduled')
@@ -348,11 +344,21 @@ class _QrCodeScanState extends State<QrCodeScan> {
               setState(() {
                 review = true;
               });
+              controller.dispose();
             } catch (e) {
               print(e);
             }
           } else {
-            Utils.showSnackBar("Scan a vaild QrCode");
+            setState(
+              () {
+                message = Text("Scan a valid Qr Code.",
+                    style: TextStyle(
+                      fontFamily: "Crimson Pro",
+                      fontSize: 16,
+                      color: const Color.fromARGB(255, 233, 64, 87),
+                    ));
+              },
+            );
           }
         }
       }

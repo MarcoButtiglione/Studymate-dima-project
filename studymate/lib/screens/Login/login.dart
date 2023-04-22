@@ -33,6 +33,8 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    double h = size.height;
+    double w = size.width;
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -40,23 +42,21 @@ class _LoginState extends State<Login> {
             Widget>[
           Expanded(
             flex: 8,
-            child: Column(children: [
-              Padding(
-                padding: EdgeInsets.only(top: size.height * 0.2),
-                child: const Text(
-                  "Login",
-                  style: TextStyle(
-                    fontFamily: "Crimson Pro",
-                    fontWeight: FontWeight.bold,
-                    fontSize: 35,
-                    color: Color.fromARGB(255, 233, 64, 87),
-                  ),
+            child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+              const Text(
+                "Login",
+                style: TextStyle(
+                  fontFamily: "Crimson Pro",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 35,
+                  color: Color.fromARGB(255, 233, 64, 87),
                 ),
               ),
               SizedBox(height: size.height * 0.03),
               Container(
                 alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(horizontal: 40),
+                height: 0.06 * h,
+                width: 0.8 * w,
                 child: TextFormField(
                   controller: emailController,
                   textInputAction: TextInputAction.next,
@@ -71,7 +71,8 @@ class _LoginState extends State<Login> {
               SizedBox(height: size.height * 0.03),
               Container(
                 alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(horizontal: 40),
+                height: 0.06 * h,
+                width: 0.8 * w,
                 child: TextFormField(
                   controller: passwordController,
                   textInputAction: TextInputAction.next,
@@ -98,8 +99,10 @@ class _LoginState extends State<Login> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.only(top: 40.0),
-                width: 300,
+                margin: EdgeInsets.only(
+                    top: 0.03 * h, left: 0.03 * h, right: 0.03 * h),
+                height: 0.08 * h,
+                width: 0.8 * w,
                 child: ElevatedButton(
                     onPressed: signIn,
                     style: ElevatedButton.styleFrom(
@@ -122,8 +125,9 @@ class _LoginState extends State<Login> {
                       ),
                     )),
               ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
+              Container(
+                alignment: Alignment.centerRight,
+                margin: const EdgeInsets.only(right: 50, top: 10),
                 child: RichText(
                     text: TextSpan(
                         style: const TextStyle(
@@ -144,6 +148,9 @@ class _LoginState extends State<Login> {
                       )
                     ])),
               ),
+              SizedBox(
+                height: 0.03 * h,
+              )
             ]),
           ),
           Expanded(
@@ -153,7 +160,7 @@ class _LoginState extends State<Login> {
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Container(
                       height: 1,
-                      width: 70,
+                      width: 0.2 * w,
                       margin: const EdgeInsets.all(6),
                       decoration: const BoxDecoration(
                         color: Color.fromARGB(156, 105, 102, 121),
@@ -171,7 +178,7 @@ class _LoginState extends State<Login> {
                     ),
                     Container(
                       height: 1,
-                      width: 70,
+                      width: 0.2 * w,
                       margin: const EdgeInsets.all(6),
                       decoration: const BoxDecoration(
                         color: Color.fromARGB(156, 105, 102, 121),
@@ -194,9 +201,9 @@ class _LoginState extends State<Login> {
                             });
                           },
                           child: Container(
-                              margin: const EdgeInsets.only(top: 40.0),
-                              width: 300,
-                              height: 60,
+                              margin: EdgeInsets.all(0.03 * h),
+                              height: 0.08 * h,
+                              width: 0.8 * w,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white,
@@ -211,20 +218,13 @@ class _LoginState extends State<Login> {
                                 children: [
                                   Image.asset(
                                     "assets/login/google.png",
-                                    height: 32,
-                                    width: 32,
+                                    height: 0.04 * h,
                                   ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 26,
-                                      top: 8,
-                                      right: 58,
-                                      bottom: 5,
-                                    ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
                                     child: Text(
                                       "Sign Up with Google",
                                       overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,

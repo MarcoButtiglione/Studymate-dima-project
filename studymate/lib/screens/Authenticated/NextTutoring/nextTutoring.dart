@@ -21,7 +21,6 @@ class NextTutoring extends StatefulWidget {
 class _TutoringState extends State<NextTutoring> {
   final user = FirebaseAuth.instance.currentUser!;
   DateTime today = DateTime.now();
-  List<Users> users = [];
   String selectedLession = "";
   String selectedCategory = "";
 
@@ -31,38 +30,18 @@ class _TutoringState extends State<NextTutoring> {
     });
   }
 
-  final CollectionReference _userRef =
-      FirebaseFirestore.instance.collection('users');
-
-  Future<void> getUser(Scheduled element) async {
-    List<Users> usrs = [];
-    var userId = "";
-    if (element.studentId == user.uid) {
-      userId = element.tutorId.toString();
-    } else {
-      userId = element.studentId.toString();
-    }
-    QuerySnapshot querySnapshot2 =
-        await _userRef.where("id", isEqualTo: userId).get();
-    var allData2 = querySnapshot2.docs.map((doc) {
-      usrs.add(Users(
-        id: doc.get("id"),
-        firstname: doc.get("firstname"),
-        lastname: doc.get("lastname"),
-        profileImageURL: doc.get("profileImage"),
-        userRating: doc.get("userRating"),
-        hours: doc.get("hours"),
-        numRating: doc.get("numRating"),
-      ));
-    }).toList();
-    users = usrs;
-  }
-
   void callbackCategory(String category) {
     setState(() {
       selectedCategory = category;
     });
   }
+
+  Stream<List<Users>> readUser(String? id) => FirebaseFirestore.instance
+      .collection("users")
+      .where("id", isEqualTo: id)
+      .snapshots()
+      .map(((snapshot) =>
+          snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList()));
 
   Stream<List<Scheduled>> readScheduled() => FirebaseFirestore.instance
       .collection('scheduled')
@@ -186,29 +165,51 @@ class _TutoringState extends State<NextTutoring> {
                                       shrinkWrap: true,
                                       itemCount: schedules.length,
                                       itemBuilder: (context, index) {
-                                        getUser(schedules[index]);
-
-                                        return (isSameDay(
-                                                schedules[index].date!.toDate(),
-                                                today))
-                                            ? ClassCard(
-                                                tutorId:
-                                                    schedules[index].tutorId,
-                                                studentId:
-                                                    schedules[index].studentId,
-                                                id: schedules[index].id,
-                                                title: schedules[index].title,
-                                                firstname: users[0].firstname,
-                                                lastname: users[0].lastname,
-                                                userImageURL:
-                                                    users[0].profileImageURL,
-                                                date: schedules[index].date,
-                                                timeslot:
-                                                    schedules[index].timeslot,
-                                                tutor: true,
-                                                lessonPage: true,
-                                              )
-                                            : SizedBox();
+                                        return FutureBuilder(
+                                            future: readUser(
+                                                    schedules[index].studentId)
+                                                .first,
+                                            builder: ((context, snapshot) {
+                                              if (snapshot.hasData) {
+                                                var users = snapshot.data!;
+                                                if (users.isNotEmpty) {
+                                                  return (isSameDay(
+                                                          schedules[index]
+                                                              .date!
+                                                              .toDate(),
+                                                          today))
+                                                      ? ClassCard(
+                                                          tutorId:
+                                                              schedules[index]
+                                                                  .tutorId,
+                                                          studentId:
+                                                              schedules[index]
+                                                                  .studentId,
+                                                          id: schedules[index]
+                                                              .id,
+                                                          title:
+                                                              schedules[index]
+                                                                  .title,
+                                                          firstname: users
+                                                              .first.firstname,
+                                                          lastname: users
+                                                              .first.lastname,
+                                                          userImageURL: users
+                                                              .first
+                                                              .profileImageURL,
+                                                          date: schedules[index]
+                                                              .date,
+                                                          timeslot:
+                                                              schedules[index]
+                                                                  .timeslot,
+                                                          tutor: true,
+                                                          lessonPage: true,
+                                                        )
+                                                      : SizedBox();
+                                                }
+                                              }
+                                              return SizedBox();
+                                            }));
                                       }),
                                 ),
                               ],

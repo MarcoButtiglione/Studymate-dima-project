@@ -25,7 +25,7 @@ class _nextLessionState extends State<NextLessionCard> {
           isGreaterThan: Timestamp.fromDate(DateTime.utc(
                   DateTime.now().year, DateTime.now().month, DateTime.now().day)
               .subtract(const Duration(days: 1))))
-      .orderBy('date', descending: true)
+      .orderBy('date', descending: false)
       .limit(1)
       .snapshots()
       .map(((snapshot) => snapshot.docs
@@ -49,7 +49,6 @@ class _nextLessionState extends State<NextLessionCard> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var schedule = snapshot.data!;
-            print(schedule.length);
             if (schedule.length > 0) {
               return Column(children: [
                 Row(children: const <Widget>[

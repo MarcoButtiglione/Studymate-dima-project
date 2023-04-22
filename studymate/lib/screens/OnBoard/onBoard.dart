@@ -48,9 +48,8 @@ class _OnBoardState extends State<OnBoard> {
     await prefs.setInt('onBoard', isViewed);
   }
 
-  AnimatedContainer _buildDots({
-    int? index,
-  }) {
+  AnimatedContainer _buildVerticalDots(
+      {int? index, required double h, required double w}) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       decoration: const BoxDecoration(
@@ -60,9 +59,9 @@ class _OnBoardState extends State<OnBoard> {
         color: Color.fromARGB(255, 233, 64, 87),
       ),
       margin: const EdgeInsets.only(right: 5),
-      height: 10,
+      height: 0.012 * h,
       curve: Curves.easeIn,
-      width: _currentPage == index ? 20 : 10,
+      width: _currentPage == index ? w * 0.05 : w * 0.025,
     );
   }
 
@@ -71,6 +70,14 @@ class _OnBoardState extends State<OnBoard> {
     Size size = MediaQuery.of(context).size;
     double width = size.width;
     double height = size.height;
+    if (width >= height) {
+      return horizontalView(width, height);
+    } else {
+      return verticalView(width, height);
+    }
+  }
+
+  Widget verticalView(double width, double height) {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: SafeArea(
@@ -85,16 +92,19 @@ class _OnBoardState extends State<OnBoard> {
                       setState(() => _currentPage = value),
                   itemCount: content.length,
                   itemBuilder: (context, i) {
-                    return Padding(
-                        padding: const EdgeInsets.all(40.0),
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(0.01 * width),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 100),
-                              child: Image.asset(content[i].img),
-                            ),
+                            Center(
+                                child: Image.asset(
+                              content[i].img,
+                              height: 0.5 * height,
+                            )),
                             SizedBox(
-                              height: (height >= 840) ? 60 : 30,
+                              height: 0.03 * height,
                             ),
                             Text(
                               content[i].text,
@@ -102,21 +112,26 @@ class _OnBoardState extends State<OnBoard> {
                               style: TextStyle(
                                   fontFamily: "Crimson Pro",
                                   fontWeight: FontWeight.w600,
-                                  fontSize: (width <= 550) ? 30 : 35,
+                                  fontSize: 0.08 * width,
                                   color: Color.fromARGB(255, 233, 64, 87)),
                             ),
-                            const SizedBox(height: 15),
+                            SizedBox(height: 0.01 * height),
                             Text(
                               content[i].desc,
                               style: TextStyle(
                                 fontFamily: "Crimson Pro",
                                 fontWeight: FontWeight.w300,
-                                fontSize: (width <= 550) ? 17 : 25,
+                                fontSize: 0.04 * width,
                               ),
                               textAlign: TextAlign.center,
-                            )
+                            ),
+                            SizedBox(
+                              height: 0.03 * height,
+                            ),
                           ],
-                        ));
+                        ),
+                      ),
+                    );
                   }),
             ),
             Expanded(
@@ -128,9 +143,8 @@ class _OnBoardState extends State<OnBoard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       content.length,
-                      (int index) => _buildDots(
-                        index: index,
-                      ),
+                      (int index) =>
+                          _buildVerticalDots(index: index, h: height, w: width),
                     ),
                   ),
                   _currentPage + 1 == content.length
@@ -221,5 +235,174 @@ class _OnBoardState extends State<OnBoard> {
             )
           ],
         )));
+  }
+
+  AnimatedContainer _buildHorizontalDots(
+      {int? index, required double h, required double w}) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(50),
+        ),
+        color: Color.fromARGB(255, 233, 64, 87),
+      ),
+      margin: const EdgeInsets.only(right: 5),
+      height: 0.03 * h,
+      curve: Curves.easeIn,
+      width: _currentPage == index ? w * 0.04 : 0.03 * h,
+    );
+  }
+
+  Widget horizontalView(double width, double height) {
+    return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        body: SafeArea(
+            child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+          Expanded(
+              flex: 9,
+              child: PageView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  controller: _pageController,
+                  onPageChanged: (value) =>
+                      setState(() => _currentPage = value),
+                  itemCount: content.length,
+                  itemBuilder: (context, i) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Center(
+                            child: Padding(
+                          padding: EdgeInsets.all(0.1 * height),
+                          child: Image.asset(
+                            content[i].img,
+                            height: 0.5 * height,
+                          ),
+                        )),
+                        Center(
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  content[i].text,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: "Crimson Pro",
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 0.05 * width,
+                                      color: Color.fromARGB(255, 233, 64, 87)),
+                                ),
+                                SizedBox(height: 0.01 * height),
+                                Text(
+                                  content[i].desc,
+                                  style: TextStyle(
+                                    fontFamily: "Crimson Pro",
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 0.02 * width,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(
+                                  height: 0.03 * height,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                    content.length,
+                                    (int index) => _buildHorizontalDots(
+                                        index: index, h: height, w: width),
+                                  ),
+                                ),
+                              ]),
+                        )
+                      ],
+                    );
+                  })),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _currentPage + 1 == content.length
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                          top: 0.1 * height, bottom: 0.1 * height),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _storeOnboardInfo();
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) => Login()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 233, 64, 87),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 0.2 * width),
+                        ),
+                        child: const Text(
+                          "START",
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.all(0.06 * width),
+                      child: Row(
+                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              _pageController.jumpToPage(2);
+                            },
+                            style: TextButton.styleFrom(
+                              elevation: 0,
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: (width <= 550) ? 13 : 17,
+                              ),
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: 0.1 * width),
+                            ),
+                            child: const Text(
+                              "SKIP",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          SizedBox(
+                            width: width - 0.65 * width,
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              _pageController.nextPage(
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeIn,
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 233, 64, 87),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              elevation: 0,
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: 0.1 * width),
+                            ),
+                            child: const Text(
+                              "NEXT",
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ],
+          ),
+        ])));
   }
 }
