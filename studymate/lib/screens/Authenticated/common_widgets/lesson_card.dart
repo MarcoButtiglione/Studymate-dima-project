@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../models/lesson.dart';
 import '../../../models/user.dart';
-import '../lesson_page.dart';
+import '../Lesson/lesson_page.dart';
 
 class LessonCard extends StatefulWidget {
   final Lesson lesson;

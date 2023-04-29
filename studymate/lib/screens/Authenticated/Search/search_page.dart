@@ -8,7 +8,7 @@ import 'package:studymate/screens/Authenticated/Search/widgets/autocomplete_sear
 import 'package:studymate/screens/Authenticated/Search/widgets/category_card.dart';
 import 'package:studymate/screens/Authenticated/Search/widgets/filter_bottomsheet_search.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
-import 'package:studymate/screens/Authenticated/lesson_page.dart';
+import 'package:studymate/screens/Authenticated/Lesson/lesson_page.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 import '../../../models/category.dart';

@@ -12,9 +12,9 @@ import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/other_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../models/lesson.dart';
-import '../../models/user.dart';
-import 'Chat/chat_msg.dart';
+import '../../../models/lesson.dart';
+import '../../../models/user.dart';
+import '../Chat/chat_msg.dart';
 
 class LessonPage extends StatefulWidget {
   Lesson lesson;

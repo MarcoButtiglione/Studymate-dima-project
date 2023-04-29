@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../lesson_page.dart';
+import '../../Lesson/lesson_page.dart';
 
 class ContactCard extends StatelessWidget {
   final String? id;
