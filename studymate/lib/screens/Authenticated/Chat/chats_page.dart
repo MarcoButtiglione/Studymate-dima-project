@@ -102,7 +102,7 @@ class _ChatState extends State<ChatsPage> {
           } else if (snapshot.hasData) {
             final users = snapshot.data!;
             String firstname = "", lastname = "";
-            if (chat.last_msg != null) {
+            if (chat.last_msg != "") {
               if (selected != "") {
                 if (users.first.firstname.toLowerCase() ==
                         selected.split(' ')[0] &&
