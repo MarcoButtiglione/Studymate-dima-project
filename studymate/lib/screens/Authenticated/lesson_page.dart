@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studymate/component/utils.dart';
 import 'package:studymate/models/category.dart';
+import 'package:studymate/models/timeslot.dart';
+
 import 'package:studymate/models/chat.dart';
 import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/other_profile_page.dart';
@@ -31,6 +33,58 @@ class _LessonState extends State<LessonPage> {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
+
+  Stream<List<TimeslotsWeek>> readTimeslot() => FirebaseFirestore.instance
+      .collection('timeslots')
+      .where('userId', isEqualTo: widget.user.id)
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((doc) => TimeslotsWeek.fromJson(doc.data()))
+          .toList());
+
+  List<String> convertListTimestampToPrint(List<dynamic> list) {
+    List<String> timeToPrint = [];
+    String? firstTimestamp;
+    //Se c'è solo un elemento nel vettore
+    if (list.length == 1) {
+      timeToPrint.add(list[0]);
+    }
+    //Se ce ne sono almeno 2
+    else {
+      //Qui gestisco tutti gli elementi del vettore tranne l'ultimo
+      for (var i = 0; i < list.length - 1; i++) {
+        String x = list[i];
+        String y = list[i + 1];
+        int xInt = int.parse(x.substring(0, 2));
+        int yInt = int.parse(y.substring(0, 2));
+
+        //Se è il timestamp successivo
+        if (xInt == (yInt - 1)) {
+          //Se era vuoto (e quindi avevo aggiunto già un elemento nella lista) aggiungo l'attuale valore
+          //altrimenti scorri il vettore
+          firstTimestamp ??= x.substring(0, 5);
+        }
+        //Se il non è il timestamp successivo
+        else {
+          if (firstTimestamp == null) {
+            timeToPrint.add(x);
+          } else {
+            timeToPrint.add(firstTimestamp + " - " + x.substring(8, 13));
+            firstTimestamp = null;
+          }
+        }
+      }
+      //Uscito dalla lista rimarrà l'ultimo
+      //Se era vuoto vuol dire che avevo già aggiunto in timeToPrint
+      if (firstTimestamp == null) {
+        timeToPrint.add(list[list.length - 1]);
+      } else {
+        String x = list[list.length - 1];
+        timeToPrint.add(firstTimestamp + " - " + x.substring(8, 13));
+      }
+    }
+    return timeToPrint;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,86 +121,114 @@ class _LessonState extends State<LessonPage> {
                 ),
               ),
               Positioned(
-                top: 20,
-                left: 20,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context).pop(context);
-                  },
+                  top: 0,
                   child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10.0),
-                        topLeft: Radius.circular(10.0),
-                        bottomLeft: Radius.circular(10.0),
-                        bottomRight: Radius.circular(10.0),
-                      ),
-                      color: Color.fromARGB(211, 255, 255, 255),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        height: 40,
-                        width: 40,
-                        child: Center(
-                          child: Icon(
-                            Icons.arrow_back_ios_new,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 20,
-                right: 20,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context)
-                        .push(_createRoute(const OtherProfilePage()));
-                  },
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10.0),
-                        topLeft: Radius.circular(10.0),
-                        bottomLeft: Radius.circular(10.0),
-                        bottomRight: Radius.circular(10.0),
-                      ),
-                      color: Color.fromARGB(211, 255, 255, 255),
-                    ),
+                    width: MediaQuery.of(context).size.width,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: Row(
                         children: [
-                          SizedBox(
-                            height: 40,
-                            width: 40,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(35),
-                              child: Image(
-                                image:
-                                    NetworkImage(widget.user.profileImageURL),
+                          Expanded(
+                            flex: 2,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pop(context);
+                                },
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10.0),
+                                      topLeft: Radius.circular(10.0),
+                                      bottomLeft: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(10.0),
+                                    ),
+                                    color: Color.fromARGB(211, 255, 255, 255),
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.arrow_back_ios_new,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            widget.user.firstname + " " + widget.user.lastname,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 46, 46, 46),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                    _createRoute(const OtherProfilePage()));
+                              },
+                              child: Container(
+                                constraints: BoxConstraints(maxWidth: 230),
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(10.0),
+                                    topLeft: Radius.circular(10.0),
+                                    bottomLeft: Radius.circular(10.0),
+                                    bottomRight: Radius.circular(10.0),
+                                  ),
+                                  color: Color.fromARGB(211, 255, 255, 255),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        height: 40,
+                                        width: 40,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(35),
+                                          child: Image(
+                                            image: NetworkImage(
+                                                widget.user.profileImageURL),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Flexible(
+                                        child: Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            widget.user.firstname +
+                                                " " +
+                                                widget.user.lastname,
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                            softWrap: false,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color.fromARGB(
+                                                  255, 46, 46, 46),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ),
-              ),
+                  )),
               Positioned(
                 top: 300,
                 left: 0,
@@ -159,185 +241,674 @@ class _LessonState extends State<LessonPage> {
                     color: Theme.of(context).colorScheme.background,
                   ),
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
+                  height: MediaQuery.of(context).size.height - 300,
                   child: Padding(
-                    padding: const EdgeInsets.all(40.0),
+                    padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                     child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.lesson.title,
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 40),
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.lesson.category,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 15,
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                widget.lesson.title,
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Location",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Milano, MI",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontSize: 15,
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                widget.lesson.category,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: const [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Location",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(
-                                    topRight: Radius.circular(10.0),
-                                    topLeft: Radius.circular(10.0),
-                                    bottomLeft: Radius.circular(10.0),
-                                    bottomRight: Radius.circular(10.0),
-                                  ),
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer,
-                                ),
-                                width: 100,
-                                height: 50,
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.pin_drop,
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Milano, MI",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                        ),
+                                      ),
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text("1 km")
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Date",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topRight: Radius.circular(10.0),
+                                      topLeft: Radius.circular(10.0),
+                                      bottomLeft: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(10.0),
+                                    ),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                  ),
+                                  width: 100,
+                                  height: 50,
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                    children: const [
+                                      Icon(
+                                        Icons.pin_drop,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text("1 km")
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "26/01/2023, 16:00-17:00",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
+                            const SizedBox(
+                              height: 25,
                             ),
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "About",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              widget.lesson.description,
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(
-                                fontSize: 15,
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Date",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "User rating",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            Wrap(
+                              children: [
+                                StreamBuilder<List<TimeslotsWeek>>(
+                                    stream: readTimeslot(),
+                                    builder: ((context, snapshot) {
+                                      if (snapshot.hasError) {
+                                        return const Text(
+                                            "Something went wrong!");
+                                      } else if (snapshot.hasData) {
+                                        if (snapshot.data!.isNotEmpty) {
+                                          final timeslotWeek =
+                                              snapshot.data!.first;
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .monday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .monday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Monday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Monday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(
+                                                                        'No lessons')
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .tuesday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .tuesday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Tuesday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Tuesday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(
+                                                                        'No lessons')
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .wednesday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .wednesday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Wednesday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Wednesday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(
+                                                                        'No lessons')
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .thursday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .thursday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Thursday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Thursday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(
+                                                                        'No lessons')
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .friday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .friday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Friday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Friday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(
+                                                                        'No lessons')
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .saturday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .saturday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Saturday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Saturday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(
+                                                                        'No lessons')
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .sunday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .sunday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Sunday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              const Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "Sunday:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(
+                                                                        'No lessons')
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                        return const Text(
+                                            "No timestamp");
+                                      } else {
+                                        return const Center(
+                                            //child: CircularProgressIndicator(),
+                                            );
+                                      }
+                                    })),
+                              ],
                             ),
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                widget.user.userRating >= 1
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                color: const Color.fromARGB(255, 101, 101, 101),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "About",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
                               ),
-                              Icon(
-                                widget.user.userRating >= 2
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                color: const Color.fromARGB(255, 101, 101, 101),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                widget.lesson.description,
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
                               ),
-                              Icon(
-                                widget.user.userRating >= 3
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                color: const Color.fromARGB(255, 101, 101, 101),
+                            ),
+                            const SizedBox(
+                              height: 25,
+                            ),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "User rating",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
                               ),
-                              Icon(
-                                widget.user.userRating >= 4
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                color: const Color.fromARGB(255, 101, 101, 101),
-                              ),
-                              Icon(
-                                widget.user.userRating >= 5
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                color: const Color.fromARGB(255, 101, 101, 101),
-                              ),
-                            ],
-                          ),
-                        ],
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  widget.user.userRating >= 1
+                                      ? Icons.star
+                                      : Icons.star_border,
+                                  color:
+                                      const Color.fromARGB(255, 101, 101, 101),
+                                ),
+                                Icon(
+                                  widget.user.userRating >= 2
+                                      ? Icons.star
+                                      : Icons.star_border,
+                                  color:
+                                      const Color.fromARGB(255, 101, 101, 101),
+                                ),
+                                Icon(
+                                  widget.user.userRating >= 3
+                                      ? Icons.star
+                                      : Icons.star_border,
+                                  color:
+                                      const Color.fromARGB(255, 101, 101, 101),
+                                ),
+                                Icon(
+                                  widget.user.userRating >= 4
+                                      ? Icons.star
+                                      : Icons.star_border,
+                                  color:
+                                      const Color.fromARGB(255, 101, 101, 101),
+                                ),
+                                Icon(
+                                  widget.user.userRating >= 5
+                                      ? Icons.star
+                                      : Icons.star_border,
+                                  color:
+                                      const Color.fromARGB(255, 101, 101, 101),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

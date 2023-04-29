@@ -191,19 +191,19 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
         docId = doc.id;
       });
 
-      TimeslotsWeek timeslotsWeek = TimeslotsWeek(userId: user.uid, week: {
-        "Monday": [],
-        "Tuesday": [],
-        "Wednesday": [],
-        "Thursday": [],
-        "Friday": [],
-        "Saturday": [],
-        "Sunday": [],
-      });
+      TimeslotsWeek timeslotsWeek = TimeslotsWeek(
+        userId: user.uid,
+        monday: [],
+        tuesday: [],
+        wednesday: [],
+        thursday: [],
+        friday: [],
+        saturday: [],
+        sunday: [],
+      );
       for (var i = 0; i < selectedHourWeek.length; i++) {
         List<SelectedHourField> selectedHourDay = selectedHourWeek[i];
-        String dayString = day[i];
-        print(dayString);
+        List<String> day=[];
         //DA FARE IL CHECK SE CAMPI NULLI
         selectedHourDay.sort((a, b) => a.fromIndex!.compareTo(b.fromIndex!));
 
@@ -213,12 +213,31 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
           for (var k = selectedHourField.fromIndex!;
               k < selectedHourField.toIndex!;
               k++) {
-            timeslotsWeek.week[dayString]!.add({
-              "timeslot": hours[k] + " - " + hours[k + 1],
-              "isOccupied": false,
-              "lessonIdOccupied": "",
-            });
+            day.add("${hours[k]} - ${hours[k + 1]}");
           }
+        }
+        switch (i) {
+          case 0:
+            timeslotsWeek.monday = day;
+            break;
+          case 1:
+            timeslotsWeek.tuesday = day;
+            break;
+          case 2:
+            timeslotsWeek.wednesday = day;
+            break;
+          case 3:
+            timeslotsWeek.thursday = day;
+            break;
+          case 4:
+            timeslotsWeek.friday = day;
+            break;
+          case 5:
+            timeslotsWeek.saturday = day;
+            break;
+          case 6:
+            timeslotsWeek.sunday = day;
+            break;
         }
       }
       final json = timeslotsWeek.toFirestore();
@@ -572,82 +591,6 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                     ),
                   ],
                 ),
-
-                /*
-                Wrap(
-                  spacing: 8.0, // gap between adjacent chips
-                  runSpacing: 0.0, // gap between lines
-                  children: <Widget>[
-                    
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('01:00 - 02:00'),
-                    ),
-                    Chip(
-                      label: const Text('03:00 - 04:00'),
-                    ),
-                    Chip(
-                      label: const Text('04:00 - 05:00'),
-                    ),
-                    Chip(
-                      label: const Text('05:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('06:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('07:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('08:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('09:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                    Chip(
-                      label: const Text('00:00 - 01:00'),
-                    ),
-                  ],
-                )
-                */
               ],
             ),
           ),
