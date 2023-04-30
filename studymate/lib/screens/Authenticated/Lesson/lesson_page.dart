@@ -9,6 +9,7 @@ import 'package:studymate/models/timeslot.dart';
 
 import 'package:studymate/models/chat.dart';
 import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
+import 'package:studymate/screens/Authenticated/Lesson/booklesson.dart';
 import 'package:studymate/screens/Authenticated/other_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -352,484 +353,527 @@ class _LessonState extends State<LessonPage> {
                                         return const Text(
                                             "Something went wrong!");
                                       } else if (snapshot.hasData) {
-                                        if (snapshot.data!.isNotEmpty) {
-                                          final timeslotWeek =
-                                              snapshot.data!.first;
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                child: (() {
-                                                  //Se c'è almeno un elemento nel vettore
-                                                  List<String> toPrint = [];
-                                                  if (timeslotWeek
-                                                      .monday.isNotEmpty) {
-                                                    toPrint =
-                                                        convertListTimestampToPrint(
-                                                            timeslotWeek
-                                                                .monday);
-                                                  }
-                                                  return toPrint.isNotEmpty
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Monday:",
+                                        if (snapshot.data != null) {
+                                          if (snapshot.data!.isNotEmpty) {
+                                            final timeslotWeek =
+                                                snapshot.data!.first;
+                                            return Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  child: (() {
+                                                    //Se c'è almeno un elemento nel vettore
+                                                    List<String> toPrint = [];
+                                                    if (timeslotWeek
+                                                        .monday.isNotEmpty) {
+                                                      toPrint =
+                                                          convertListTimestampToPrint(
+                                                              timeslotWeek
+                                                                  .monday);
+                                                    }
+                                                    return toPrint.isNotEmpty
+                                                        ? Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Monday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: toPrint
-                                                                      .map<Text>(
-                                                                          ((e) {
-                                                                    return Text(
-                                                                        e);
-                                                                  })).toList(),
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: toPrint
+                                                                        .map<Text>(
+                                                                            ((e) {
+                                                                      return Text(
+                                                                          e);
+                                                                    })).toList(),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Monday:",
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Monday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: [
-                                                                    Text(
-                                                                        'No lessons')
-                                                                  ],
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Text(
+                                                                          'No lessons')
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                }()),
-                                              ),
-                                              Container(
-                                                child: (() {
-                                                  //Se c'è almeno un elemento nel vettore
-                                                  List<String> toPrint = [];
-                                                  if (timeslotWeek
-                                                      .tuesday.isNotEmpty) {
-                                                    toPrint =
-                                                        convertListTimestampToPrint(
-                                                            timeslotWeek
-                                                                .tuesday);
-                                                  }
-                                                  return toPrint.isNotEmpty
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Tuesday:",
+                                                              ],
+                                                            ),
+                                                          );
+                                                  }()),
+                                                ),
+                                                Container(
+                                                  child: (() {
+                                                    //Se c'è almeno un elemento nel vettore
+                                                    List<String> toPrint = [];
+                                                    if (timeslotWeek
+                                                        .tuesday.isNotEmpty) {
+                                                      toPrint =
+                                                          convertListTimestampToPrint(
+                                                              timeslotWeek
+                                                                  .tuesday);
+                                                    }
+                                                    return toPrint.isNotEmpty
+                                                        ? Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Tuesday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: toPrint
-                                                                      .map<Text>(
-                                                                          ((e) {
-                                                                    return Text(
-                                                                        e);
-                                                                  })).toList(),
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: toPrint
+                                                                        .map<Text>(
+                                                                            ((e) {
+                                                                      return Text(
+                                                                          e);
+                                                                    })).toList(),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Tuesday:",
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Tuesday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: [
-                                                                    Text(
-                                                                        'No lessons')
-                                                                  ],
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Text(
+                                                                          'No lessons')
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                }()),
-                                              ),
-                                              Container(
-                                                child: (() {
-                                                  //Se c'è almeno un elemento nel vettore
-                                                  List<String> toPrint = [];
-                                                  if (timeslotWeek
-                                                      .wednesday.isNotEmpty) {
-                                                    toPrint =
-                                                        convertListTimestampToPrint(
-                                                            timeslotWeek
-                                                                .wednesday);
-                                                  }
-                                                  return toPrint.isNotEmpty
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Wednesday:",
+                                                              ],
+                                                            ),
+                                                          );
+                                                  }()),
+                                                ),
+                                                Container(
+                                                  child: (() {
+                                                    //Se c'è almeno un elemento nel vettore
+                                                    List<String> toPrint = [];
+                                                    if (timeslotWeek
+                                                        .wednesday.isNotEmpty) {
+                                                      toPrint =
+                                                          convertListTimestampToPrint(
+                                                              timeslotWeek
+                                                                  .wednesday);
+                                                    }
+                                                    return toPrint.isNotEmpty
+                                                        ? Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Wednesday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: toPrint
-                                                                      .map<Text>(
-                                                                          ((e) {
-                                                                    return Text(
-                                                                        e);
-                                                                  })).toList(),
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: toPrint
+                                                                        .map<Text>(
+                                                                            ((e) {
+                                                                      return Text(
+                                                                          e);
+                                                                    })).toList(),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Wednesday:",
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Wednesday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: [
-                                                                    Text(
-                                                                        'No lessons')
-                                                                  ],
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Text(
+                                                                          'No lessons')
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                }()),
-                                              ),
-                                              Container(
-                                                child: (() {
-                                                  //Se c'è almeno un elemento nel vettore
-                                                  List<String> toPrint = [];
-                                                  if (timeslotWeek
-                                                      .thursday.isNotEmpty) {
-                                                    toPrint =
-                                                        convertListTimestampToPrint(
-                                                            timeslotWeek
-                                                                .thursday);
-                                                  }
-                                                  return toPrint.isNotEmpty
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Thursday:",
+                                                              ],
+                                                            ),
+                                                          );
+                                                  }()),
+                                                ),
+                                                Container(
+                                                  child: (() {
+                                                    //Se c'è almeno un elemento nel vettore
+                                                    List<String> toPrint = [];
+                                                    if (timeslotWeek
+                                                        .thursday.isNotEmpty) {
+                                                      toPrint =
+                                                          convertListTimestampToPrint(
+                                                              timeslotWeek
+                                                                  .thursday);
+                                                    }
+                                                    return toPrint.isNotEmpty
+                                                        ? Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Thursday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: toPrint
-                                                                      .map<Text>(
-                                                                          ((e) {
-                                                                    return Text(
-                                                                        e);
-                                                                  })).toList(),
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: toPrint
+                                                                        .map<Text>(
+                                                                            ((e) {
+                                                                      return Text(
+                                                                          e);
+                                                                    })).toList(),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Thursday:",
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Thursday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: [
-                                                                    Text(
-                                                                        'No lessons')
-                                                                  ],
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Text(
+                                                                          'No lessons')
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                }()),
-                                              ),
-                                              Container(
-                                                child: (() {
-                                                  //Se c'è almeno un elemento nel vettore
-                                                  List<String> toPrint = [];
-                                                  if (timeslotWeek
-                                                      .friday.isNotEmpty) {
-                                                    toPrint =
-                                                        convertListTimestampToPrint(
-                                                            timeslotWeek
-                                                                .friday);
-                                                  }
-                                                  return toPrint.isNotEmpty
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Friday:",
+                                                              ],
+                                                            ),
+                                                          );
+                                                  }()),
+                                                ),
+                                                Container(
+                                                  child: (() {
+                                                    //Se c'è almeno un elemento nel vettore
+                                                    List<String> toPrint = [];
+                                                    if (timeslotWeek
+                                                        .friday.isNotEmpty) {
+                                                      toPrint =
+                                                          convertListTimestampToPrint(
+                                                              timeslotWeek
+                                                                  .friday);
+                                                    }
+                                                    return toPrint.isNotEmpty
+                                                        ? Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Friday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: toPrint
-                                                                      .map<Text>(
-                                                                          ((e) {
-                                                                    return Text(
-                                                                        e);
-                                                                  })).toList(),
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: toPrint
+                                                                        .map<Text>(
+                                                                            ((e) {
+                                                                      return Text(
+                                                                          e);
+                                                                    })).toList(),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Friday:",
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Friday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: [
-                                                                    Text(
-                                                                        'No lessons')
-                                                                  ],
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Text(
+                                                                          'No lessons')
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                }()),
-                                              ),
-                                              Container(
-                                                child: (() {
-                                                  //Se c'è almeno un elemento nel vettore
-                                                  List<String> toPrint = [];
-                                                  if (timeslotWeek
-                                                      .saturday.isNotEmpty) {
-                                                    toPrint =
-                                                        convertListTimestampToPrint(
-                                                            timeslotWeek
-                                                                .saturday);
-                                                  }
-                                                  return toPrint.isNotEmpty
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Saturday:",
+                                                              ],
+                                                            ),
+                                                          );
+                                                  }()),
+                                                ),
+                                                Container(
+                                                  child: (() {
+                                                    //Se c'è almeno un elemento nel vettore
+                                                    List<String> toPrint = [];
+                                                    if (timeslotWeek
+                                                        .saturday.isNotEmpty) {
+                                                      toPrint =
+                                                          convertListTimestampToPrint(
+                                                              timeslotWeek
+                                                                  .saturday);
+                                                    }
+                                                    return toPrint.isNotEmpty
+                                                        ? Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Saturday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: toPrint
-                                                                      .map<Text>(
-                                                                          ((e) {
-                                                                    return Text(
-                                                                        e);
-                                                                  })).toList(),
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: toPrint
+                                                                        .map<Text>(
+                                                                            ((e) {
+                                                                      return Text(
+                                                                          e);
+                                                                    })).toList(),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Saturday:",
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Saturday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: [
-                                                                    Text(
-                                                                        'No lessons')
-                                                                  ],
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Text(
+                                                                          'No lessons')
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                }()),
-                                              ),
-                                              Container(
-                                                child: (() {
-                                                  //Se c'è almeno un elemento nel vettore
-                                                  List<String> toPrint = [];
-                                                  if (timeslotWeek
-                                                      .sunday.isNotEmpty) {
-                                                    toPrint =
-                                                        convertListTimestampToPrint(
-                                                            timeslotWeek
-                                                                .sunday);
-                                                  }
-                                                  return toPrint.isNotEmpty
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Sunday:",
+                                                              ],
+                                                            ),
+                                                          );
+                                                  }()),
+                                                ),
+                                                Container(
+                                                  child: (() {
+                                                    //Se c'è almeno un elemento nel vettore
+                                                    List<String> toPrint = [];
+                                                    if (timeslotWeek
+                                                        .sunday.isNotEmpty) {
+                                                      toPrint =
+                                                          convertListTimestampToPrint(
+                                                              timeslotWeek
+                                                                  .sunday);
+                                                    }
+                                                    return toPrint.isNotEmpty
+                                                        ? Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Sunday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: toPrint
-                                                                      .map<Text>(
-                                                                          ((e) {
-                                                                    return Text(
-                                                                        e);
-                                                                  })).toList(),
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: toPrint
+                                                                        .map<Text>(
+                                                                            ((e) {
+                                                                      return Text(
+                                                                          e);
+                                                                    })).toList(),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  0, 0, 0, 15),
-                                                          child: Row(
-                                                            children: [
-                                                              const Expanded(
-                                                                flex: 4,
-                                                                child: Text(
-                                                                  "Sunday:",
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    15),
+                                                            child: Row(
+                                                              children: [
+                                                                const Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                    "Sunday:",
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 6,
-                                                                child: Column(
-                                                                  children: [
-                                                                    Text(
-                                                                        'No lessons')
-                                                                  ],
+                                                                Expanded(
+                                                                  flex: 6,
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Text(
+                                                                          'No lessons')
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                }()),
-                                              ),
-                                            ],
-                                          );
+                                                              ],
+                                                            ),
+                                                          );
+                                                  }()),
+                                                ),
+                                              ],
+                                            );
+                                          }
                                         }
-                                        return const Text(
-                                            "No timestamp");
+                                        return const Text("No timestamp");
                                       } else {
                                         return const Center(
-                                            //child: CircularProgressIndicator(),
-                                            );
+                                          child: CircularProgressIndicator(),
+                                        );
                                       }
                                     })),
                               ],
@@ -938,12 +982,26 @@ class _LessonState extends State<LessonPage> {
                       const SizedBox(
                         width: 20,
                       ),
-                      const SizedBox(
+                      SizedBox(
                         width: 90,
                         height: 90,
-                        child: SendRequestToggleButton(
-                          isEnabled: true,
-                          getDefaultStyle: sendRequestButtonStyle,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.check_outlined,
+                            size: 50,
+                          ),
+                          onPressed: () {
+                            showModalBottomSheet(
+                                elevation: 1,
+                                context: context,
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(40))),
+                                builder: (context) => BookLessonModal(
+                                    user: widget.user, lesson: widget.lesson));
+                          },
+                          style: bookLessonButtonStyle(),
                         ),
                       ),
                       const SizedBox(
@@ -1024,52 +1082,6 @@ Route _createRoute(Widget page) {
   );
 }
 
-class SendRequestToggleButton extends StatefulWidget {
-  const SendRequestToggleButton(
-      {required this.isEnabled, this.getDefaultStyle, super.key});
-
-  final bool isEnabled;
-  final ButtonStyle? Function(bool, ColorScheme)? getDefaultStyle;
-
-  @override
-  State<SendRequestToggleButton> createState() =>
-      _SendRequestToggleButtonState();
-}
-
-class _SendRequestToggleButtonState extends State<SendRequestToggleButton> {
-  bool selected = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colors = Theme.of(context).colorScheme;
-    final VoidCallback? onPressed = widget.isEnabled
-        ? () {
-            setState(() {
-              selected = !selected;
-            });
-          }
-        : null;
-    ButtonStyle? style;
-    if (widget.getDefaultStyle != null) {
-      style = widget.getDefaultStyle!(selected, colors);
-    }
-
-    return IconButton(
-      isSelected: selected,
-      icon: const Icon(
-        Icons.check_outlined,
-        size: 50,
-      ),
-      selectedIcon: const Icon(
-        Icons.check,
-        size: 50,
-      ),
-      onPressed: onPressed,
-      style: style,
-    );
-  }
-}
-
 class SavedToggleButton extends StatefulWidget {
   const SavedToggleButton(
       {required this.isEnabled, this.getDefaultStyle, super.key});
@@ -1115,26 +1127,6 @@ class _SavedToggleButtonState extends State<SavedToggleButton> {
   }
 }
 
-ButtonStyle sendRequestButtonStyle(bool selected, ColorScheme colors) {
-  ColorScheme color =
-      ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 0, 215, 36));
-  return IconButton.styleFrom(
-    foregroundColor: selected ? color.onPrimary : color.primary,
-    backgroundColor: selected ? color.primary : color.surfaceVariant,
-    disabledForegroundColor: color.onSurface.withOpacity(0.38),
-    disabledBackgroundColor: color.onSurface.withOpacity(0.12),
-    hoverColor: selected
-        ? color.onPrimary.withOpacity(0.08)
-        : color.primary.withOpacity(0.08),
-    focusColor: selected
-        ? color.onPrimary.withOpacity(0.12)
-        : color.primary.withOpacity(0.12),
-    highlightColor: selected
-        ? color.onPrimary.withOpacity(0.12)
-        : color.primary.withOpacity(0.12),
-  );
-}
-
 ButtonStyle savedButtonStyle(bool selected, ColorScheme colors) {
   ColorScheme color =
       ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 82, 14));
@@ -1158,6 +1150,20 @@ ButtonStyle savedButtonStyle(bool selected, ColorScheme colors) {
 ButtonStyle messageButtonStyle() {
   ColorScheme color =
       ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 168, 168, 168));
+  return IconButton.styleFrom(
+    foregroundColor: color.primary,
+    backgroundColor: color.surfaceVariant,
+    disabledForegroundColor: color.onSurface.withOpacity(0.38),
+    disabledBackgroundColor: color.onSurface.withOpacity(0.12),
+    hoverColor: color.primary.withOpacity(0.08),
+    focusColor: color.primary.withOpacity(0.12),
+    highlightColor: color.primary.withOpacity(0.12),
+  );
+}
+
+ButtonStyle bookLessonButtonStyle() {
+  ColorScheme color =
+      ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 0, 215, 36));
   return IconButton.styleFrom(
     foregroundColor: color.primary,
     backgroundColor: color.surfaceVariant,
