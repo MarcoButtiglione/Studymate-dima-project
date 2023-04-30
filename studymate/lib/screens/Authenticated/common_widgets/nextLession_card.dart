@@ -52,7 +52,7 @@ class _nextLessionState extends State<NextLessionCard> {
             if (schedule.length > 0) {
               return Column(children: [
                 Row(children: const <Widget>[
-                  Text("Your next lession",
+                  Text("Your next lesson",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 15,
