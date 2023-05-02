@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studymate/component/utils.dart';
 import 'package:studymate/models/category.dart';
+import 'package:studymate/models/recordLessonViewed.dart';
 import 'package:studymate/models/timeslot.dart';
 
 import 'package:studymate/models/chat.dart';
@@ -27,6 +28,13 @@ class LessonPage extends StatefulWidget {
 
 class _LessonState extends State<LessonPage> {
   final userFirebase = FirebaseAuth.instance.currentUser!;
+  final userLog = FirebaseAuth.instance.currentUser!;
+
+  @override
+  void initState() {
+    final record= RecordLessonView(lessonId: widget.lesson.id,timestamp: Timestamp.fromDate(DateTime.now()),userId:userLog.uid );
+    sendRecord(record: record);
+  }
 
   Stream<List<Category>> readCategory() => FirebaseFirestore.instance
       .collection('categories')
@@ -85,6 +93,22 @@ class _LessonState extends State<LessonPage> {
       }
     }
     return timeToPrint;
+  }
+
+  Future sendRecord({required RecordLessonView record}) async {
+    try {
+      String docId = "";
+      final docRecord =
+          FirebaseFirestore.instance.collection('recordLessonsViewed');
+      final json = record.toFirestore();
+      await docRecord.add(json).then((DocumentReference doc) {
+        docId = doc.id;
+      });
+
+      await docRecord.doc(docId).update({'id': docId});
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+    }
   }
 
   @override

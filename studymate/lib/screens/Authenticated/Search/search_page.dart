@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:studymate/models/recordLessonViewed.dart';
 import 'package:studymate/screens/Authenticated/Search/widgets/autocomplete_searchbar.dart';
 import 'package:studymate/screens/Authenticated/Search/widgets/category_card.dart';
 import 'package:studymate/screens/Authenticated/Search/widgets/filter_bottomsheet_search.dart';
@@ -12,20 +14,40 @@ import 'package:studymate/screens/Authenticated/Lesson/lesson_page.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 import '../../../models/category.dart';
+import '../../../models/lesson.dart';
 
 class SearchPage extends StatefulWidget {
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
 
-Stream<List<Category>> readCategory() => FirebaseFirestore.instance
-    .collection('categories')
-    .snapshots()
-    .map((snapshot) =>
-        snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
-
 class _SearchPageState extends State<SearchPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final userLog = FirebaseAuth.instance.currentUser!;
+
+  Stream<List<RecordLessonView>> readRecordLesson() =>
+      FirebaseFirestore.instance
+          .collection('recordLessonsViewed')
+          .where('userId', isEqualTo: userLog.uid)
+          .orderBy('timestamp', descending: true)
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => RecordLessonView.fromFirestore(doc.data()))
+              .toList());
+
+  Stream<List<Category>> readCategory() => FirebaseFirestore.instance
+      .collection('categories')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
+
+  Stream<List<Lesson>> readLessons(String lessonId) =>
+      FirebaseFirestore.instance
+          .collection('lessons')
+          .where('id', isEqualTo: lessonId)
+          .snapshots()
+          .map((snapshot) =>
+              snapshot.docs.map((doc) => Lesson.fromJson(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +92,7 @@ class _SearchPageState extends State<SearchPage> {
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
             ]),
-            
+
             SizedBox(
               height: 180.0,
               child: StreamBuilder<List<Category>>(
@@ -95,7 +117,7 @@ class _SearchPageState extends State<SearchPage> {
                 }),
               ),
             ),
-            
+
             const SizedBox(height: 10),
             const Divider(
               color: Colors.grey,
@@ -107,44 +129,71 @@ class _SearchPageState extends State<SearchPage> {
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
             ]),
-            const SizedBox(height: 15),
-            /*
-            LessonCard(
-              lessonName: "Machine Learning",
-              userName: "Robert Jackson",
-              userImageURL:
-                  "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80",
-              date: "Thursday 26/01/2023",
-              location: "Milan",
-            ),
-            const SizedBox(height: 15),
-            const LessonCard(
-              lessonName: "Fisica tecnica",
-              userName: "Mark Crosby",
-              userImageURL:
-                  "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-              date: "Thursday 26/01/2023",
-              location: "Milan",
-            ),
-            const SizedBox(height: 15),
-            const LessonCard(
-              lessonName: "Analisi 1",
-              userName: "Stephen King",
-              userImageURL:
-                  "https://images.unsplash.com/photo-1581803118522-7b72a50f7e9f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-              date: "Thursday 26/01/2023",
-              location: "Milan",
-            ),
-            const SizedBox(height: 15),
-            const LessonCard(
-              lessonName: "Teoria dei segnali",
-              userName: "Mario Rossi",
-              userImageURL:
-                  "https://images.unsplash.com/photo-1541752171745-4176eee47556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-              date: "Thursday 26/01/2023",
-              location: "Milan",
-            ),
-            */
+            const SizedBox(height: 10),
+            StreamBuilder<List<RecordLessonView>>(
+                stream: readRecordLesson(),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text("Something went wrong!");
+                  } else if (snapshot.hasData) {
+                    final recordLesson = snapshot.data!;
+                    //Controllo se ci sono due record con lo stesso lesson id e li rimuovo
+                    List<RecordLessonView> elementToRemove=[];
+                    int index=0;
+                    for (var element in recordLesson) {
+                      int i=0;
+                      bool toRemove=false;
+                      while(i<index&&!toRemove){
+                        if(recordLesson.elementAt(i).lessonId==element.lessonId){
+                          toRemove=true;
+                        }
+                        i++;
+                      }
+                      if(toRemove){
+                        elementToRemove.add(element);
+                      }
+                      index++;
+                    }
+                    for (var element in elementToRemove) {
+                      recordLesson.remove(element);
+                    }
+                    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~              
+                    return Column(
+                      children: recordLesson
+                          .map(
+                            (record) => StreamBuilder<List<Lesson>>(
+                                stream: readLessons(record.lessonId!),
+                                builder: ((context, snapshot) {
+                                  
+
+                                  if (snapshot.hasError) {
+                                    return const Text("Something went wrong!");
+                                  } else if (snapshot.hasData) {
+                                    if (snapshot.data!.length >= 1) {
+                                      
+                                      final lesson = snapshot.data!.first;
+                                      return LessonCard(
+                                        lesson: lesson,
+                                      );
+                                    }
+                                    else{
+                                      return Container();
+                                    }
+                                  } else {
+                                    return const Center(
+                                        //child: CircularProgressIndicator(),
+                                        );
+                                  }
+                                })),
+                          )
+                          .toList(),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }))
           ],
         ),
       ),
