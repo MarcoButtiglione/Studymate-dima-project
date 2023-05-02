@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 class CategoryCard extends StatelessWidget {
   final String name;
   final String url;
-  const CategoryCard({super.key, required this.name, required this.url});
+  final bool selected;
+  const CategoryCard({super.key, required this.name, required this.url,required this.selected});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class CategoryCard extends StatelessWidget {
       child: Column(
         children: [
           Card(
-            elevation: 0,
+            elevation: selected? 10:0,
             color: Theme.of(context).colorScheme.surfaceVariant,
             child: SizedBox(
               height: 150,
@@ -27,7 +28,7 @@ class CategoryCard extends StatelessWidget {
               ),
             ),
           ),
-          Text(name, style: TextStyle(fontWeight: FontWeight.bold))
+          Text(name, style: TextStyle(fontWeight: selected?FontWeight.bold:FontWeight.normal))
         ],
       ),
     );

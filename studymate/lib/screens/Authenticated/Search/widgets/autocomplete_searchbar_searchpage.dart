@@ -3,41 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
+class AutocompleteSearchbarSearchPage extends StatefulWidget {
+  final List<String> lessonsTitle;
+  final Function(String) onSelectedCallback;
+  final Function() onCleanCallback;
+  const AutocompleteSearchbarSearchPage({
+    super.key,
+    required this.lessonsTitle,
+    required this.onSelectedCallback,
+    required this.onCleanCallback,
+  });
 
-class AutocompleteSearchbar extends StatefulWidget {
   @override
-  _AutocompleteSearchbarState createState() => _AutocompleteSearchbarState();
+  _AutocompleteSearchbarSearchPageState createState() =>
+      _AutocompleteSearchbarSearchPageState();
 }
 
-class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
+class _AutocompleteSearchbarSearchPageState
+    extends State<AutocompleteSearchbarSearchPage> {
   bool isLoading = false;
 
-  late List<String> autoCompleteData;
-
   late TextEditingController controller;
-
-  Future fetchAutoCompleteData() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final String stringData = await rootBundle.loadString("assets/data.json");
-
-    final List<dynamic> json = jsonDecode(stringData);
-
-    final List<String> jsonStringData = json.cast<String>();
-
-    setState(() {
-      isLoading = false;
-      autoCompleteData = jsonStringData;
-    });
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    fetchAutoCompleteData();
   }
 
   @override
@@ -51,7 +42,7 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
               if (textEditingValue.text.isEmpty) {
                 return const Iterable<String>.empty();
               } else {
-                return autoCompleteData.where((word) => word
+                return widget.lessonsTitle.where((word) => word
                     .toLowerCase()
                     .contains(textEditingValue.text.toLowerCase()));
               }
@@ -84,7 +75,7 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
               );
             },
             onSelected: (selectedString) {
-              print(selectedString);
+              widget.onSelectedCallback(selectedString);
             },
             fieldViewBuilder:
                 (context, controller, focusNode, onEditingComplete) {
@@ -107,8 +98,16 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: Colors.grey[300]!),
                   ),
-                  hintText: "Search a lesson or a tutor",
+                  hintText: "Search a lesson",
                   prefixIcon: Icon(Icons.search),
+                  suffixIcon: controller.text!=''?IconButton(
+                      onPressed: () {
+                        controller.clear();
+                        widget.onCleanCallback();
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                      )):null
                 ),
               );
             },
