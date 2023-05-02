@@ -189,63 +189,57 @@ class _LessonState extends State<LessonPage> {
                           ),
                           Align(
                             alignment: Alignment.centerRight,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                    _createRoute(const OtherProfilePage()));
-                              },
-                              child: Container(
-                                constraints: BoxConstraints(maxWidth: 230),
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(10.0),
-                                    topLeft: Radius.circular(10.0),
-                                    bottomLeft: Radius.circular(10.0),
-                                    bottomRight: Radius.circular(10.0),
-                                  ),
-                                  color: Color.fromARGB(211, 255, 255, 255),
+                            child: Container(
+                              constraints: BoxConstraints(maxWidth: 200),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10.0),
+                                  topLeft: Radius.circular(10.0),
+                                  bottomLeft: Radius.circular(10.0),
+                                  bottomRight: Radius.circular(10.0),
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        height: 40,
-                                        width: 40,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(35),
-                                          child: Image(
-                                            image: NetworkImage(
-                                                widget.user.profileImageURL),
+                                color: Color.fromARGB(211, 255, 255, 255),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      height: 40,
+                                      width: 40,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(35),
+                                        child: Image(
+                                          image: NetworkImage(
+                                              widget.user.profileImageURL),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          widget.user.firstname +
+                                              " " +
+                                              widget.user.lastname,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                          softWrap: false,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 46, 46, 46),
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Flexible(
-                                        child: Container(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            widget.user.firstname +
-                                                " " +
-                                                widget.user.lastname,
-                                            overflow: TextOverflow.fade,
-                                            maxLines: 1,
-                                            softWrap: false,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Color.fromARGB(
-                                                  255, 46, 46, 46),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
