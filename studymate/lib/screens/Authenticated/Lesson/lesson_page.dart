@@ -16,6 +16,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/lesson.dart';
 import '../../../models/user.dart';
+import '../../../service/storage_service.dart';
 import '../Chat/chat_msg.dart';
 
 class LessonPage extends StatefulWidget {
@@ -32,7 +33,10 @@ class _LessonState extends State<LessonPage> {
 
   @override
   void initState() {
-    final record= RecordLessonView(lessonId: widget.lesson.id,timestamp: Timestamp.fromDate(DateTime.now()),userId:userLog.uid );
+    final record = RecordLessonView(
+        lessonId: widget.lesson.id,
+        timestamp: Timestamp.fromDate(DateTime.now()),
+        userId: userLog.uid);
     sendRecord(record: record);
   }
 
@@ -113,6 +117,8 @@ class _LessonState extends State<LessonPage> {
 
   @override
   Widget build(BuildContext context) {
+    final Storage storage = Storage();
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -133,10 +139,20 @@ class _LessonState extends State<LessonPage> {
                           return const Text("Something went wrong!");
                         } else if (snapshot.hasData) {
                           final category = snapshot.data!.first;
-                          return Image.network(
-                            category.imageURL,
-                            fit: BoxFit.fill,
-                          );
+                          return FutureBuilder(
+                              future: storage.downloadURL(category.imageURL),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text("Something went wrong!");
+                                } else if (snapshot.hasData) {
+                                  return Image(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(snapshot.data!),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              });
                         } else {
                           return const Center(
                               //child: CircularProgressIndicator(),
@@ -210,12 +226,23 @@ class _LessonState extends State<LessonPage> {
                                       height: 40,
                                       width: 40,
                                       child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(35),
-                                        child: Image(
-                                          image: NetworkImage(
-                                              widget.user.profileImageURL),
-                                        ),
+                                        borderRadius: BorderRadius.circular(35),
+                                        child: FutureBuilder(
+                                            future: storage.downloadURL(
+                                                widget.user.profileImageURL),
+                                            builder: (context, snapshot) {
+                                              if (snapshot.hasError) {
+                                                return const Text(
+                                                    "Something went wrong!");
+                                              } else if (snapshot.hasData) {
+                                                return Image(
+                                                  image: NetworkImage(
+                                                      snapshot.data!),
+                                                );
+                                              } else {
+                                                return Container();
+                                              }
+                                            }),
                                       ),
                                     ),
                                     const SizedBox(
@@ -233,8 +260,8 @@ class _LessonState extends State<LessonPage> {
                                           softWrap: false,
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 46, 46, 46),
+                                            color:
+                                                Color.fromARGB(255, 46, 46, 46),
                                           ),
                                         ),
                                       ),

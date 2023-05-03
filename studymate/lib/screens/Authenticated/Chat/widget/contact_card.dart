@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../service/storage_service.dart';
 import '../../Lesson/lesson_page.dart';
 
 class ContactCard extends StatelessWidget {
@@ -26,6 +27,8 @@ class ContactCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Storage storage = Storage();
+
     return Column(
       children: [
         Row(
@@ -35,10 +38,19 @@ class ContactCard extends StatelessWidget {
               width: 70,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(35),
-                child: Image(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(userImageURL!),
-                ),
+                child: FutureBuilder(
+                    future: storage.downloadURL(userImageURL!),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Text("Something went wrong!");
+                      } else if (snapshot.hasData) {
+                        return Image(
+                          image: NetworkImage(snapshot.data!),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    }),
               ),
             ),
             const SizedBox(width: 20),

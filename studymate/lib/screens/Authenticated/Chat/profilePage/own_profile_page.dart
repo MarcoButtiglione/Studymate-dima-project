@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:studymate/provider/AuthService.dart';
 import 'package:studymate/provider/authentication.dart';
 import 'package:studymate/screens/Authenticated/Chat/profilePage/updateInterest.dart';
 import 'package:studymate/screens/Login/login.dart';
+import 'package:studymate/service/storage_service.dart';
 
 import '../../../../models/user.dart';
 
@@ -45,6 +47,8 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
   }
 
   Widget _buildPage(Users us) {
+    final Storage storage = Storage();
+
     List<String> interest = [];
     us.categoriesOfInterest!.forEach((element) {
       interest.add(element.toString());
@@ -58,6 +62,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
             children: [
               const Text("Profile details", style: TextStyle(fontSize: 35)),
               const SizedBox(height: 50),
+              
               Stack(
                 alignment: Alignment.bottomRight,
                 children: <Widget>[
@@ -66,14 +71,43 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                     width: 150,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
-                      child: Image(
-                        image: NetworkImage(us.profileImageURL),
-                      ),
+                      child: FutureBuilder(
+                          future: storage.downloadURL(us.profileImageURL),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return const Text("Something went wrong!");
+                            } else if (snapshot.hasData) {
+                              return Image(
+                                image: NetworkImage(snapshot.data!),
+                              );
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          }),
                     ),
                   ),
                   IconButton(
                       icon: const Icon(Icons.photo_camera),
-                      onPressed: () {
+                      onPressed: () async {
+                        final results = await FilePicker.platform.pickFiles(
+                          allowMultiple: false,
+                          type: FileType.custom,
+                          allowedExtensions: ['png', 'jpg'],
+                        );
+                        if (results == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('No file selected')));
+                          return null;
+                        }
+                        final path = results.files.single.path!;
+                        final fileName = results.files.single.name!;
+
+                        storage.uploadProfilePicture(path, fileName).then((value) =>
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Image loaded'))));
+
+                        /*
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
@@ -96,6 +130,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                             ),
                           ),
                         );
+                        */
                       },
                       style: IconButton.styleFrom(
                         foregroundColor:

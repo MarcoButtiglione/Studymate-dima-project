@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:studymate/screens/Authenticated/qrCode/qrCodeGenerate.dart';
 import 'package:studymate/screens/Authenticated/qrCode/qrCodeScan.dart';
 
+import '../../../service/storage_service.dart';
 import '../NextLesson/nextLession.dart';
 import '../NextTutoring/nextTutoring.dart';
 
@@ -69,6 +70,8 @@ class ClassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Storage storage = Storage();
+
     return Container(
       width: 350,
       height: 200,
@@ -98,10 +101,19 @@ class ClassCard extends StatelessWidget {
               width: 70,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(35),
-                child: Image(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(userImageURL!),
-                ),
+                child: FutureBuilder(
+                    future: storage.downloadURL(userImageURL!),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Text("Something went wrong!");
+                      } else if (snapshot.hasData) {
+                        return Image(
+                          image: NetworkImage(snapshot.data!),
+                        );
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    }),
               ),
             ),
             const SizedBox(width: 20),

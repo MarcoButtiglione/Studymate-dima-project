@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../models/lesson.dart';
 import '../../../models/user.dart';
+import '../../../service/storage_service.dart';
 import '../Lesson/lesson_page.dart';
 
 class LessonCard extends StatefulWidget {
@@ -29,6 +30,8 @@ class _LessonCardState extends State<LessonCard> {
 
   @override
   Widget build(BuildContext context) {
+    final Storage storage = Storage();
+
     return Column(
       children: [
         const SizedBox(height: 15),
@@ -53,10 +56,19 @@ class _LessonCardState extends State<LessonCard> {
                       width: 70,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(35),
-                        child: Image(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(user.profileImageURL),
-                        ),
+                        child: FutureBuilder(
+                            future: storage.downloadURL(user.profileImageURL),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return const Text("Something went wrong!");
+                              } else if (snapshot.hasData) {
+                                return Image(
+                                  image: NetworkImage(snapshot.data!),
+                                );
+                              } else {
+                                return CircularProgressIndicator();
+                              }
+                            }),
                       ),
                     ),
                     const SizedBox(width: 20),
@@ -79,13 +91,13 @@ class _LessonCardState extends State<LessonCard> {
                             ],
                           ),
                           Row(
-                            children:  [
+                            children: [
                               Icon(
                                 user.userRating >= 1
                                     ? Icons.star
                                     : Icons.star_border,
                                 size: 13,
-                                color:const  Color.fromARGB(255, 101, 101, 101),
+                                color: const Color.fromARGB(255, 101, 101, 101),
                               ),
                               Icon(
                                 user.userRating >= 2

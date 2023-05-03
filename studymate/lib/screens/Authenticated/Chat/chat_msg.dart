@@ -11,6 +11,7 @@ import 'package:studymate/screens/Authenticated/Chat/widget/sent_message.dart';
 import '../../../component/utils.dart';
 import '../../../models/chat.dart';
 import '../../../models/msg.dart';
+import '../../../service/storage_service.dart';
 
 class ChatMsg extends StatefulWidget {
   final Chat? chat;
@@ -47,6 +48,8 @@ class _MsgState extends State<ChatMsg> {
 
   @override
   Widget build(BuildContext context) {
+    final Storage storage = Storage();
+
     return Scaffold(
         body: Container(
       color: const Color.fromARGB(18, 233, 64, 87),
@@ -70,10 +73,20 @@ class _MsgState extends State<ChatMsg> {
                     width: 50,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(35),
-                      child: Image(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(widget.reciver.profileImageURL),
-                      ),
+                      child: FutureBuilder(
+                          future: storage
+                              .downloadURL(widget.reciver.profileImageURL),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return const Text("Something went wrong!");
+                            } else if (snapshot.hasData) {
+                              return Image(
+                                image: NetworkImage(snapshot.data!),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }),
                     ),
                   ),
                   const SizedBox(width: 20),
