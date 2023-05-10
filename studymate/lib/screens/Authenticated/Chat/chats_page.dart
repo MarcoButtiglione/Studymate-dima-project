@@ -16,6 +16,32 @@ class _ChatState extends State<ChatsPage> {
   final user = FirebaseAuth.instance.currentUser!;
   late String selected = "";
 
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  CollectionReference _notRef =
+      FirebaseFirestore.instance.collection('notification');
+
+  Future<void> getData() async {
+    QuerySnapshot querySnapshot = await _notRef
+        .where('to_id', isEqualTo: user.uid)
+        .where('type', isEqualTo: "message")
+        .get();
+
+    final allData = querySnapshot.docs.map((doc) {
+      return doc.get("id");
+    }).toList();
+    allData.forEach((element) {
+      FirebaseFirestore.instance
+          .collection("notification")
+          .doc(element)
+          .delete();
+    });
+  }
+
   Stream<List<Users>> readUser(String userId) => FirebaseFirestore.instance
       .collection('users')
       .where('id', isEqualTo: userId)

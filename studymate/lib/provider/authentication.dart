@@ -85,7 +85,9 @@ class Authentication {
     Utilities utilities = Utilities();
     try {
       if (!kIsWeb) {
-        await googleSignIn.signOut();
+        if (await googleSignIn.isSignedIn()) {
+          await googleSignIn.signOut();
+        }
       }
       await FirebaseAuth.instance.signOut();
       Navigator.of(context).popUntil((route) => route.isFirst);

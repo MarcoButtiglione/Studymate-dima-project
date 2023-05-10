@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/message_format.dart';
@@ -11,6 +12,7 @@ import 'package:studymate/screens/Authenticated/Chat/widget/sent_message.dart';
 import '../../../component/utils.dart';
 import '../../../models/chat.dart';
 import '../../../models/msg.dart';
+import '../../../models/notification.dart';
 import '../../../service/storage_service.dart';
 
 class ChatMsg extends StatefulWidget {
@@ -309,6 +311,21 @@ class _MsgState extends State<ChatMsg> {
         'last_time': addMsg.addtime,
         'from_uid': addMsg.from_uid,
         'view': false
+      });
+      final docChat = FirebaseFirestore.instance.collection('notification');
+      await docChat.add({}).then((DocumentReference doc) {
+        var notif = Notifications(
+          id: doc.id,
+          from_id: addMsg.from_uid,
+          to_id: widget.reciver.id,
+          eventId: addMsg.id,
+          type: "message",
+          content: "${addMsg.content}",
+          view: false,
+          time: Timestamp.now(),
+        );
+        final json = notif.toFirestore();
+        docChat.doc(doc.id).update(json);
       });
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);

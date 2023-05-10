@@ -4,13 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:studymate/functions/routingAnimation.dart';
+import 'package:studymate/models/chat.dart';
 import 'package:studymate/models/lesson.dart';
+import 'package:studymate/models/msg.dart';
 import 'package:studymate/models/user.dart';
+import '../../models/notification.dart';
 import 'common_widgets/nextLession_card.dart';
 import 'common_widgets/nextTutoring_card.dart';
 import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
-import 'package:studymate/screens/Authenticated/notification_page.dart';
+import 'package:studymate/screens/Authenticated/notification/notification_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -36,6 +39,22 @@ class _HomePageState extends State<HomePage> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
 
+  Stream<List<Chat>> readMessages() => FirebaseFirestore.instance
+      .collection('chat')
+      .where('member', arrayContains: user.uid)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Chat.fromFirestore(doc.data())).toList());
+
+  Stream<List<Notifications>> readNot() => FirebaseFirestore.instance
+      .collection('notification')
+      .where('to_id', isEqualTo: user.uid)
+      .where('view', isEqualTo: false)
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((doc) => Notifications.fromFirestore(doc.data()))
+          .toList());
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -55,36 +74,93 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.bold,
                     )),
               ),
-              IconButton(
-                icon: badges.Badge(
-                  position: BadgePosition.topEnd(top: 0, end: 0),
-                  showBadge: true,
-                  child: const Icon(
-                    Icons.notifications,
-                    color: Colors.grey,
-                    size: 25.0,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context)
-                      .push(createRoute(const NotificationPage()));
-                },
-              ),
+              StreamBuilder(
+                  stream: readNot(),
+                  builder: ((context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<Notifications> notifications = snapshot.data!;
+                      if (notifications.isNotEmpty) {
+                        return IconButton(
+                          icon: badges.Badge(
+                            position: BadgePosition.topEnd(top: 0, end: 0),
+                            showBadge: true,
+                            child: const Icon(
+                              Icons.notifications,
+                              color: Colors.grey,
+                              size: 25.0,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(createRoute(NotificationPage()));
+                          },
+                        );
+                      }
+                    }
+                    return IconButton(
+                      icon: badges.Badge(
+                        position: BadgePosition.topEnd(top: 0, end: 0),
+                        showBadge: false,
+                        child: const Icon(
+                          Icons.notifications,
+                          color: Colors.grey,
+                          size: 25.0,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(createRoute(NotificationPage()));
+                      },
+                    );
+                  })),
               const SizedBox(width: 10),
-              IconButton(
-                icon: badges.Badge(
-                  position: BadgePosition.topEnd(top: 0, end: 0),
-                  showBadge: true,
-                  child: const Icon(
-                    Icons.message,
-                    color: Colors.grey,
-                    size: 25.0,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(createRoute(ChatsPage()));
-                },
-              ),
+              StreamBuilder(
+                  stream: readMessages(),
+                  builder: ((context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<Chat> messages = snapshot.data!;
+                      if (messages.isNotEmpty) {
+                        int num = 0;
+                        messages.forEach((element) {
+                          if (element.num_msg! > 0 &&
+                              element.from_uid != user.uid) {
+                            num += 1;
+                          }
+                        });
+                        if (num > 0) {
+                          return IconButton(
+                            icon: badges.Badge(
+                              position: BadgePosition.topEnd(top: 0, end: 0),
+                              showBadge: true,
+                              child: const Icon(
+                                Icons.message,
+                                color: Colors.grey,
+                                size: 25.0,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .push(createRoute(ChatsPage()));
+                            },
+                          );
+                        }
+                      }
+                    }
+                    return IconButton(
+                      icon: badges.Badge(
+                        position: BadgePosition.topEnd(top: 0, end: 0),
+                        showBadge: false,
+                        child: const Icon(
+                          Icons.message,
+                          color: Colors.grey,
+                          size: 25.0,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(createRoute(ChatsPage()));
+                      },
+                    );
+                  })),
             ]),
             //--------------------
             //Your next lesson

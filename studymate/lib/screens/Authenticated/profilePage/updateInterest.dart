@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:studymate/models/user.dart';
 
-import '../../../../component/utils.dart';
-import '../../../../models/category.dart';
+import '../../../component/utils.dart';
+import '../../../models/category.dart';
 
 class updateInterest extends StatefulWidget {
   final List<String> interest;

@@ -12,12 +12,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:studymate/provider/AuthService.dart';
 import 'package:studymate/provider/authentication.dart';
-import 'package:studymate/screens/Authenticated/Chat/profilePage/updateInterest.dart';
+import 'package:studymate/screens/Authenticated/profilePage/updateInterest.dart';
 import 'package:studymate/screens/Login/login.dart';
 import 'package:studymate/service/storage_service.dart';
 import 'package:path/path.dart' as p;
 
-import '../../../../models/user.dart';
+import '../../../models/user.dart';
 
 class OwnProfilePage extends StatefulWidget {
   @override
@@ -169,16 +169,17 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                               clipBehavior: Clip.none,
                               children: [
                                 Positioned(
-                                  top: -10,
+                                    top: -10,
                                     child: Container(
-                                  width: 59,
-                                  height: 3,
-                                  margin: const EdgeInsets.only(bottom: 20),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(2.5),
-                                    color: Colors.black38,
-                                  ),
-                                )),
+                                      width: 59,
+                                      height: 3,
+                                      margin: const EdgeInsets.only(bottom: 20),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(2.5),
+                                        color: Colors.black38,
+                                      ),
+                                    )),
                                 Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

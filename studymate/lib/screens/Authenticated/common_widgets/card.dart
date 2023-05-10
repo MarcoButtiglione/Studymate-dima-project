@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:studymate/models/notification.dart';
 import 'package:studymate/screens/Authenticated/qrCode/qrCodeGenerate.dart';
 import 'package:studymate/screens/Authenticated/qrCode/qrCodeScan.dart';
 
@@ -35,6 +37,7 @@ class ClassCard extends StatelessWidget {
       required this.lessonPage});
 
   Future<void> _showMyDialog(BuildContext context) async {
+    final currUser = FirebaseAuth.instance.currentUser!;
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -47,11 +50,27 @@ class ClassCard extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               child: Text('Confirm'),
-              onPressed: () {
+              onPressed: () async {
                 FirebaseFirestore.instance
                     .collection("scheduled")
                     .doc(id)
                     .delete();
+                final docChat =
+                    FirebaseFirestore.instance.collection('notification');
+                await docChat.add({}).then((DocumentReference doc) {
+                  var notif = Notifications(
+                    id: doc.id,
+                    from_id: currUser.uid,
+                    to_id: (currUser.uid == studentId) ? tutorId : studentId,
+                    type: "response",
+                    content:
+                        " deleted the ${(tutor!) ? "tutoring" : "lesson"} on ${DateFormat.yMd().format(date!.toDate())}",
+                    view: false,
+                    time: Timestamp.now(),
+                  );
+                  final json = notif.toFirestore();
+                  docChat.doc(doc.id).update(json);
+                });
 
                 Navigator.pop(context, true);
               },

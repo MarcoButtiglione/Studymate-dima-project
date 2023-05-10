@@ -3,12 +3,14 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:studymate/models/scheduled.dart';
 import 'package:studymate/models/timeslot.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../component/utils.dart';
 import '../../../models/lesson.dart';
+import '../../../models/notification.dart';
 import '../../../models/user.dart';
 
 class BookLessonModal extends StatefulWidget {
@@ -139,13 +141,39 @@ class _BookLessonModalState extends State<BookLessonModal> {
       });
 
       String docId = "";
+      var sched = Scheduled();
       final docScheduled = FirebaseFirestore.instance.collection('scheduled');
-      final json = scheduled.toFirestore();
-      await docScheduled.add(json).then((DocumentReference doc) {
-        docId = doc.id;
+      await docScheduled.add({}).then((DocumentReference doc) {
+        sched = Scheduled(
+            id: doc.id,
+            lessionId: scheduled.lessionId,
+            studentId: scheduled.studentId,
+            title: scheduled.title,
+            category: scheduled.category,
+            timeslot: scheduled.timeslot,
+            tutorId: scheduled.tutorId,
+            date: scheduled.date,
+            accepted: scheduled.accepted);
+        final json = sched.toFirestore();
+        docScheduled.doc(doc.id).update(json);
       });
 
-      await docScheduled.doc(docId).update({'id': docId});
+      final docChat = FirebaseFirestore.instance.collection('notification');
+      await docChat.add({}).then((DocumentReference doc) {
+        var notif = Notifications(
+          id: doc.id,
+          from_id: sched.studentId,
+          to_id: sched.tutorId,
+          type: "request",
+          content:
+              "${scheduled.title} on ${DateFormat.yMd().format(scheduled.date!.toDate())}",
+          view: false,
+          eventId: sched.id,
+          time: Timestamp.now(),
+        );
+        final json = notif.toFirestore();
+        docChat.doc(doc.id).update(json);
+      });
       setState(() {
         isBusy = false;
       });
