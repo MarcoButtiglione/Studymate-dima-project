@@ -126,7 +126,7 @@ class _OnBoardState extends State<OnBoard> {
                               textAlign: TextAlign.center,
                             ),
                             SizedBox(
-                              height: 0.03 * height,
+                              height: 0.02 * height,
                             ),
                           ],
                         ),
@@ -135,7 +135,7 @@ class _OnBoardState extends State<OnBoard> {
                   }),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -276,12 +276,12 @@ class _OnBoardState extends State<OnBoard> {
                           padding: EdgeInsets.all(0.1 * height),
                           child: Image.asset(
                             content[i].img,
-                            height: 0.5 * height,
+                            height: 0.7 * height,
                           ),
                         )),
                         Center(
                           child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   content[i].text,
@@ -304,14 +304,6 @@ class _OnBoardState extends State<OnBoard> {
                                 ),
                                 SizedBox(
                                   height: 0.03 * height,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    content.length,
-                                    (int index) => _buildHorizontalDots(
-                                        index: index, h: height, w: width),
-                                  ),
                                 ),
                               ]),
                         )
@@ -373,6 +365,14 @@ class _OnBoardState extends State<OnBoard> {
                           ),
                           SizedBox(
                             width: width - 0.65 * width,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                content.length,
+                                (int index) => _buildHorizontalDots(
+                                    index: index, h: height, w: width),
+                              ),
+                            ),
                           ),
                           ElevatedButton(
                             onPressed: () {

@@ -55,7 +55,6 @@ class _LoginState extends State<Login> {
               SizedBox(height: size.height * 0.03),
               Container(
                 alignment: Alignment.center,
-                height: 0.06 * h,
                 width: 0.8 * w,
                 child: TextFormField(
                   controller: emailController,
@@ -68,10 +67,9 @@ class _LoginState extends State<Login> {
                           : null,
                 ),
               ),
-              SizedBox(height: size.height * 0.03),
+              //SizedBox(height: size.height * 0.001),
               Container(
                 alignment: Alignment.center,
-                height: 0.06 * h,
                 width: 0.8 * w,
                 child: TextFormField(
                   controller: passwordController,
