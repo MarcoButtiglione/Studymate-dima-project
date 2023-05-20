@@ -7,13 +7,13 @@ import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:studymate/provider/authentication.dart';
+import 'package:studymate/screens/Authenticated/profilePage/body_profile_page.dart';
 import 'package:studymate/screens/Authenticated/profilePage/updateInterest.dart';
 import 'package:studymate/service/storage_service.dart';
 import 'package:path/path.dart' as p;
 
 import '../../../../models/user.dart';
 
-enum ProfilePageSection { onwlesson, saved}
 
 class OwnProfilePage extends StatefulWidget {
   @override
@@ -22,9 +22,6 @@ class OwnProfilePage extends StatefulWidget {
 
 class _OwnProfilePageState extends State<OwnProfilePage> {
   File? _image;
-  ProfilePageSection selected = ProfilePageSection.onwlesson;
-
-  
 
   Future _pickImage(ImageSource source) async {
     try {
@@ -138,7 +135,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
         ),
         //Sfumatura
         Positioned(
-            top: 170,
+            top: 110,
             left: 0,
             child: Container(
               decoration: BoxDecoration(
@@ -170,81 +167,56 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                         child: InkWell(
                           onTap: () {
                             showModalBottomSheet(
+                              showDragHandle: true,
                               context: context,
                               isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20))),
                               builder: (context) => Container(
-                                padding: const EdgeInsets.all(16),
-                                child: Stack(
-                                  alignment: AlignmentDirectional.topCenter,
-                                  clipBehavior: Clip.none,
+                                child: Wrap(
                                   children: [
-                                    Positioned(
-                                        top: -10,
-                                        child: Container(
-                                          width: 59,
-                                          height: 3,
-                                          margin:
-                                              const EdgeInsets.only(bottom: 20),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(2.5),
-                                            color: Colors.black38,
-                                          ),
-                                        )),
-                                    Wrap(
-                                      children: [
-                                        ListTile(
-                                          onTap: () {},
-                                          leading: const Icon(Icons.settings),
-                                          title: const Text('Edit profile'),
-                                        ),
-                                        ListTile(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        updateInterest(
-                                                          interest: interest,
-                                                        )));
-                                          },
-                                          leading: const Icon(Icons.favorite),
-                                          title: const Text('Edit preferences'),
-                                        ),
-                                        ListTile(
-                                          onTap: () {},
-                                          leading: const Icon(Icons.schedule),
-                                          title: const Text('Edit timeslots'),
-                                        ),
-                                        _isSigningOut
-                                            ? CircularProgressIndicator(
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<
-                                                            Color>(
-                                                        Color.fromARGB(
-                                                            255, 233, 64, 87)),
-                                              )
-                                            : ListTile(
-                                                onTap: () {
-                                                  setState(() {
-                                                    _isSigningOut = true;
-                                                  });
-                                                  Authentication
-                                                      .signOutWithGoogle(
-                                                          context: context);
-                                                  setState(() {
-                                                    _isSigningOut = true;
-                                                  });
-                                                },
-                                                leading:
-                                                    const Icon(Icons.logout),
-                                                title: const Text('Logout'),
-                                              ),
-                                      ],
+                                    ListTile(
+                                      onTap: () {},
+                                      leading: const Icon(Icons.settings),
+                                      title: const Text('Edit profile'),
                                     ),
+                                    ListTile(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    updateInterest(
+                                                      interest: interest,
+                                                    )));
+                                      },
+                                      leading: const Icon(Icons.favorite),
+                                      title: const Text('Edit preferences'),
+                                    ),
+                                    ListTile(
+                                      onTap: () {},
+                                      leading: const Icon(Icons.schedule),
+                                      title: const Text('Edit timeslots'),
+                                    ),
+                                    _isSigningOut
+                                        ? CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Color.fromARGB(
+                                                        255, 233, 64, 87)),
+                                          )
+                                        : ListTile(
+                                            onTap: () {
+                                              setState(() {
+                                                _isSigningOut = true;
+                                              });
+                                              Authentication.signOutWithGoogle(
+                                                  context: context);
+                                              setState(() {
+                                                _isSigningOut = true;
+                                              });
+                                            },
+                                            leading: const Icon(Icons.logout),
+                                            title: const Text('Logout'),
+                                          ),
                                   ],
                                 ),
                               ),
@@ -283,37 +255,22 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
 
         //BODY
         Positioned(
-          top: 280,
+          top: 220,
           left: 0,
           child: Container(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.background,
             ),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height - 130,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    
-                    
-                    const SizedBox(height: 50),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+            height: MediaQuery.of(context).size.height,
+            child: Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: BodyProfilePage()
             ),
           ),
         ),
         Positioned(
-            top: 200,
+            top: 150,
             left: 0,
             child: Container(
               width: MediaQuery.of(context).size.width,
@@ -356,73 +313,48 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                               icon: const Icon(Icons.mode_edit_outline),
                               onPressed: () {
                                 showModalBottomSheet(
+                                  showDragHandle: true,
                                   context: context,
                                   isScrollControlled: true,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(20))),
                                   builder: (context) => Container(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Stack(
-                                      alignment: AlignmentDirectional.topCenter,
-                                      clipBehavior: Clip.none,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Positioned(
-                                            top: -10,
-                                            child: Container(
-                                              width: 59,
-                                              height: 3,
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 20),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(2.5),
-                                                color: Colors.black38,
-                                              ),
+                                        const SizedBox(height: 10),
+                                        ElevatedButton(
+                                            onPressed: (() {
+                                              _pickImage(ImageSource.gallery);
+                                              return;
+                                            }),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const [
+                                                Icon(
+                                                    Icons.collections_outlined),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text('Browse Gallery'),
+                                              ],
                                             )),
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const SizedBox(height: 10),
-                                            ElevatedButton(
-                                                onPressed: (() {
-                                                  _pickImage(
-                                                      ImageSource.gallery);
-                                                  return;
-                                                }),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: const [
-                                                    Icon(Icons
-                                                        .collections_outlined),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text('Browse Gallery'),
-                                                  ],
-                                                )),
-                                            Text('or'),
-                                            ElevatedButton(
-                                                onPressed: (() {
-                                                  _pickImage(
-                                                      ImageSource.camera);
-                                                  return;
-                                                }),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: const [
-                                                    Icon(Icons
-                                                        .camera_alt_outlined),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text('Use a Camera'),
-                                                  ],
-                                                )),
-                                          ],
-                                        ),
+                                        Text('or'),
+                                        ElevatedButton(
+                                            onPressed: (() {
+                                              _pickImage(ImageSource.camera);
+                                              return;
+                                            }),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: const [
+                                                Icon(Icons.camera_alt_outlined),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text('Use a Camera'),
+                                              ],
+                                            )),
                                       ],
                                     ),
                                   ),
