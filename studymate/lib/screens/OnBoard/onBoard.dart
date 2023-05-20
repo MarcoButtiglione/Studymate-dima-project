@@ -82,6 +82,7 @@ class _OnBoardState extends State<OnBoard> {
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: SafeArea(
             child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Expanded(
               flex: 9,
@@ -121,7 +122,7 @@ class _OnBoardState extends State<OnBoard> {
                               style: TextStyle(
                                 fontFamily: "Crimson Pro",
                                 fontWeight: FontWeight.w300,
-                                fontSize: 0.04 * width,
+                                fontSize: 0.03 * width,
                               ),
                               textAlign: TextAlign.center,
                             ),
