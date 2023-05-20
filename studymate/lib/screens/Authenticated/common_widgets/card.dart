@@ -90,9 +90,11 @@ class ClassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Storage storage = Storage();
-
+    Size size = MediaQuery.of(context).size;
+    double h = size.height;
+    double w = size.width;
     return Container(
-      width: 350,
+      width: w > h ? 330 : 350,
       height: 200,
       margin: const EdgeInsets.all(2),
       decoration: BoxDecoration(

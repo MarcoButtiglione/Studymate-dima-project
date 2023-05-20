@@ -171,9 +171,11 @@ class _OnBoardState extends State<OnBoard> {
                                   : EdgeInsets.symmetric(
                                       horizontal: width * 0.2, vertical: 25),
                             ),
-                            child: const Text(
+                            child: Text(
                               "START",
                               style: TextStyle(
+                                fontSize:
+                                    (width > 490 && height > 720) ? 30 : 16,
                                 color: const Color.fromARGB(255, 255, 255, 255),
                               ),
                             ),
@@ -195,9 +197,13 @@ class _OnBoardState extends State<OnBoard> {
                                     fontSize: (width <= 550) ? 13 : 17,
                                   ),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   "SKIP",
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                      fontSize: (width > 490 && height > 720)
+                                          ? 30
+                                          : 16,
+                                      color: Colors.black),
                                 ),
                               ),
                               ElevatedButton(
@@ -220,9 +226,11 @@ class _OnBoardState extends State<OnBoard> {
                                       : const EdgeInsets.symmetric(
                                           horizontal: 30, vertical: 25),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   "NEXT",
                                   style: TextStyle(
+                                    fontSize:
+                                        (width > 490 && height > 720) ? 30 : 16,
                                     color: const Color.fromARGB(
                                         255, 255, 255, 255),
                                   ),
@@ -333,9 +341,10 @@ class _OnBoardState extends State<OnBoard> {
                           padding:
                               EdgeInsets.symmetric(horizontal: 0.2 * width),
                         ),
-                        child: const Text(
+                        child: Text(
                           "START",
                           style: TextStyle(
+                            fontSize: (width > 490 && height > 720) ? 30 : 16,
                             color: const Color.fromARGB(255, 255, 255, 255),
                           ),
                         ),
@@ -359,9 +368,13 @@ class _OnBoardState extends State<OnBoard> {
                               padding:
                                   EdgeInsets.symmetric(horizontal: 0.1 * width),
                             ),
-                            child: const Text(
+                            child: Text(
                               "SKIP",
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize:
+                                    (width > 490 && height > 720) ? 30 : 16,
+                              ),
                             ),
                           ),
                           SizedBox(
@@ -392,9 +405,11 @@ class _OnBoardState extends State<OnBoard> {
                               padding:
                                   EdgeInsets.symmetric(horizontal: 0.1 * width),
                             ),
-                            child: const Text(
+                            child: Text(
                               "NEXT",
                               style: TextStyle(
+                                fontSize:
+                                    (width > 490 && height > 720) ? 30 : 16,
                                 color: const Color.fromARGB(255, 255, 255, 255),
                               ),
                             ),

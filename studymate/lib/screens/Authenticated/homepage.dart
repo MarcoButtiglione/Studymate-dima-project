@@ -57,6 +57,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double w = size.width;
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -162,24 +165,43 @@ class _HomePageState extends State<HomePage> {
                     );
                   })),
             ]),
-            //--------------------
-            //Your next lesson
-            const SizedBox(height: 20),
-            NextLessionCard(
-              user: user,
-            ),
+            (w < 490)
+                ? Column(
+                    children: [
+                      //--------------------
+                      //Your next lesson
+                      NextLessionCard(
+                        user: user,
+                      ),
+                      //--------------------
+                      //Your next tutoring
+                      NextTutoringCard(
+                        user: user,
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      //--------------------
+                      //Your next lesson
+                      NextLessionCard(
+                        user: user,
+                      ),
 
-            //--------------------
-            //Your next tutoring
+                      //--------------------
+                      //Your next tutoring
 
-            NextTutoringCard(
-              user: user,
-            ),
+                      NextTutoringCard(
+                        user: user,
+                      ),
+                    ],
+                  ),
 
             //--------------------
             //Suggested for you
             const SizedBox(height: 20),
-            Row(children: const <Widget>[
+            const Row(children: <Widget>[
               Text("Suggested for you",
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),

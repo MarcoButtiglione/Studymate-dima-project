@@ -40,16 +40,18 @@ class _nextTutoringState extends State<NextTutoringCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
       child: StreamBuilder(
         stream: readScheduled(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var schedule = snapshot.data!;
-            if (schedule.length > 0) {
+            if (schedule.isNotEmpty) {
               return Column(children: [
-                Row(children: const <Widget>[
+                const SizedBox(
+                  height: 10,
+                ),
+                const Row(children: <Widget>[
                   Text("Your next tutoring",
                       textAlign: TextAlign.left,
                       style: TextStyle(
@@ -57,7 +59,7 @@ class _nextTutoringState extends State<NextTutoringCard> {
                         fontWeight: FontWeight.bold,
                       )),
                 ]),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 StreamBuilder(
                     stream: readUser(schedule.first.studentId),
                     builder: (context, snapshot) {
@@ -79,7 +81,7 @@ class _nextTutoringState extends State<NextTutoringCard> {
                       } else if (snapshot.hasError) {
                         return Text(snapshot.error.toString());
                       } else {
-                        return SizedBox();
+                        return const SizedBox();
                       }
                     }),
                 const SizedBox(height: 20),
@@ -88,12 +90,12 @@ class _nextTutoringState extends State<NextTutoringCard> {
                 ),
               ]);
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           } else {
-            return SizedBox();
+            return const SizedBox();
           }
         },
       ),

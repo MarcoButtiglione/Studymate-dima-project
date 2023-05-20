@@ -42,8 +42,7 @@ class _nextLessionState extends State<NextLessionCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
       child: StreamBuilder(
         stream: readScheduled(),
         builder: (context, snapshot) {
@@ -51,7 +50,7 @@ class _nextLessionState extends State<NextLessionCard> {
             var schedule = snapshot.data!;
             if (schedule.length > 0) {
               return Column(children: [
-                Row(children: const <Widget>[
+                const Row(children: <Widget>[
                   Text("Your next lesson",
                       textAlign: TextAlign.left,
                       style: TextStyle(
@@ -59,7 +58,7 @@ class _nextLessionState extends State<NextLessionCard> {
                         fontWeight: FontWeight.bold,
                       )),
                 ]),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 StreamBuilder(
                     stream: readUser(schedule.first.tutorId),
                     builder: (context, snapshot) {
@@ -80,7 +79,7 @@ class _nextLessionState extends State<NextLessionCard> {
                       } else if (snapshot.hasError) {
                         return Text(snapshot.error.toString());
                       } else {
-                        return SizedBox();
+                        return const SizedBox();
                       }
                     }),
                 const SizedBox(height: 10),
@@ -89,12 +88,12 @@ class _nextLessionState extends State<NextLessionCard> {
                 ),
               ]);
             } else {
-              return SizedBox();
+              return const SizedBox();
             }
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           } else {
-            return SizedBox();
+            return const SizedBox();
           }
         },
       ),

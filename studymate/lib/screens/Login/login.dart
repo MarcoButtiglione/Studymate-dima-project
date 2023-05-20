@@ -40,227 +40,235 @@ class _LoginState extends State<Login> {
         resizeToAvoidBottomInset: false,
         body: ListView(
           children: <Widget>[
-            Column(mainAxisAlignment: MainAxisAlignment.center, children: <
-                Widget>[
-              SizedBox(
-                height: h > w
-                    ? w * 0.3
-                    : (h > 720 && w > 490)
-                        ? 0.1 * h
-                        : 0,
-              ),
-              Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-                Text(
-                  "Login",
-                  style: TextStyle(
-                    fontFamily: "Crimson Pro",
-                    fontWeight: FontWeight.bold,
-                    fontSize: (w > 490 && h > 720) ? 60 : 35,
-                    color: Color.fromARGB(255, 233, 64, 87),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  width: 0.8 * w,
-                  child: TextFormField(
-                    controller: emailController,
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      labelText: "Email",
-                      labelStyle:
-                          TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
-                      hintStyle:
-                          TextStyle(fontSize: (w > 490 && h > 720) ? 16 : 12),
-                      errorStyle:
-                          TextStyle(fontSize: (w > 490 && h > 720) ? 16 : 12),
-                    ),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (email) =>
-                        email != null && !EmailValidator.validate(email)
-                            ? 'Enter a valid email'
-                            : null,
-                    style: TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
-                  ),
-                ),
-                //SizedBox(height: size.height * 0.001),
-                Container(
-                  alignment: Alignment.center,
-                  width: 0.8 * w,
-                  child: TextFormField(
-                    controller: passwordController,
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      labelStyle:
-                          TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
-                      hintStyle:
-                          TextStyle(fontSize: (w > 490 && h > 720) ? 16 : 12),
-                      errorStyle:
-                          TextStyle(fontSize: (w > 490 && h > 720) ? 16 : 12),
-                    ),
-                    obscureText: true,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) => value != null && value.isEmpty
-                        ? 'Enter password'
-                        : null,
-                    style: TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  margin: EdgeInsets.only(
-                      right: (w > 490 && h > 720) ? 80 : 50, top: 10),
-                  child: GestureDetector(
-                    onTap: () => {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Reset())),
-                    },
-                    child: Text(
-                      "Forgot your password?",
-                      style: TextStyle(
-                          fontSize: (w > 490 && h > 720) ? 18 : 12,
-                          color: Color.fromARGB(156, 65, 62, 88)),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                      top: 0.03 * h, left: 0.03 * h, right: 0.03 * h),
-                  height: 0.08 * h,
-                  width: 0.8 * w,
-                  child: ElevatedButton(
-                      onPressed: signIn,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 233, 64, 87),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        "LOGIN",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: (w > 490 && h > 720) ? 30 : 16,
-                          color: Color.fromARGB(255, 255, 255, 255),
-                        ),
-                      )),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  margin: EdgeInsets.only(
-                      right: (w > 490 && h > 720) ? 80 : 50, top: 10),
-                  child: RichText(
-                      text: TextSpan(
-                          style: TextStyle(
-                              fontSize: (w > 490 && h > 720) ? 18 : 12,
-                              color: Color.fromARGB(156, 65, 62, 88)),
-                          text: "Don't Have an Account?",
-                          children: [
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Register())),
-                          text: ' SignUp',
-                          style: TextStyle(
-                              fontSize: (w > 490 && h > 720) ? 18 : 12,
-                              color: Color.fromARGB(255, 233, 64, 87)),
-                        )
-                      ])),
-                ),
-                SizedBox(
-                  height: 0.03 * h,
-                )
-              ]),
-              Column(
-                children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Container(
-                      height: 1,
-                      width: 0.2 * w,
-                      margin: const EdgeInsets.all(6),
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(156, 105, 102, 121),
-                      ),
-                    ),
-                    Text(
-                      "or sign in with google",
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: (w > 490 && h > 720) ? 19 : 13,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(156, 105, 102, 121),
-                      ),
-                    ),
-                    Container(
-                      height: 1,
-                      width: 0.2 * w,
-                      margin: const EdgeInsets.all(6),
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(156, 105, 102, 121),
-                      ),
-                    ),
-                  ]),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
                   SizedBox(
-                    height: 10,
+                    height: h > w
+                        ? w * 0.3
+                        : (h > 720 && w > 490)
+                            ? 0.1 * h
+                            : 0,
                   ),
-                  _isSigningIn
-                      ? const CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Color.fromARGB(255, 233, 64, 87)),
-                        )
-                      : GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isSigningIn = true;
-                            });
-                            Authentication.signInWithGoogle(context: context);
-                            setState(() {
-                              _isSigningIn = false;
-                            });
-                          },
-                          child: Container(
-                              margin: EdgeInsets.all(0.03 * h),
-                              height: 0.08 * h,
-                              width: 0.8 * w,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: Color.fromARGB(156, 105, 102, 121),
-                                      spreadRadius: 2),
-                                ],
+                  Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    Text(
+                      "Login",
+                      style: TextStyle(
+                        fontFamily: "Crimson Pro",
+                        fontWeight: FontWeight.bold,
+                        fontSize: (w > 490 && h > 720) ? 60 : 35,
+                        color: Color.fromARGB(255, 233, 64, 87),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 0.8 * w,
+                      child: TextFormField(
+                        controller: emailController,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: "Email",
+                          labelStyle: TextStyle(
+                              fontSize: (w > 490 && h > 720) ? 25 : 14),
+                          hintStyle: TextStyle(
+                              fontSize: (w > 490 && h > 720) ? 16 : 12),
+                          errorStyle: TextStyle(
+                              fontSize: (w > 490 && h > 720) ? 16 : 12),
+                        ),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (email) =>
+                            email != null && !EmailValidator.validate(email)
+                                ? 'Enter a valid email'
+                                : null,
+                        style:
+                            TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
+                      ),
+                    ),
+                    //SizedBox(height: size.height * 0.001),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 0.8 * w,
+                      child: TextFormField(
+                        controller: passwordController,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: "Password",
+                          labelStyle: TextStyle(
+                              fontSize: (w > 490 && h > 720) ? 25 : 14),
+                          hintStyle: TextStyle(
+                              fontSize: (w > 490 && h > 720) ? 16 : 12),
+                          errorStyle: TextStyle(
+                              fontSize: (w > 490 && h > 720) ? 16 : 12),
+                        ),
+                        obscureText: true,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) => value != null && value.isEmpty
+                            ? 'Enter password'
+                            : null,
+                        style:
+                            TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      margin: EdgeInsets.only(
+                          right: (w > 490 && h > 720) ? 80 : 50, top: 10),
+                      child: GestureDetector(
+                        onTap: () => {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Reset())),
+                        },
+                        child: Text(
+                          "Forgot your password?",
+                          style: TextStyle(
+                              fontSize: (w > 490 && h > 720) ? 20 : 12,
+                              color: Color.fromARGB(156, 65, 62, 88)),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: 0.03 * h, left: 0.03 * h, right: 0.03 * h),
+                      height: 0.08 * h,
+                      width: 0.8 * w,
+                      child: ElevatedButton(
+                          onPressed: signIn,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 233, 64, 87),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: Text(
+                            "LOGIN",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: (w > 490 && h > 720) ? 30 : 16,
+                              color: Color.fromARGB(255, 255, 255, 255),
+                            ),
+                          )),
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      margin: EdgeInsets.only(
+                          right: (w > 490 && h > 720) ? 80 : 50, top: 10),
+                      child: RichText(
+                          text: TextSpan(
+                              style: TextStyle(
+                                  fontSize: (w > 490 && h > 720) ? 20 : 12,
+                                  color: Color.fromARGB(156, 65, 62, 88)),
+                              text: "Don't Have an Account?",
+                              children: [
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Register())),
+                              text: ' SignUp',
+                              style: TextStyle(
+                                  fontSize: (w > 490 && h > 720) ? 20 : 12,
+                                  color: Color.fromARGB(255, 233, 64, 87)),
+                            )
+                          ])),
+                    ),
+                    SizedBox(
+                      height: 0.03 * h,
+                    )
+                  ]),
+                  Column(
+                    children: [
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 1,
+                              width: 0.2 * w,
+                              margin: const EdgeInsets.all(6),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(156, 105, 102, 121),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    "assets/login/google.png",
-                                    height: 0.04 * h,
+                            ),
+                            Text(
+                              "or sign in with google",
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: (w > 490 && h > 720) ? 19 : 13,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(156, 105, 102, 121),
+                              ),
+                            ),
+                            Container(
+                              height: 1,
+                              width: 0.2 * w,
+                              margin: const EdgeInsets.all(6),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(156, 105, 102, 121),
+                              ),
+                            ),
+                          ]),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _isSigningIn
+                          ? const CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color.fromARGB(255, 233, 64, 87)),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _isSigningIn = true;
+                                });
+                                Authentication.signInWithGoogle(
+                                    context: context);
+                                setState(() {
+                                  _isSigningIn = false;
+                                });
+                              },
+                              child: Container(
+                                  margin: EdgeInsets.all(0.03 * h),
+                                  height: 0.08 * h,
+                                  width: 0.8 * w,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.white,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Color.fromARGB(
+                                              156, 105, 102, 121),
+                                          spreadRadius: 2),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "Sign Up with Google",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize:
-                                            (w > 490 && h > 720) ? 25 : 15,
-                                        color:
-                                            Color.fromARGB(156, 105, 102, 121)),
-                                  )
-                                ],
-                              )),
-                        )
-                ],
-              ),
-            ]),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        "assets/login/google.png",
+                                        height: 0.04 * h,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        "Sign Up with Google",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize:
+                                                (w > 490 && h > 720) ? 25 : 15,
+                                            color: Color.fromARGB(
+                                                156, 105, 102, 121)),
+                                      )
+                                    ],
+                                  )),
+                            )
+                    ],
+                  ),
+                ]),
           ],
         ));
   }
