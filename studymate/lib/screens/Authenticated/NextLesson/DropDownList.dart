@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class DropdownCategory extends StatefulWidget {
-  Function callback;
-  Function(String) onChanged;
+  final Function callback;
+  final Function(String) onChanged;
 
-  DropdownCategory(this.callback, {super.key, required this.onChanged});
+  const DropdownCategory(this.callback, {super.key, required this.onChanged});
 
   @override
   State<DropdownCategory> createState() => _DropdownCategoryState();

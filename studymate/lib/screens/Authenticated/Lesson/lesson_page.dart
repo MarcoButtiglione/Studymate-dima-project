@@ -19,9 +19,9 @@ import '../../../service/storage_service.dart';
 import '../Chat/chat_msg.dart';
 
 class LessonPage extends StatefulWidget {
-  Lesson lesson;
-  Users user;
-  LessonPage({super.key, required this.lesson, required this.user});
+  final Lesson lesson;
+  final Users user;
+  const LessonPage({super.key, required this.lesson, required this.user});
   @override
   _LessonState createState() => _LessonState();
 }

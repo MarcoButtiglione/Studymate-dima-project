@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../service/storage_service.dart';
-import '../../Lesson/lesson_page.dart';
 
 class ContactCard extends StatelessWidget {
   final String? id;

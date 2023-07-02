@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class DropdownCategory extends StatefulWidget {
-  Function callback;
-  Function(String) onChanged;
 
-  DropdownCategory(this.callback, {super.key, required this.onChanged});
+class DropdownCategory extends StatefulWidget {
+  final Function callback;
+  final Function(String) onChanged;
+
+  const DropdownCategory(this.callback, {super.key, required this.onChanged});
 
   @override
   State<DropdownCategory> createState() => _DropdownCategoryState();

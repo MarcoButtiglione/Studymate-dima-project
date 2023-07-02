@@ -12,10 +12,10 @@ import '../../../models/notification.dart';
 import '../../../models/user.dart';
 
 class BookLessonModal extends StatefulWidget {
-  Lesson lesson;
-  Users user;
+  final Lesson lesson;
+  final Users user;
 
-  BookLessonModal({
+  const BookLessonModal({
     super.key,
     required this.lesson,
     required this.user,
