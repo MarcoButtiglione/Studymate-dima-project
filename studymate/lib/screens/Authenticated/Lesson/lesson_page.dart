@@ -9,9 +9,7 @@ import 'package:studymate/models/recordLessonViewed.dart';
 import 'package:studymate/models/timeslot.dart';
 
 import 'package:studymate/models/chat.dart';
-import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/Lesson/booklesson.dart';
-import 'package:studymate/screens/Authenticated/other_profile_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../models/lesson.dart';

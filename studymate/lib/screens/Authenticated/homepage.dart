@@ -6,7 +6,6 @@ import 'package:badges/badges.dart' as badges;
 import 'package:studymate/functions/routingAnimation.dart';
 import 'package:studymate/models/chat.dart';
 import 'package:studymate/models/lesson.dart';
-import 'package:studymate/models/msg.dart';
 import 'package:studymate/models/user.dart';
 import '../../models/notification.dart';
 import 'common_widgets/nextLession_card.dart';

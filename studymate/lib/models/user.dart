@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:studymate/models/category.dart';
 
 class Users {
   String id;

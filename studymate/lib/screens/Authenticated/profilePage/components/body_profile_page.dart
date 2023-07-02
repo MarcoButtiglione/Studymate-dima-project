@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studymate/screens/Authenticated/profilePage/components/own_lessons_profile_page.dart';
 
 enum ProfilePageSection { onwlesson, saved }
 
@@ -21,7 +22,6 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 50),
         SegmentedButton<ProfilePageSection>(
           segments: const <ButtonSegment<ProfilePageSection>>[
             ButtonSegment<ProfilePageSection>(
@@ -43,9 +43,10 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
             });
           },
         ),
+        const SizedBox(height: 20,),
         Container(
           child: isOwnLesson()
-              ? Text('Own')
+              ? OwnLessonsProfilePage()
               : Text('saved'),
         )
       ],

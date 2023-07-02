@@ -7,13 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:studymate/provider/authentication.dart';
-import 'package:studymate/screens/Authenticated/profilePage/body_profile_page.dart';
+import 'package:studymate/screens/Authenticated/profilePage/components/body_profile_page.dart';
 import 'package:studymate/screens/Authenticated/profilePage/updateInterest.dart';
 import 'package:studymate/service/storage_service.dart';
 import 'package:path/path.dart' as p;
 
 import '../../../../models/user.dart';
-
 
 class OwnProfilePage extends StatefulWidget {
   @override
@@ -262,11 +261,10 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
               color: Theme.of(context).colorScheme.background,
             ),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height-320,
             child: Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: BodyProfilePage()
-            ),
+                padding: const EdgeInsets.fromLTRB(20, 90, 20, 0),
+                child: SingleChildScrollView(child: BodyProfilePage())),
           ),
         ),
         Positioned(

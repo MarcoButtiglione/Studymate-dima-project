@@ -1,5 +1,3 @@
-import 'package:studymate/models/category.dart';
-import 'package:studymate/models/user.dart';
 
 class TimeslotsWeek {
   final String userId;

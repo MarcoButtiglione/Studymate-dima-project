@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'msg.dart';
 
 class Notifications {
   final String? id;
