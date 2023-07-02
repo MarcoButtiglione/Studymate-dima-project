@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:studymate/models/msg.dart';
 import 'package:studymate/models/notification.dart';
 import 'package:studymate/screens/Authenticated/notification/notificationCard.dart';
 

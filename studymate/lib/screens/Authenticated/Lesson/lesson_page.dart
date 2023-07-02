@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:studymate/component/utils.dart';
 import 'package:studymate/models/category.dart';
 import 'package:studymate/models/recordLessonViewed.dart';
+import 'package:studymate/models/savedLesson.dart';
 import 'package:studymate/models/timeslot.dart';
 
 import 'package:studymate/models/chat.dart';
@@ -28,6 +29,7 @@ class LessonPage extends StatefulWidget {
 class _LessonState extends State<LessonPage> {
   final userFirebase = FirebaseAuth.instance.currentUser!;
   final userLog = FirebaseAuth.instance.currentUser!;
+  bool isBusy = false;
 
   @override
   void initState() {
@@ -51,6 +53,14 @@ class _LessonState extends State<LessonPage> {
       .snapshots()
       .map((snapshot) => snapshot.docs
           .map((doc) => TimeslotsWeek.fromJson(doc.data()))
+          .toList());
+
+  Stream<List<SavedLesson>> readSavedLesson() => FirebaseFirestore.instance
+      .collection('savedLessons')
+      .where('lessonId', isEqualTo: widget.lesson.id)
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((doc) => SavedLesson.fromFirestore(doc.data()))
           .toList());
 
   List<String> convertListTimestampToPrint(List<dynamic> list) {
@@ -110,6 +120,49 @@ class _LessonState extends State<LessonPage> {
       await docRecord.doc(docId).update({'id': docId});
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
+    }
+  }
+
+  Future saveLesson({required SavedLesson savedLesson}) async {
+    setState(() {
+      isBusy = true;
+    });
+    try {
+      String docId = "";
+      final docRecord = FirebaseFirestore.instance.collection('savedLessons');
+      final json = savedLesson.toFirestore();
+      await docRecord.add(json).then((DocumentReference doc) {
+        docId = doc.id;
+      });
+
+      await docRecord.doc(docId).update({'id': docId});
+      setState(() {
+        isBusy = false;
+      });
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+      setState(() {
+        isBusy = false;
+      });
+    }
+  }
+
+  Future removeSavedLesson({required String savedLessonId}) async {
+    setState(() {
+      isBusy = true;
+    });
+    try {
+      final docRecord = FirebaseFirestore.instance.collection('savedLessons');
+
+      await docRecord.doc(savedLessonId).delete();
+      setState(() {
+        isBusy = false;
+      });
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+      setState(() {
+        isBusy = false;
+      });
     }
   }
 
@@ -204,7 +257,7 @@ class _LessonState extends State<LessonPage> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: Container(
-                              constraints: BoxConstraints(maxWidth: 200),
+                              constraints: const BoxConstraints(maxWidth: 200),
                               decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.only(
                                   topRight: Radius.circular(10.0),
@@ -310,7 +363,7 @@ class _LessonState extends State<LessonPage> {
                               child: Text(
                                 widget.lesson.category,
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                 ),
                               ),
@@ -321,9 +374,9 @@ class _LessonState extends State<LessonPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
+                                const Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
@@ -361,8 +414,8 @@ class _LessonState extends State<LessonPage> {
                                   width: 100,
                                   height: 50,
                                   padding: const EdgeInsets.all(10),
-                                  child: Row(
-                                    children: const [
+                                  child: const Row(
+                                    children: [
                                       Icon(
                                         Icons.pin_drop,
                                       ),
@@ -446,17 +499,13 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
+                                                        : const Padding(
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(0, 0,
+                                                                    0, 15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
                                                                     "Monday:",
@@ -518,17 +567,13 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
+                                                        : const Padding(
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(0, 0,
+                                                                    0, 15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
                                                                     "Tuesday:",
@@ -590,17 +635,13 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
+                                                        : const Padding(
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(0, 0,
+                                                                    0, 15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
                                                                     "Wednesday:",
@@ -662,17 +703,13 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
+                                                        : const Padding(
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(0, 0,
+                                                                    0, 15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
                                                                     "Thursday:",
@@ -734,17 +771,13 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
+                                                        : const Padding(
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(0, 0,
+                                                                    0, 15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
                                                                     "Friday:",
@@ -806,17 +839,13 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
+                                                        : const Padding(
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(0, 0,
+                                                                    0, 15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
                                                                     "Saturday:",
@@ -878,17 +907,13 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
+                                                        : const Padding(
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(0, 0,
+                                                                    0, 15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
                                                                     "Sunday:",
@@ -1050,13 +1075,84 @@ class _LessonState extends State<LessonPage> {
                       const SizedBox(
                         width: 20,
                       ),
-                      const SizedBox(
+                      SizedBox(
                         width: 50,
                         height: 50,
-                        child: SavedToggleButton(
-                          isEnabled: true,
-                          getDefaultStyle: savedButtonStyle,
-                        ),
+                        child: StreamBuilder<List<SavedLesson>>(
+                            stream: readSavedLesson(),
+                            builder: ((context, snapshot) {
+                              if (snapshot.hasError) {
+                                return IconButton(
+                                  isSelected: false,
+                                  icon: const Icon(
+                                    Icons.error,
+                                    size: 25,
+                                  ),
+                                  onPressed: () {},
+                                  style: savedButtonStyle(false),
+                                );
+                              } else if (snapshot.hasData) {
+                                //If saved
+                                if (snapshot.data!.isNotEmpty) {
+                                  final savedLesson = snapshot.data!.first;
+                                  return IconButton(
+                                    isSelected: true,
+                                    icon: const Icon(
+                                      Icons.favorite_outline,
+                                      size: 25,
+                                    ),
+                                    selectedIcon: const Icon(
+                                      Icons.favorite,
+                                      size: 25,
+                                    ),
+                                    onPressed: () {
+                                      if (!isBusy) {
+                                        removeSavedLesson(
+                                            savedLessonId: savedLesson.id!);
+                                      }
+                                    },
+                                    style: savedButtonStyle(true),
+                                  );
+                                }
+                                //If not saved
+                                else {
+                                  return IconButton(
+                                    isSelected: false,
+                                    icon: const Icon(
+                                      Icons.favorite_outline,
+                                      size: 25,
+                                    ),
+                                    selectedIcon: const Icon(
+                                      Icons.favorite,
+                                      size: 25,
+                                    ),
+                                    onPressed: () {
+                                      if (!isBusy) {
+                                        final savedLesson = SavedLesson(
+                                            lessonId: widget.lesson.id,
+                                            userId: userLog.uid);
+                                        saveLesson(savedLesson: savedLesson);
+                                      }
+                                    },
+                                    style: savedButtonStyle(false),
+                                  );
+                                }
+                              } else {
+                                return IconButton(
+                                  isSelected: false,
+                                  icon: const Icon(
+                                    Icons.favorite_outline,
+                                    size: 25,
+                                  ),
+                                  selectedIcon: const Icon(
+                                    Icons.favorite,
+                                    size: 25,
+                                  ),
+                                  onPressed: () {},
+                                  style: savedButtonStyle(false),
+                                );
+                              }
+                            })),
                       ),
                     ],
                   ),
@@ -1125,52 +1221,7 @@ Route _createRoute(Widget page) {
   );
 }
 
-class SavedToggleButton extends StatefulWidget {
-  const SavedToggleButton(
-      {required this.isEnabled, this.getDefaultStyle, super.key});
-
-  final bool isEnabled;
-  final ButtonStyle? Function(bool, ColorScheme)? getDefaultStyle;
-
-  @override
-  State<SavedToggleButton> createState() => _SavedToggleButtonState();
-}
-
-class _SavedToggleButtonState extends State<SavedToggleButton> {
-  bool selected = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colors = Theme.of(context).colorScheme;
-    final VoidCallback? onPressed = widget.isEnabled
-        ? () {
-            setState(() {
-              selected = !selected;
-            });
-          }
-        : null;
-    ButtonStyle? style;
-    if (widget.getDefaultStyle != null) {
-      style = widget.getDefaultStyle!(selected, colors);
-    }
-
-    return IconButton(
-      isSelected: selected,
-      icon: const Icon(
-        Icons.favorite_outline,
-        size: 25,
-      ),
-      selectedIcon: const Icon(
-        Icons.favorite,
-        size: 25,
-      ),
-      onPressed: onPressed,
-      style: style,
-    );
-  }
-}
-
-ButtonStyle savedButtonStyle(bool selected, ColorScheme colors) {
+ButtonStyle savedButtonStyle(bool selected) {
   ColorScheme color =
       ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 82, 14));
   return IconButton.styleFrom(

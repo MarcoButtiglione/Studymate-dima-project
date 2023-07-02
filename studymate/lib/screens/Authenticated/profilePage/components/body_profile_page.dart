@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studymate/screens/Authenticated/profilePage/components/own_lessons_profile_page.dart';
+import 'package:studymate/screens/Authenticated/profilePage/components/saved_lessons_profile_page.dart';
 
 enum ProfilePageSection { onwlesson, saved }
 
@@ -47,7 +48,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         Container(
           child: isOwnLesson()
               ? OwnLessonsProfilePage()
-              : Text('saved'),
+              : SavedLessonsProfilePage(),
         )
       ],
     );
