@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../component/utils.dart';
 import '../../../../models/category.dart';
 import '../../../../models/lesson.dart';
 import '../../../../service/storage_service.dart';
@@ -14,6 +15,7 @@ class OwnLessonsProfilePage extends StatefulWidget {
 class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
   final user = FirebaseAuth.instance.currentUser!;
   final Storage storage = Storage();
+  bool isBusy = false;
 
   Stream<List<Lesson>> readOwnLessons(String userId) =>
       FirebaseFirestore.instance
@@ -30,8 +32,60 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
 
+  Future deleteLessons({required String lessonId}) async {
+    ///DEVO RICORDARE DI ELIMINARE IN CASCATA TUTTO lessons, recordlessons, saved lessons, scheduled
+    setState(() {
+      isBusy = true;
+    });
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('savedLessons')
+          .where('lessonId', isEqualTo: lessonId)
+          .get();
+      snapshot.docs.forEach((doc) {
+        doc.reference.delete();
+      });
+      snapshot = await FirebaseFirestore.instance
+          .collection('recordLessonsViewed')
+          .where('lessonId', isEqualTo: lessonId)
+          .get();
+      snapshot.docs.forEach((doc) {
+        doc.reference.delete();
+      });
+      snapshot = await FirebaseFirestore.instance
+          .collection('scheduled')
+          .where('lessionId', isEqualTo: lessonId)
+          .get();
+      snapshot.docs.forEach((doc) {
+        doc.reference.delete();
+      });
+
+      final docRecord = FirebaseFirestore.instance.collection('lessons');
+      await docRecord.doc(lessonId).delete();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Lesson successfully deleted.'),
+        ),
+      );
+      setState(() {
+        isBusy = false;
+      });
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+      setState(() {
+        isBusy = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (isBusy) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return StreamBuilder<List<Lesson>>(
         stream: readOwnLessons(user.uid),
         builder: ((context, snapshot) {
@@ -81,10 +135,41 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                           style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
-                        trailing: PopupMenuButton<ListTileTitleAlignment>(
+                        trailing: PopupMenuButton<String>(
+                          onSelected: (String? value) {
+                            if (value == 'edit') {
+                            } else if (value == 'delete') {
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: const Text(
+                                      'Do you want to delete the lesson?'),
+                                  content: const Text(
+                                      'Are you sure you want to delete the lesson? This operation is irreversible.'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, 'Cancel'),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        if (!isBusy) {
+                                          deleteLessons(lessonId: lesson.id!);
+                                          Navigator.pop(context, 'Cancel');
+                                        }
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
                           itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<ListTileTitleAlignment>>[
-                            const PopupMenuItem<ListTileTitleAlignment>(
+                              <PopupMenuEntry<String>>[
+                            const PopupMenuItem<String>(
+                              value: 'edit',
                               child: Row(
                                 children: [
                                   Icon(Icons.edit),
@@ -93,12 +178,13 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                                 ],
                               ),
                             ),
-                            const PopupMenuItem<ListTileTitleAlignment>(
+                            const PopupMenuItem<String>(
+                              value: 'delete',
                               child: Row(
                                 children: [
                                   Icon(Icons.delete),
                                   SizedBox(width: 16),
-                                  Text('Remove lesson'),
+                                  Text('Delete lesson'),
                                 ],
                               ),
                             ),
