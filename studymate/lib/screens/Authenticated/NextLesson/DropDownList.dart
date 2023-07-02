@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:studymate/models/category.dart';
 
 class DropdownCategory extends StatefulWidget {
   Function callback;
@@ -29,7 +28,8 @@ class _DropdownCategoryState extends State<DropdownCategory> {
     List<String> c = [];
     c.add("Category");
     QuerySnapshot querySnapshot = await _catRef.get();
-    var allData = querySnapshot.docs.map((doc) {
+   // var allData = 
+    querySnapshot.docs.map((doc) {
       c.add(doc.get("name"));
     }).toList();
     setState(

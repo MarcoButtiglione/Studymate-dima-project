@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studymate/component/storage.dart';
 import 'package:studymate/screens/Authenticated/FirstLogin/intrest.dart';
 import 'package:file_picker/file_picker.dart';

@@ -28,7 +28,8 @@ class _DropdownCategoryState extends State<DropdownCategory> {
     List<String> c = [];
     c.add("Category");
     QuerySnapshot querySnapshot = await _catRef.get();
-    var allData = querySnapshot.docs.map((doc) {
+    //var allData = 
+    querySnapshot.docs.map((doc) {
       c.add(doc.get("name"));
     }).toList();
     setState(

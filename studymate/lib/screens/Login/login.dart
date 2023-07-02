@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
+
 import 'package:studymate/component/utils.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:studymate/provider/AuthService.dart';
 import 'package:studymate/screens/Login/register.dart';
 import 'package:studymate/screens/Login/reset.dart';
 

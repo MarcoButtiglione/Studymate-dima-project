@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:studymate/screens/Authenticated/NextLesson/nextLession.dart';
+
 import 'package:studymate/screens/Authenticated/common_widgets/card.dart';
 
 import '../../../models/scheduled.dart';

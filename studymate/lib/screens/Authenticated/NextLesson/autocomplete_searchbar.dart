@@ -1,13 +1,9 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:studymate/models/scheduled.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
-import '../../../../models/chat.dart';
-import '../../../../models/user.dart';
 
 class AutocompleteSearchbar extends StatefulWidget {
   final Function(String) onSelected;
@@ -42,7 +38,8 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
                 .subtract(const Duration(days: 1))))
         .orderBy('date', descending: true)
         .get();
-    var allData = querySnapshot.docs.map((doc) {
+    //var allData = 
+    querySnapshot.docs.map((doc) {
       autoCompleteData.add(doc.get("title"));
     }).toList();
     print(autoCompleteData);
