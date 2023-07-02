@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -140,7 +138,6 @@ class _BookLessonModalState extends State<BookLessonModal> {
         isBusy = true;
       });
 
-      String docId = "";
       var sched = Scheduled();
       final docScheduled = FirebaseFirestore.instance.collection('scheduled');
       await docScheduled.add({}).then((DocumentReference doc) {
@@ -315,7 +312,6 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                                                     timeslot),
                                                               ),
                                                             );
-                                                            ;
                                                           }
                                                           return Container(
                                                             margin:

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studymate/screens/Authenticated/authenticated.dart';
 import 'package:studymate/screens/Login/login.dart';
 
 class OnboardModel {

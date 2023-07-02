@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'dart:math';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,10 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:studymate/models/recordLessonViewed.dart';
 import 'package:studymate/screens/Authenticated/Search/widgets/autocomplete_searchbar_searchpage.dart';
 import 'package:studymate/screens/Authenticated/Search/widgets/category_card.dart';
-import 'package:studymate/screens/Authenticated/Search/widgets/filter_bottomsheet_search.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
-import 'package:studymate/screens/Authenticated/Lesson/lesson_page.dart';
-import 'package:substring_highlight/substring_highlight.dart';
 
 import '../../../models/category.dart';
 import '../../../models/lesson.dart';
@@ -23,7 +19,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userLog = FirebaseAuth.instance.currentUser!;
   String? selectedCategory;
   String? selectedLesson;

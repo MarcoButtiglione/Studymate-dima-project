@@ -8,7 +8,6 @@ class ProPage extends StatefulWidget {
 }
 
 class _ProPageState extends State<ProPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

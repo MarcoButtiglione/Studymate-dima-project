@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:studymate/models/lesson.dart';
 import 'package:studymate/screens/Authenticated/hoursselection_page.dart';
 
-import '../../component/utils.dart';
-import '../../functions/routingAnimation.dart';
-import '../../models/category.dart';
+import '../../../component/utils.dart';
+import '../../../functions/routingAnimation.dart';
+import '../../../models/category.dart';
+import 'components/dropdownCategory.dart';
 
 Stream<List<Category>> readCategory() => FirebaseFirestore.instance
     .collection('categories')
@@ -25,7 +24,6 @@ class NewLessonPage extends StatefulWidget {
 class _NewLessonPageState extends State<NewLessonPage> {
   @override
   void initState() {
-    print("UNA VOLTA");
     super.initState();
   }
 
@@ -56,12 +54,6 @@ class _NewLessonPageState extends State<NewLessonPage> {
   void callbackDate(String date) {
     setState(() {
       this.date = date;
-    });
-  }
-
-  void callbackStartingTime(String startingTime) {
-    setState(() {
-      this.startingTime = startingTime;
     });
   }
 
@@ -165,41 +157,6 @@ class _NewLessonPageState extends State<NewLessonPage> {
                             ),
                             const SizedBox(height: 10),
                             DropdownCategory(callbackCategory, categories),
-                            /*
-                            DataPicker(callbackDate),
-                            const SizedBox(height: 10),
-                            StartingTimePicker(callbackStartingTime),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: const [
-                                Text("Lesson duration",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 9,
-                                  child: SliderDuration(callbackDuration),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    duration.toString() + "h",
-                                    textAlign: TextAlign.left,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            */
                             const SizedBox(height: 10),
                             TextFormField(
                               validator: (value) {
@@ -287,7 +244,6 @@ class _NewLessonPageState extends State<NewLessonPage> {
                             ),
                           ],
                         );
-                        ;
                       } else {
                         return const Center(
                           child: CircularProgressIndicator(),
@@ -296,212 +252,6 @@ class _NewLessonPageState extends State<NewLessonPage> {
                     }),
               ),
       ),
-    );
-  }
-}
-
-class DropdownCategory extends StatefulWidget {
-  Function callback;
-  List<Category> categories;
-  DropdownCategory(this.callback, this.categories, {super.key});
-
-  @override
-  State<DropdownCategory> createState() => _DropdownCategoryState();
-}
-
-class _DropdownCategoryState extends State<DropdownCategory> {
-  String? dropdownValue;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: DropdownButtonFormField<String>(
-        value: dropdownValue,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please select a category';
-          }
-          return null;
-        },
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        decoration: InputDecoration(
-          labelText: "Category",
-          hintText: "Select the category of your lesson",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey[300]!),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey[300]!),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey[300]!),
-          ),
-        ),
-        onChanged: (String? value) {
-          // This is called when the user selects an item.
-          setState(() {
-            dropdownValue = value!;
-          });
-          widget.callback(value);
-        },
-        items: widget.categories
-            .map<DropdownMenuItem<String>>((Category category) {
-          return DropdownMenuItem<String>(
-            value: category.name,
-            child: Text(category.name),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-
-class DataPicker extends StatefulWidget {
-  Function callback;
-  DataPicker(this.callback, {super.key});
-
-  @override
-  State<DataPicker> createState() => _DataPickerState();
-}
-
-class _DataPickerState extends State<DataPicker> {
-  TextEditingController _date = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter a date';
-        }
-        return null;
-      },
-      readOnly: true,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      controller: _date,
-      keyboardType: TextInputType.datetime,
-      decoration: InputDecoration(
-        icon: const Icon(
-          Icons.calendar_today_rounded,
-          color: const Color.fromARGB(255, 233, 64, 87),
-        ),
-        labelText: "Date",
-        hintText: "Select the date of your lesson",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-      ),
-      onTap: () async {
-        DateTime? pickeddate = await showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime.now(),
-            lastDate: DateTime(2100));
-        if (pickeddate != null) {
-          setState(() {
-            _date.text = DateFormat('yyyy-MM-dd').format(pickeddate);
-          });
-          widget.callback(DateFormat('yyyy-MM-dd').format(pickeddate));
-        }
-      },
-    );
-  }
-}
-
-class StartingTimePicker extends StatefulWidget {
-  Function callback;
-  StartingTimePicker(this.callback, {super.key});
-
-  @override
-  State<StartingTimePicker> createState() => _StartingTimePickerState();
-}
-
-class _StartingTimePickerState extends State<StartingTimePicker> {
-  TextEditingController _date = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: _date,
-      readOnly: true,
-      keyboardType: TextInputType.datetime,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter a starting time';
-        }
-        return null;
-      },
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      decoration: InputDecoration(
-        icon: const Icon(
-          Icons.timer_outlined,
-          color: const Color.fromARGB(255, 233, 64, 87),
-        ),
-        labelText: "Starting time",
-        hintText: "Select the starting time of your lesson",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-      ),
-      onTap: () async {
-        TimeOfDay? pickeddate = await showTimePicker(
-            context: context, initialTime: TimeOfDay.now());
-        if (pickeddate != null) {
-          setState(() {
-            _date.text = pickeddate.format(context);
-          });
-          widget.callback(pickeddate.format(context));
-        }
-      },
-    );
-  }
-}
-
-class SliderDuration extends StatefulWidget {
-  Function callback;
-  SliderDuration(this.callback, {super.key});
-
-  @override
-  State<SliderDuration> createState() => _SliderDurationState();
-}
-
-class _SliderDurationState extends State<SliderDuration> {
-  double _currentSliderValue = 1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Slider(
-      value: _currentSliderValue,
-      min: 1,
-      max: 10,
-      divisions: 10,
-      label: _currentSliderValue.round().toString(),
-      onChanged: (double value) {
-        setState(() {
-          _currentSliderValue = value;
-        });
-        widget.callback(value.toInt());
-      },
     );
   }
 }
