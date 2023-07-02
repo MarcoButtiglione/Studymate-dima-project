@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/message_format.dart';
 import 'package:studymate/models/user.dart';
-import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/Chat/widget/recivied_message.dart';
 import 'package:studymate/screens/Authenticated/Chat/widget/sent_message.dart';
 

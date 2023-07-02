@@ -70,7 +70,8 @@ class _QrCodeScanState extends State<QrCodeScan> {
     QuerySnapshot querySnapshot2 =
         await _userRef.where("id", isEqualTo: sId).get();
     int h = 0;
-    var allData2 = querySnapshot2.docs.map((doc) {
+    //var allData2 = 
+    querySnapshot2.docs.map((doc) {
       h = doc.get("hours");
     }).toList();
     setState(() {
@@ -79,7 +80,8 @@ class _QrCodeScanState extends State<QrCodeScan> {
 
     querySnapshot2 = await _userRef.where("id", isEqualTo: tId).get();
     int th = 0;
-    allData2 = querySnapshot2.docs.map((doc) {
+    //allData2 = 
+    querySnapshot2.docs.map((doc) {
       th = doc.get("hours");
     }).toList();
     setState(() {
@@ -88,7 +90,8 @@ class _QrCodeScanState extends State<QrCodeScan> {
     QuerySnapshot querySnapshot3 =
         await _scheduleRef.where("id", isEqualTo: widget.id).get();
     List<dynamic> ts = [];
-    var allData3 = querySnapshot3.docs.map((doc) {
+    //var allData3 = 
+    querySnapshot3.docs.map((doc) {
       ts = doc.get("timeslot");
     }).toList();
     setState(() {
@@ -101,7 +104,8 @@ class _QrCodeScanState extends State<QrCodeScan> {
         await _userRef.where("id", isEqualTo: id).get();
     int r = 0;
     int n = 0;
-    var allData2 = querySnapshot2.docs.map((doc) {
+    //var allData2 = 
+    querySnapshot2.docs.map((doc) {
       r = doc.get("userRating");
       n = doc.get("numRating");
     }).toList();

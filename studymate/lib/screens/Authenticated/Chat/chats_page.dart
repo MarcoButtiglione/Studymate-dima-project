@@ -127,7 +127,7 @@ class _ChatState extends State<ChatsPage> {
             return const Text('Something went wrong!');
           } else if (snapshot.hasData) {
             final users = snapshot.data!;
-            String firstname = "", lastname = "";
+            //String firstname = "", lastname = "";
             if (chat.last_msg != "") {
               if (selected != "") {
                 if (users.first.firstname.toLowerCase() ==
