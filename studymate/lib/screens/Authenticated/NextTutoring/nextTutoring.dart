@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +5,6 @@ import 'package:studymate/screens/Authenticated/NextTutoring/DropDownList.dart';
 import 'package:studymate/screens/Authenticated/NextTutoring/autocomplete_searchbar.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/card.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import '../../../models/category.dart';
-import '../../../models/lesson.dart';
 import '../../../models/scheduled.dart';
 import '../../../models/user.dart';
 

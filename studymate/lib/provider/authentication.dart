@@ -6,8 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:studymate/provider/AuthService.dart';
 
 import '../component/utilities.dart';
-import '../component/utils.dart';
-import '../screens/Authenticated/authenticated.dart';
+
 
 class Authentication {
   //this method is used to initialize firebase
@@ -29,13 +28,13 @@ class Authentication {
   static Future<void> signInWithGoogle({required BuildContext context}) async {
     Utilities utilities = Utilities();
     FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
+    //User? user;
 
     if (kIsWeb) {
       GoogleAuthProvider authProvider = GoogleAuthProvider();
 
       try {
-        final UserCredential userCredential =
+        //final UserCredential userCredential =
             await auth.signInWithPopup(authProvider);
       } catch (e) {
         print(e);

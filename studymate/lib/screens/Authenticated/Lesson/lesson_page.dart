@@ -33,6 +33,7 @@ class _LessonState extends State<LessonPage> {
 
   @override
   void initState() {
+    super.initState();
     final record = RecordLessonView(
         lessonId: widget.lesson.id,
         timestamp: Timestamp.fromDate(DateTime.now()),

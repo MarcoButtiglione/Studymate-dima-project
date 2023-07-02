@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
-import 'package:studymate/screens/Login/login.dart';
 
 import '../models/user.dart';
 import '../screens/Authenticated/FirstLogin/setUser.dart';

@@ -246,6 +246,7 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
       );
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
+      print(e);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Fill out the previous form first."),
         duration: Duration(seconds: 2),

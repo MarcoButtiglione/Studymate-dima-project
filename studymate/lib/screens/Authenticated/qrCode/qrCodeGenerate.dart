@@ -1,14 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:studymate/models/category.dart';
-import 'package:studymate/screens/Authenticated/authenticated.dart';
 import 'package:studymate/screens/Authenticated/qrCode/qrImage.dart';
-
-import '../../../component/utils.dart';
 import '../../../models/scheduled.dart';
-import '../../../models/user.dart';
 
 class QrCodeGenerate extends StatefulWidget {
   final String? id;
@@ -37,7 +31,7 @@ class _QrCodeGenerateState extends State<QrCodeGenerate> {
           .toList()));
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: SingleChildScrollView(
             child: Padding(
