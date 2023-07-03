@@ -113,6 +113,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
     });
     return Stack(
       children: [
+        /*===IMMAGINE DI SFONDO===*/
         Positioned(
           top: 0,
           left: 0,
@@ -138,114 +139,184 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                 }
               }),
         ),
-        //Sfumatura
+        /*===SFUMATURA SFONDO===*/
         Positioned(
-            top: 110,
-            left: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Theme.of(context).colorScheme.background.withOpacity(0),
-                    Theme.of(context).colorScheme.background
-                  ],
-                ),
-                color: Theme.of(context).colorScheme.background,
+          top: 110,
+          left: 0,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Theme.of(context).colorScheme.background.withOpacity(0),
+                  Theme.of(context).colorScheme.background
+                ],
               ),
-              width: MediaQuery.of(context).size.width,
-              height: 111,
-            )),
+              color: Theme.of(context).colorScheme.background,
+            ),
+            width: MediaQuery.of(context).size.width,
+            height: 111,
+          ),
+        ),
+        /*===BOTTONI SUPERIORI===*/
         Positioned(
-            top: 0,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: InkWell(
-                          onTap: () {
-                            showModalBottomSheet(
-                              showDragHandle: true,
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (context) => Container(
-                                child: Wrap(
-                                  children: [
-                                    ListTile(
-                                      onTap: () {},
-                                      leading: const Icon(Icons.settings),
-                                      title: const Text('Edit profile'),
-                                    ),
-                                    ListTile(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    updateInterest(
-                                                      interest: interest,
-                                                    )));
-                                      },
-                                      leading: const Icon(Icons.favorite),
-                                      title: const Text('Edit preferences'),
-                                    ),
-                                    ListTile(
-                                      onTap: () {},
-                                      leading: const Icon(Icons.schedule),
-                                      title: const Text('Edit timeslots'),
-                                    ),
-                                    _isSigningOut
-                                        ? CircularProgressIndicator(
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                    Color.fromARGB(
-                                                        255, 233, 64, 87)),
-                                          )
-                                        : ListTile(
-                                            onTap: () {
-                                              setState(() {
-                                                _isSigningOut = true;
-                                              });
-                                              Authentication.signOutWithGoogle(
-                                                  context: context);
-                                              setState(() {
-                                                _isSigningOut = true;
-                                              });
-                                            },
-                                            leading: const Icon(Icons.logout),
-                                            title: const Text('Logout'),
-                                          ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(10.0),
-                                topLeft: Radius.circular(10.0),
-                                bottomLeft: Radius.circular(10.0),
-                                bottomRight: Radius.circular(10.0),
-                              ),
-                              color: Color.fromARGB(211, 255, 255, 255),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                height: 40,
-                                width: 40,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.menu,
+          top: 0,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: InkWell(
+                        onTap: () {
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    us.hours.toString(),
+                                    style: TextStyle(fontSize: 40),
                                   ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Icon(
+                                     Icons.av_timer,
+                                    size: 40,
+                                  ),
+                                ],
+                              ),
+                              content: Text(
+                                  'You have ${us.hours} hours available to spend on other lessons. Finish some lessons or create new ones to get more.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Close'),
+                                  child: const Text('Close'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10.0),
+                              topLeft: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0),
+                            ),
+                            color: Color.fromARGB(211, 255, 255, 255),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                            child: SizedBox(
+                              height: 40,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(us.hours.toString()),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  const Icon(
+                                     Icons.av_timer,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        onTap: () {
+                          showModalBottomSheet(
+                            showDragHandle: true,
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) => Container(
+                              child: Wrap(
+                                children: [
+                                  ListTile(
+                                    onTap: () {},
+                                    leading: const Icon(Icons.settings),
+                                    title: const Text('Edit profile'),
+                                  ),
+                                  ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  updateInterest(
+                                                    interest: interest,
+                                                  )));
+                                    },
+                                    leading: const Icon(Icons.favorite),
+                                    title: const Text('Edit preferences'),
+                                  ),
+                                  ListTile(
+                                    onTap: () {},
+                                    leading: const Icon(Icons.schedule),
+                                    title: const Text('Edit timeslots'),
+                                  ),
+                                  _isSigningOut
+                                      ? CircularProgressIndicator(
+                                          valueColor: AlwaysStoppedAnimation<
+                                                  Color>(
+                                              Color.fromARGB(255, 233, 64, 87)),
+                                        )
+                                      : ListTile(
+                                          onTap: () {
+                                            setState(() {
+                                              _isSigningOut = true;
+                                            });
+                                            Authentication.signOutWithGoogle(
+                                                context: context);
+                                            setState(() {
+                                              _isSigningOut = true;
+                                            });
+                                          },
+                                          leading: const Icon(Icons.logout),
+                                          title: const Text('Logout'),
+                                        ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10.0),
+                              topLeft: Radius.circular(10.0),
+                              bottomLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0),
+                            ),
+                            color: Color.fromARGB(211, 255, 255, 255),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: Center(
+                                child: Icon(
+                                  Icons.menu,
                                 ),
                               ),
                             ),
@@ -253,12 +324,13 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            )),
-
-        //BODY
+            ),
+          ),
+        ),
+        /*===BODY===*/
         Positioned(
           top: 220,
           left: 0,
@@ -273,137 +345,191 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                 child: SingleChildScrollView(child: BodyProfilePage())),
           ),
         ),
+        /*===IMMAGINE DI PROFILO===*/
         Positioned(
-            top: 150,
-            left: 0,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Stack(
-                        alignment: Alignment.bottomRight,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 100,
-                            width: 100,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: _image == null
-                                  ? FutureBuilder(
-                                      future: storage
-                                          .downloadURL(us.profileImageURL),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasError) {
-                                          return const Text(
-                                              "Something went wrong!");
-                                        } else if (snapshot.hasData) {
-                                          return Image(
-                                            image: NetworkImage(snapshot.data!),
-                                          );
-                                        } else {
-                                          return const Card(
-                                            margin: EdgeInsets.zero,
-                                          );
-                                        }
-                                      })
-                                  : Image(
-                                      image: FileImage(_image!),
-                                    ),
-                            ),
-                          ),
-                          IconButton(
-                              icon: const Icon(Icons.mode_edit_outline),
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  showDragHandle: true,
-                                  context: context,
-                                  isScrollControlled: true,
-                                  builder: (context) => Container(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const SizedBox(height: 10),
-                                        ElevatedButton(
-                                            onPressed: (() {
-                                              _pickImage(ImageSource.gallery);
-                                              return;
-                                            }),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: const [
-                                                Icon(
-                                                    Icons.collections_outlined),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text('Browse Gallery'),
-                                              ],
-                                            )),
-                                        Text('or'),
-                                        ElevatedButton(
-                                            onPressed: (() {
-                                              _pickImage(ImageSource.camera);
-                                              return;
-                                            }),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: const [
-                                                Icon(Icons.camera_alt_outlined),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text('Use a Camera'),
-                                              ],
-                                            )),
-                                      ],
-                                    ),
+          top: 150,
+          left: 0,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: _image == null
+                                ? FutureBuilder(
+                                    future:
+                                        storage.downloadURL(us.profileImageURL),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasError) {
+                                        return const Text(
+                                            "Something went wrong!");
+                                      } else if (snapshot.hasData) {
+                                        return Image(
+                                          image: NetworkImage(snapshot.data!),
+                                        );
+                                      } else {
+                                        return const Card(
+                                          margin: EdgeInsets.zero,
+                                        );
+                                      }
+                                    })
+                                : Image(
+                                    image: FileImage(_image!),
                                   ),
-                                );
-                              },
-                              style: IconButton.styleFrom(
-                                foregroundColor:
-                                    Theme.of(context).colorScheme.onPrimary,
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                disabledBackgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    .withOpacity(0.12),
-                                hoverColor: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimary
-                                    .withOpacity(0.08),
-                                focusColor: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimary
-                                    .withOpacity(0.12),
-                                highlightColor: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimary
-                                    .withOpacity(0.12),
-                              )),
-                        ],
-                      ),
+                          ),
+                        ),
+                        IconButton(
+                            icon: const Icon(Icons.mode_edit_outline),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                showDragHandle: true,
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) => Container(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(height: 10),
+                                      ElevatedButton(
+                                          onPressed: (() {
+                                            _pickImage(ImageSource.gallery);
+                                            return;
+                                          }),
+                                          child: const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.collections_outlined),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text('Browse Gallery'),
+                                            ],
+                                          )),
+                                      const Text('or'),
+                                      ElevatedButton(
+                                          onPressed: (() {
+                                            _pickImage(ImageSource.camera);
+                                            return;
+                                          }),
+                                          child: const Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.camera_alt_outlined),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text('Use a Camera'),
+                                            ],
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            style: IconButton.styleFrom(
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              disabledBackgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.12),
+                              hoverColor: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimary
+                                  .withOpacity(0.08),
+                              focusColor: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimary
+                                  .withOpacity(0.12),
+                              highlightColor: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimary
+                                  .withOpacity(0.12),
+                            )),
+                      ],
                     ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        '${us.firstname} ${us.lastname}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
+                  ),
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      '${us.firstname} ${us.lastname}',
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            )),
+            ),
+          ),
+        ),
+        /*===USER RATING===*/
+        Positioned(
+          top: 150,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: SizedBox(
+                        child: Column(
+                          children: [
+                            Text(
+                              us.numRating.toString(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                            const Text('reviews'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      child: SizedBox(
+                        child: Column(
+                          children: [
+                            Text(
+                              '${us.userRating}.0/5.0',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                            Text('rating'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
