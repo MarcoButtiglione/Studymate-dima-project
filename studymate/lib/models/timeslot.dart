@@ -1,15 +1,17 @@
-
 class TimeslotsWeek {
+  final String? id;
+
   final String userId;
   List<dynamic> monday;
-  List<dynamic> tuesday ;
-  List<dynamic> wednesday ;
-  List<dynamic> thursday ;
-  List<dynamic> friday ;
-  List<dynamic> saturday ;
-  List<dynamic> sunday ;
+  List<dynamic> tuesday;
+  List<dynamic> wednesday;
+  List<dynamic> thursday;
+  List<dynamic> friday;
+  List<dynamic> saturday;
+  List<dynamic> sunday;
 
   TimeslotsWeek({
+    this.id,
     required this.userId,
     required this.monday,
     required this.tuesday,
@@ -19,8 +21,9 @@ class TimeslotsWeek {
     required this.saturday,
     required this.sunday,
   });
-  
+
   static TimeslotsWeek fromJson(Map<String, dynamic> json) => TimeslotsWeek(
+        id: json['id'],
         userId: json['userId'],
         monday: json['monday'],
         tuesday: json['tuesday'],
@@ -29,11 +32,11 @@ class TimeslotsWeek {
         friday: json['friday'],
         saturday: json['saturday'],
         sunday: json['sunday'],
-       
       );
 
   Map<String, dynamic> toFirestore() {
-    var map ={
+    var map = {
+      "id": id,
       "userId": userId,
       "monday": monday,
       "tuesday": tuesday,
@@ -47,6 +50,4 @@ class TimeslotsWeek {
   }
 }
 
-class Week {
-
-}
+class Week {}

@@ -202,6 +202,9 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                           255, 233, 64, 87),
                                     ),
                                     onPressed: () {
+                                      if(isBusy){
+                                        return;
+                                      }
                                       // Validate returns true if the form is valid, or false otherwise.
                                       if (_formKey.currentState!.validate()) {
                                         FirebaseFirestore.instance
@@ -226,6 +229,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                             Navigator.of(context).push(
                                                 createRoute(
                                                     const HoursSelectionPage()));
+                                                    
                                           }
                                         });
                                       } else {

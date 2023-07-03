@@ -41,14 +41,15 @@ const List<String> day = [
   "Sunday",
 ];
 
-class HoursSelectionPage extends StatefulWidget {
-  const HoursSelectionPage({super.key});
+class EditTimeslotsPage extends StatefulWidget {
+  final TimeslotsWeek timeslots;
+  const EditTimeslotsPage({super.key, required this.timeslots});
 
   @override
-  State<HoursSelectionPage> createState() => _HoursSelectionPageState();
+  State<EditTimeslotsPage> createState() => _EditTimeslotsPageState();
 }
 
-class _HoursSelectionPageState extends State<HoursSelectionPage> {
+class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
   final _formKey = GlobalKey<FormState>();
   final user = FirebaseAuth.instance.currentUser!;
   bool isBusy = false;
@@ -62,6 +63,12 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
     [],
     [],
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    initSelectedHourWeek();
+  }
 
   bool checkingOverlappingFrom(String newValue, int index, int day) {
     List<SelectedHourField> listToCheck = selectedHourWeek[day];
@@ -187,8 +194,8 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
       setState(() {
         isBusy = true;
       });
-
       TimeslotsWeek timeslotsWeek = TimeslotsWeek(
+        id: widget.timeslots.id,
         userId: user.uid,
         monday: [],
         tuesday: [],
@@ -237,13 +244,19 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
             break;
         }
       }
-      String docId = "";
+      String docId = widget.timeslots.id!;
       final docTimeslot = FirebaseFirestore.instance.collection('timeslots');
       final json = timeslotsWeek.toFirestore();
-      await docTimeslot.add(json).then((DocumentReference doc) {
-        docId = doc.id;
+      await docTimeslot.doc(docId).update({
+        'monday': timeslotsWeek.monday,
+        'tuesday': timeslotsWeek.tuesday,
+        'wednesday': timeslotsWeek.wednesday,
+        'thursday': timeslotsWeek.thursday,
+        'friday': timeslotsWeek.friday,
+        'saturday': timeslotsWeek.saturday,
+        'sunday': timeslotsWeek.sunday,
       });
-      await docTimeslot.doc(docId).update({'id': docId});
+
       Navigator.pop(context);
       setState(() {
         isBusy = false;
@@ -264,6 +277,158 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
     }
   }
 
+  List<String> convertListTimestampToPrint(List<dynamic> list) {
+    List<String> timeToPrint = [];
+    String? firstTimestamp;
+    //Se c'è solo un elemento nel vettore
+    if (list.length == 1) {
+      timeToPrint.add(list[0]);
+    }
+    //Se ce ne sono almeno 2
+    else {
+      //Qui gestisco tutti gli elementi del vettore tranne l'ultimo
+      for (var i = 0; i < list.length - 1; i++) {
+        String x = list[i];
+        String y = list[i + 1];
+        int xInt = int.parse(x.substring(0, 2));
+        int yInt = int.parse(y.substring(0, 2));
+
+        //Se è il timestamp successivo
+        if (xInt == (yInt - 1)) {
+          //Se era vuoto (e quindi avevo aggiunto già un elemento nella lista) aggiungo l'attuale valore
+          //altrimenti scorri il vettore
+          firstTimestamp ??= x.substring(0, 5);
+        }
+        //Se il non è il timestamp successivo
+        else {
+          if (firstTimestamp == null) {
+            timeToPrint.add(x);
+          } else {
+            timeToPrint.add(firstTimestamp + " - " + x.substring(8, 13));
+            firstTimestamp = null;
+          }
+        }
+      }
+      //Uscito dalla lista rimarrà l'ultimo
+      //Se era vuoto vuol dire che avevo già aggiunto in timeToPrint
+      if (firstTimestamp == null) {
+        timeToPrint.add(list[list.length - 1]);
+      } else {
+        String x = list[list.length - 1];
+        timeToPrint.add(firstTimestamp + " - " + x.substring(8, 13));
+      }
+    }
+    return timeToPrint;
+  }
+
+  void initSelectedHourWeek() {
+    if (widget.timeslots.monday.isNotEmpty) {
+      List<String> monday =
+          convertListTimestampToPrint(widget.timeslots.monday);
+      for (var element in monday) {
+        SelectedHourField shf = SelectedHourField();
+        shf.from = element.substring(0, 5);
+        shf.fromIndex = hours.indexOf(element.substring(0, 5));
+        shf.to = element.substring(8, 13);
+        shf.toIndex = hours.indexOf(element.substring(8, 13));
+        shf.isValid = true;
+        setState(() {
+          selectedHourWeek[0].add(shf);
+        });
+      }
+    }
+    if (widget.timeslots.tuesday.isNotEmpty) {
+      List<String> tuesday =
+          convertListTimestampToPrint(widget.timeslots.tuesday);
+      for (var element in tuesday) {
+        SelectedHourField shf = SelectedHourField();
+        shf.from = element.substring(0, 5);
+        shf.fromIndex = hours.indexOf(element.substring(0, 5));
+        shf.to = element.substring(8, 13);
+        shf.toIndex = hours.indexOf(element.substring(8, 13));
+        shf.isValid = true;
+        setState(() {
+          selectedHourWeek[1].add(shf);
+        });
+      }
+    }
+    if (widget.timeslots.wednesday.isNotEmpty) {
+      List<String> wednesday =
+          convertListTimestampToPrint(widget.timeslots.wednesday);
+      for (var element in wednesday) {
+        SelectedHourField shf = SelectedHourField();
+        shf.from = element.substring(0, 5);
+        shf.fromIndex = hours.indexOf(element.substring(0, 5));
+        shf.to = element.substring(8, 13);
+        shf.toIndex = hours.indexOf(element.substring(8, 13));
+        shf.isValid = true;
+        setState(() {
+          selectedHourWeek[2].add(shf);
+        });
+      }
+    }
+    if (widget.timeslots.thursday.isNotEmpty) {
+      List<String> thursday =
+          convertListTimestampToPrint(widget.timeslots.thursday);
+      for (var element in thursday) {
+        SelectedHourField shf = SelectedHourField();
+        shf.from = element.substring(0, 5);
+        shf.fromIndex = hours.indexOf(element.substring(0, 5));
+        shf.to = element.substring(8, 13);
+        shf.toIndex = hours.indexOf(element.substring(8, 13));
+        shf.isValid = true;
+        setState(() {
+          selectedHourWeek[3].add(shf);
+        });
+      }
+    }
+    if (widget.timeslots.friday.isNotEmpty) {
+      List<String> friday =
+          convertListTimestampToPrint(widget.timeslots.friday);
+      for (var element in friday) {
+        SelectedHourField shf = SelectedHourField();
+        shf.from = element.substring(0, 5);
+        shf.fromIndex = hours.indexOf(element.substring(0, 5));
+        shf.to = element.substring(8, 13);
+        shf.toIndex = hours.indexOf(element.substring(8, 13));
+        shf.isValid = true;
+        setState(() {
+          selectedHourWeek[4].add(shf);
+        });
+      }
+    }
+    if (widget.timeslots.saturday.isNotEmpty) {
+      List<String> saturday =
+          convertListTimestampToPrint(widget.timeslots.saturday);
+      for (var element in saturday) {
+        SelectedHourField shf = SelectedHourField();
+        shf.from = element.substring(0, 5);
+        shf.fromIndex = hours.indexOf(element.substring(0, 5));
+        shf.to = element.substring(8, 13);
+        shf.toIndex = hours.indexOf(element.substring(8, 13));
+        shf.isValid = true;
+        setState(() {
+          selectedHourWeek[5].add(shf);
+        });
+      }
+    }
+    if (widget.timeslots.sunday.isNotEmpty) {
+      List<String> sunday =
+          convertListTimestampToPrint(widget.timeslots.sunday);
+      for (var element in sunday) {
+        SelectedHourField shf = SelectedHourField();
+        shf.from = element.substring(0, 5);
+        shf.fromIndex = hours.indexOf(element.substring(0, 5));
+        shf.to = element.substring(8, 13);
+        shf.toIndex = hours.indexOf(element.substring(8, 13));
+        shf.isValid = true;
+        setState(() {
+          selectedHourWeek[6].add(shf);
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -280,18 +445,22 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                   child: Column(
                     children: [
                       const SizedBox(height: 60),
-                      Row(children: const <Widget>[
-                        Text("Select your free time",
+                      Row(children: <Widget>[
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              size: 20,
+                            )),
+                        const Text("Edit timeslots",
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 25,
                               fontWeight: FontWeight.bold,
                             )),
                       ]),
-                      const Text(
-                          "Before creating your first lesson, enter the time slots of the week when you would be free to give lessons.",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(fontSize: 13)),
                       const SizedBox(height: 30),
                       Column(
                         children: selectedHourWeek.map<Column>(
@@ -566,7 +735,7 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                                     const Color.fromARGB(255, 233, 64, 87),
                               ),
                               onPressed: () {
-                                if (isBusy) {
+                                if(isBusy){
                                   return;
                                 }
                                 // Validate returns true if the form is valid, or false otherwise.

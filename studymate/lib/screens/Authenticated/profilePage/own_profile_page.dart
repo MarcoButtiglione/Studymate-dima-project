@@ -8,11 +8,14 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:studymate/provider/authentication.dart';
 import 'package:studymate/screens/Authenticated/profilePage/components/body_profile_page.dart';
+import 'package:studymate/screens/Authenticated/profilePage/components/edit_timeslots_page.dart';
 import 'package:studymate/screens/Authenticated/profilePage/updateInterest.dart';
 import 'package:studymate/service/storage_service.dart';
 import 'package:path/path.dart' as p;
 
 import '../../../../models/user.dart';
+import '../../../functions/routingAnimation.dart';
+import '../../../models/timeslot.dart';
 
 class OwnProfilePage extends StatefulWidget {
   @override
@@ -89,22 +92,43 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
-    return FutureBuilder(
-        future: readUsers().first,
+    Stream<List<TimeslotsWeek>> readTimeslot() => FirebaseFirestore.instance
+        .collection('timeslots')
+        .where('userId', isEqualTo: user.uid)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => TimeslotsWeek.fromJson(doc.data()))
+            .toList());
+
+    return StreamBuilder(
+        stream: readUsers(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong!');
           } else if (snapshot.hasData) {
             var users = snapshot.data!;
 
-            return _buildPage(users.first);
+            return StreamBuilder(
+                stream: readTimeslot(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Something went wrong!');
+                  } else if (snapshot.hasData) {
+                    var timeslots =  snapshot.data!;
+
+                    return _buildPage(users.first,timeslots.first);
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                });
+            ;
           } else {
             return Center(child: CircularProgressIndicator());
           }
         });
   }
 
-  Widget _buildPage(Users us) {
+  Widget _buildPage(Users us, TimeslotsWeek ts) {
     final Storage storage = Storage();
 
     List<String> interest = [];
@@ -189,7 +213,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                     width: 10,
                                   ),
                                   const Icon(
-                                     Icons.av_timer,
+                                    Icons.av_timer,
                                     size: 40,
                                   ),
                                 ],
@@ -228,7 +252,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                     width: 10,
                                   ),
                                   const Icon(
-                                     Icons.av_timer,
+                                    Icons.av_timer,
                                   ),
                                 ],
                               ),
@@ -251,13 +275,17 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                             builder: (context) => Container(
                               child: Wrap(
                                 children: [
+                                  /*
                                   ListTile(
                                     onTap: () {},
                                     leading: const Icon(Icons.settings),
                                     title: const Text('Edit profile'),
                                   ),
+                                   */
+
                                   ListTile(
                                     onTap: () {
+                                      Navigator.pop(context, 'Edit preferences');
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -270,7 +298,12 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                     title: const Text('Edit preferences'),
                                   ),
                                   ListTile(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.pop(context, 'Edit timeslots');
+                                      Navigator.of(context).push(
+                                          createRoute(EditTimeslotsPage(timeslots: ts,)));
+                                          return;
+                                    },
                                     leading: const Icon(Icons.schedule),
                                     title: const Text('Edit timeslots'),
                                   ),
@@ -477,7 +510,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
             ),
           ),
         ),
-        /*===USER RATING===*/
+        /*===USER RATING E NUM. REVIEWS===*/
         Positioned(
           top: 150,
           child: SizedBox(
