@@ -16,6 +16,7 @@ import 'package:path/path.dart' as p;
 import '../../../../models/user.dart';
 import '../../../functions/routingAnimation.dart';
 import '../../../models/timeslot.dart';
+import '../hoursselection_page.dart';
 
 class OwnProfilePage extends StatefulWidget {
   @override
@@ -114,21 +115,20 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                   if (snapshot.hasError) {
                     return const Text('Something went wrong!');
                   } else if (snapshot.hasData) {
-                    var timeslots =  snapshot.data!;
+                    var timeslots = snapshot.data!;
 
-                    return _buildPage(users.first,timeslots.first);
+                    return _buildPage(users.first, timeslots);
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
                 });
-            
           } else {
             return Center(child: CircularProgressIndicator());
           }
         });
   }
 
-  Widget _buildPage(Users us, TimeslotsWeek ts) {
+  Widget _buildPage(Users us, List<TimeslotsWeek> ts) {
     final Storage storage = Storage();
 
     List<String> interest = [];
@@ -285,7 +285,8 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
 
                                   ListTile(
                                     onTap: () {
-                                      Navigator.pop(context, 'Edit preferences');
+                                      Navigator.pop(
+                                          context, 'Edit preferences');
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -297,16 +298,35 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                     leading: const Icon(Icons.favorite),
                                     title: const Text('Edit preferences'),
                                   ),
-                                  ListTile(
-                                    onTap: () {
-                                      Navigator.pop(context, 'Edit timeslots');
-                                      Navigator.of(context).push(
-                                          createRoute(EditTimeslotsPage(timeslots: ts,)));
+                                  (() {
+                                    if (ts.isEmpty) {
+                                      return ListTile(
+                                        onTap: () {
+                                          Navigator.pop(
+                                              context, 'Insert timeslots');
+                                          Navigator.of(context).push(
+                                              createRoute(const HoursSelectionPage()));
                                           return;
-                                    },
-                                    leading: const Icon(Icons.schedule),
-                                    title: const Text('Edit timeslots'),
-                                  ),
+                                        },
+                                        leading: const Icon(Icons.schedule),
+                                        title: const Text('Insert timeslots'),
+                                      );
+                                    } else {
+                                      return ListTile(
+                                        onTap: () {
+                                          Navigator.pop(
+                                              context, 'Edit timeslots');
+                                          Navigator.of(context).push(
+                                              createRoute(EditTimeslotsPage(
+                                            timeslots: ts.first,
+                                          )));
+                                          return;
+                                        },
+                                        leading: const Icon(Icons.schedule),
+                                        title: const Text('Edit timeslots'),
+                                      );
+                                    }
+                                  }()),
                                   _isSigningOut
                                       ? CircularProgressIndicator(
                                           valueColor: AlwaysStoppedAnimation<

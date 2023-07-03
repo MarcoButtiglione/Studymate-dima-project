@@ -1,23 +1,76 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:studymate/component/storage.dart';
+import 'package:flutter/services.dart';
 import 'package:studymate/screens/Authenticated/FirstLogin/intrest.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as p;
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:studymate/service/storage_service.dart';
 
 import '../../../component/utils.dart';
 import '../../../models/user.dart';
 
 class SetUser extends StatefulWidget {
   @override
-  _SetUserState createState() => _SetUserState();
+  State<SetUser> createState() => _SetUserState();
 }
 
 class _SetUserState extends State<SetUser> {
   final formKey = GlobalKey<FormState>();
   final firstnameControler = TextEditingController();
   final lastnameControler = TextEditingController();
-  final Storage storage = Storage();
   final user = FirebaseAuth.instance.currentUser!;
+
+  File? _image;
+  final Storage storage = Storage();
+
+  Future _pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('No image selected')));
+        return;
+      }
+      File? img = File(image.path);
+      img = await _cropImage(imageFile: img);
+
+      if (img == null) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('No image cropped')));
+        return;
+      }
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Image loaded')));
+      setState(() {
+        _image = img;
+      });
+      Navigator.pop(context);
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.pop(context);
+    }
+  }
+
+  Future<File?> _cropImage({required File imageFile}) async {
+    CroppedFile? croppedImage = await ImageCropper().cropImage(
+      sourcePath: imageFile.path,
+      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+      maxHeight: 1080,
+      maxWidth: 1080,
+      compressQuality: 30,
+    );
+    if (croppedImage == null) {
+      return null;
+    }
+    return File(croppedImage.path);
+  }
 
   @override
   void dispose() {
@@ -64,24 +117,63 @@ class _SetUserState extends State<SetUser> {
                         height: 150,
                         width: 150,
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            //child: Image.network(imgUrl)),
-                            child: Image.asset("assets/login/user.png")),
+                          borderRadius: BorderRadius.circular(75),
+                          child: _image == null
+                              ? Image.asset("assets/login/user.png")
+                              : Image(
+                                  image: FileImage(_image!),
+                                ),
+                        ),
                       ),
                       IconButton(
-                          icon: const Icon(Icons.photo_camera),
-                          onPressed: () async {
-                            final results = await FilePicker.platform.pickFiles(
-                                allowMultiple: false,
-                                type: FileType.custom,
-                                allowedExtensions: ['png', 'jpg']);
-                            if (results == null) {
-                              Utils.showSnackBar('No file selected');
-                            } else {
-                              final path = results.files.single.path!;
-                              storage.uploadFile(path, user.uid);
-                              //imgUrl = storage.downloadFile(user.uid) as String;
-                            }
+                          icon: const Icon(Icons.mode_edit_outline),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              showDragHandle: true,
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) => Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    ElevatedButton(
+                                        onPressed: (() {
+                                          _pickImage(ImageSource.gallery);
+                                          return;
+                                        }),
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.collections_outlined),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text('Browse Gallery'),
+                                          ],
+                                        )),
+                                    const Text('or'),
+                                    ElevatedButton(
+                                        onPressed: (() {
+                                          _pickImage(ImageSource.camera);
+                                          return;
+                                        }),
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.camera_alt_outlined),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text('Use a Camera'),
+                                          ],
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            );
                           },
                           style: IconButton.styleFrom(
                             foregroundColor:
@@ -193,17 +285,37 @@ class _SetUserState extends State<SetUser> {
         barrierDismissible: false,
         builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
-      final addUser = Users(
-          id: user.uid,
-          firstname: firstnameControler.text.trim(),
-          lastname: lastnameControler.text.trim(),
-          profileImageURL:
-              'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
-          userRating: 0,
-          hours: 20,
-          numRating: 0);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => Intrest(addUser: addUser)));
+      if (_image != null) {
+        final path = _image!.path;
+        final extension = p.extension(path); // '.jpg'
+
+        final fileName = user.uid + extension;
+        final Storage storage = Storage();
+        final addUser = Users(
+            id: user.uid,
+            firstname: firstnameControler.text.trim(),
+            lastname: lastnameControler.text.trim(),
+            profileImageURL: 'profilePictures/$fileName',
+            userRating: 0,
+            hours: 5,
+            numRating: 0);
+        storage.uploadProfilePicture(path, fileName).then((value) =>
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Intrest(addUser: addUser))));
+      } else {
+        final addUser = Users(
+            id: user.uid,
+            firstname: firstnameControler.text.trim(),
+            lastname: lastnameControler.text.trim(),
+            profileImageURL: 'profilePictures/user.png',
+            userRating: 0,
+            hours: 5,
+            numRating: 0);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => Intrest(addUser: addUser)));
+      }
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
       Navigator.of(context).pop();
