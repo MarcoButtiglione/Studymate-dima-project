@@ -93,7 +93,7 @@ class ClassCard extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     double h = size.height;
     double w = size.width;
-    
+
     return Container(
       width: lessonPage == false
           ? (w > 490 ? w * 0.45 : w * 0.9)
@@ -135,7 +135,9 @@ class ClassCard extends StatelessWidget {
                           image: NetworkImage(snapshot.data!),
                         );
                       } else {
-                        return CircularProgressIndicator();
+                        return Card(
+                          margin: EdgeInsets.zero,
+                        );
                       }
                     }),
               ),

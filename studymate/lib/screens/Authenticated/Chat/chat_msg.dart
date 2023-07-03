@@ -83,7 +83,9 @@ class _MsgState extends State<ChatMsg> {
                                 image: NetworkImage(snapshot.data!),
                               );
                             } else {
-                              return Container();
+                              return Card(
+                                margin: EdgeInsets.zero,
+                              );
                             }
                           }),
                     ),

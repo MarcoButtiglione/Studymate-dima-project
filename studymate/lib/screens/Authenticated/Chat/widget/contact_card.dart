@@ -47,7 +47,10 @@ class ContactCard extends StatelessWidget {
                           image: NetworkImage(snapshot.data!),
                         );
                       } else {
-                        return Container();
+                        return Card(
+                          margin: EdgeInsets.zero,
+                        );
+                        
                       }
                     }),
               ),
@@ -127,12 +130,8 @@ class ContactCard extends StatelessWidget {
             ),
           ],
         ),
-        const Divider(
-          color: Colors.grey,
-        ),
-        const SizedBox(
-          height: 20,
-        )
+        
+        
       ],
     );
   }

@@ -292,7 +292,9 @@ class _LessonState extends State<LessonPage> {
                                                       snapshot.data!),
                                                 );
                                               } else {
-                                                return Container();
+                                                return Card(
+                                                  margin: EdgeInsets.zero,
+                                                );
                                               }
                                             }),
                                       ),

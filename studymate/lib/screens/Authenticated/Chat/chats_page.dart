@@ -122,50 +122,72 @@ class _ChatState extends State<ChatsPage> {
                         selected.split(' ')[0] &&
                     users.first.lastname.toLowerCase() ==
                         selected.split(' ')[1]) {
-                  return InkWell(
-                      onTap: () => openChat(chat, users.first),
-                      child: user.uid == chat.from_uid
-                          ? ContactCard(
-                              id: chat.id,
-                              firstname: users.first.firstname,
-                              lastname: users.first.lastname,
-                              userImageURL: users.first.profileImageURL,
-                              last_msg: chat.last_msg,
-                              last_time: chat.last_time,
-                              view: chat.view)
-                          : ContactCard(
-                              id: chat.id,
-                              firstname: users.first.firstname,
-                              lastname: users.first.lastname,
-                              userImageURL: users.first.profileImageURL,
-                              last_msg: chat.last_msg,
-                              last_time: chat.last_time,
-                              msg_num: chat.num_msg,
-                            ));
+                  return Column(
+                    children: [
+                      SizedBox(
+                      height: 5,
+                    ),
+                      InkWell(
+                          onTap: () => openChat(chat, users.first),
+                          child: user.uid == chat.from_uid
+                              ? ContactCard(
+                                  id: chat.id,
+                                  firstname: users.first.firstname,
+                                  lastname: users.first.lastname,
+                                  userImageURL: users.first.profileImageURL,
+                                  last_msg: chat.last_msg,
+                                  last_time: chat.last_time,
+                                  view: chat.view)
+                              : ContactCard(
+                                  id: chat.id,
+                                  firstname: users.first.firstname,
+                                  lastname: users.first.lastname,
+                                  userImageURL: users.first.profileImageURL,
+                                  last_msg: chat.last_msg,
+                                  last_time: chat.last_time,
+                                  msg_num: chat.num_msg,
+                                )),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      Divider(),
+                    ],
+                  );
                 } else {
                   return SizedBox();
                 }
               } else {
-                return InkWell(
-                    onTap: () => openChat(chat, users.first),
-                    child: user.uid == chat.from_uid
-                        ? ContactCard(
-                            id: chat.id,
-                            firstname: users.first.firstname,
-                            lastname: users.first.lastname,
-                            userImageURL: users.first.profileImageURL,
-                            last_msg: chat.last_msg,
-                            last_time: chat.last_time,
-                            view: chat.view)
-                        : ContactCard(
-                            id: chat.id,
-                            firstname: users.first.firstname,
-                            lastname: users.first.lastname,
-                            userImageURL: users.first.profileImageURL,
-                            last_msg: chat.last_msg,
-                            last_time: chat.last_time,
-                            msg_num: chat.num_msg,
-                          ));
+                return Column(
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    InkWell(
+                        onTap: () => openChat(chat, users.first),
+                        child: user.uid == chat.from_uid
+                            ? ContactCard(
+                                id: chat.id,
+                                firstname: users.first.firstname,
+                                lastname: users.first.lastname,
+                                userImageURL: users.first.profileImageURL,
+                                last_msg: chat.last_msg,
+                                last_time: chat.last_time,
+                                view: chat.view)
+                            : ContactCard(
+                                id: chat.id,
+                                firstname: users.first.firstname,
+                                lastname: users.first.lastname,
+                                userImageURL: users.first.profileImageURL,
+                                last_msg: chat.last_msg,
+                                last_time: chat.last_time,
+                                msg_num: chat.num_msg,
+                              )),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Divider(),
+                  ],
+                );
               }
             } else {
               return SizedBox();
