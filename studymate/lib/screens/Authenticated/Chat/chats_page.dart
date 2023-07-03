@@ -58,33 +58,21 @@ class _ChatState extends State<ChatsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        //appBar: AppBar(),
-        body: SingleChildScrollView(
+    return SingleChildScrollView(
       child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             //mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
-              Row(children: <Widget>[
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
-                      Icons.arrow_back_ios,
-                      size: 20,
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Messages",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
                     )),
-                const Expanded(
-                    child: Text("Messages",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ))),
-              ]),
-              const SizedBox(height: 10),
+              ),
               AutocompleteSearchbar(onSelected: (selectedUser) {
                 setState(() {
                   selected = selectedUser;
@@ -112,7 +100,7 @@ class _ChatState extends State<ChatsPage> {
                   }),
             ],
           )),
-    ));
+    );
   }
 
   Widget buildChat(Chat chat) {

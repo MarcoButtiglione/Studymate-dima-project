@@ -1,9 +1,16 @@
+import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/homepage.dart';
 import 'package:studymate/screens/Authenticated/createLesson/new_lesson_page.dart';
-import 'package:studymate/screens/Authenticated/pro_page.dart';
+//import 'package:studymate/screens/Authenticated/pro_page.dart';
 import 'package:studymate/screens/Authenticated/profilePage/own_profile_page.dart';
 import 'package:studymate/screens/Authenticated/Search/search_page.dart';
+import 'package:badges/badges.dart' as badges;
+
+import '../../models/chat.dart';
 
 class Authenticated extends StatefulWidget {
   @override
@@ -17,6 +24,15 @@ class _AuthenticatedState extends State<Authenticated> {
       _selectedIndex = index;
     });
   }
+
+  final user = FirebaseAuth.instance.currentUser!;
+
+  Stream<List<Chat>> readMessages() => FirebaseFirestore.instance
+      .collection('chat')
+      .where('member', arrayContains: user.uid)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Chat.fromFirestore(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +48,7 @@ class _AuthenticatedState extends State<Authenticated> {
         page = NewLessonPage();
         break;
       case 3:
-        page = ProPage();
+        page = ChatsPage();
         break;
       case 4:
         page = OwnProfilePage();
@@ -70,16 +86,16 @@ class _AuthenticatedState extends State<Authenticated> {
                 showSelectedLabels: false,
                 showUnselectedLabels: false,
                 //backgroundColor: Theme.of(context).bottomAppBarColor,
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
+                items: <BottomNavigationBarItem>[
+                  const BottomNavigationBarItem(
                     icon: Icon(Icons.home),
                     label: 'Home',
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     icon: Icon(Icons.search),
                     label: 'Search',
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     icon: Icon(
                       Icons.add_circle_outline,
                       size: 35,
@@ -87,10 +103,42 @@ class _AuthenticatedState extends State<Authenticated> {
                     label: 'Search',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.star),
+                    icon: StreamBuilder(
+                        stream: readMessages(),
+                        builder: ((context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<Chat> messages = snapshot.data!;
+                            if (messages.isNotEmpty) {
+                              int num = 0;
+                              messages.forEach((element) {
+                                if (element.num_msg! > 0 &&
+                                    element.from_uid != user.uid) {
+                                  num += 1;
+                                }
+                              });
+                              if (num > 0) {
+                                return badges.Badge(
+                                  position:
+                                      BadgePosition.topEnd(top: 0, end: 0),
+                                  showBadge: true,
+                                  child: const Icon(
+                                    Icons.message,
+                                  ),
+                                );
+                              }
+                            }
+                          }
+                          return badges.Badge(
+                            position: BadgePosition.topEnd(top: 0, end: 0),
+                            showBadge: false,
+                            child: const Icon(
+                              Icons.message,
+                            ),
+                          );
+                        })),
                     label: 'Pro',
                   ),
-                  BottomNavigationBarItem(
+                  const BottomNavigationBarItem(
                     icon: Icon(Icons.account_circle),
                     label: 'Profile',
                   ),

@@ -4,13 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:studymate/functions/routingAnimation.dart';
-import 'package:studymate/models/chat.dart';
 import 'package:studymate/models/lesson.dart';
 import 'package:studymate/models/user.dart';
 import '../../models/notification.dart';
 import 'common_widgets/nextLession_card.dart';
 import 'common_widgets/nextTutoring_card.dart';
-import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
 import 'package:studymate/screens/Authenticated/notification/notification_page.dart';
 
@@ -37,14 +35,14 @@ class _HomePageState extends State<HomePage> {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
-
+/*
   Stream<List<Chat>> readMessages() => FirebaseFirestore.instance
       .collection('chat')
       .where('member', arrayContains: user.uid)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Chat.fromFirestore(doc.data())).toList());
-
+*/
   Stream<List<Notifications>> readNot() => FirebaseFirestore.instance
       .collection('notification')
       .where('to_id', isEqualTo: user.uid)
@@ -115,6 +113,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     );
                   })),
+              /*
               const SizedBox(width: 10),
               StreamBuilder(
                   stream: readMessages(),
@@ -163,6 +162,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     );
                   })),
+                  */
             ]),
             (w < 490)
                 ? Column(
