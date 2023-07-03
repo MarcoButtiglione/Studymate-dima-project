@@ -246,7 +246,6 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
       }
       String docId = widget.timeslots.id!;
       final docTimeslot = FirebaseFirestore.instance.collection('timeslots');
-      final json = timeslotsWeek.toFirestore();
       await docTimeslot.doc(docId).update({
         'monday': timeslotsWeek.monday,
         'tuesday': timeslotsWeek.tuesday,

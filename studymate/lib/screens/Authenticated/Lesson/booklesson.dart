@@ -81,6 +81,13 @@ class _BookLessonModalState extends State<BookLessonModal> {
     return timeslots;
   }
 
+  Stream<List<Users>> readUsers() => FirebaseFirestore.instance
+      .collection('users')
+      .where('id', isEqualTo: userStudent.uid)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList());
+
   Stream<List<TimeslotsWeek>> readTimeslot() => FirebaseFirestore.instance
       .collection('timeslots')
       .where('userId', isEqualTo: widget.user.id)
@@ -132,7 +139,8 @@ class _BookLessonModalState extends State<BookLessonModal> {
     return false;
   }
 
-  Future send({required Scheduled scheduled}) async {
+  Future send(
+      {required Scheduled scheduled, required Users userStudent}) async {
     try {
       setState(() {
         isBusy = true;
@@ -170,6 +178,11 @@ class _BookLessonModalState extends State<BookLessonModal> {
         );
         final json = notif.toFirestore();
         docChat.doc(doc.id).update(json);
+      });
+      final docUsers = FirebaseFirestore.instance.collection('users');
+
+      await docUsers.doc(userStudent.id).update({
+        'hours': userStudent.hours - scheduled.timeslot!.length,
       });
       setState(() {
         isBusy = false;
@@ -347,6 +360,66 @@ class _BookLessonModalState extends State<BookLessonModal> {
                       const SizedBox(
                         height: 20,
                       ),
+                      Row(
+                        children: [
+                          const Expanded(
+                            flex: 2,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text("Credits available:",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text("(1 credit/1 hour)",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          )),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          StreamBuilder(
+                              stream: readUsers(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text('Something went wrong!');
+                                } else if (snapshot.hasData) {
+                                  var ownUser = snapshot.data!.first;
+                                  return Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          ownUser.hours.toString(),
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        const Icon(
+                                          Icons.av_timer,
+                                          size: 20,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
+                              }),
+                        ],
+                      ),
                       Align(
                         alignment: Alignment.centerRight,
                         child: Wrap(
@@ -359,30 +432,56 @@ class _BookLessonModalState extends State<BookLessonModal> {
                               ),
                               child: Text('CLOSE'),
                             ),
-                            TextButton(
-                              onPressed: () {
-                                if (selectedTimeslot.isNotEmpty &&
-                                    isBusy == false) {
-                                  selectedTimeslot.sort(
-                                      (String a, String b) => a.compareTo(b));
-                                  final scheduled = Scheduled(
-                                    lessionId: widget.lesson.id,
-                                    studentId: userStudent.uid,
-                                    title: widget.lesson.title,
-                                    category: widget.lesson.category,
-                                    tutorId: widget.user.id,
-                                    timeslot: selectedTimeslot,
-                                    date: Timestamp.fromDate(dateShown),
-                                    accepted: false,
-                                  );
-                                  send(scheduled: scheduled);
-                                }
-                              },
-                              style: TextButton.styleFrom(
-                                primary: Theme.of(context).colorScheme.primary,
-                              ),
-                              child: Text('BOOK THE LESSON'),
-                            ),
+                            StreamBuilder(
+                                stream: readUsers(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return const Text('Something went wrong!');
+                                  } else if (snapshot.hasData) {
+                                    var ownUser = snapshot.data!.first;
+                                    return TextButton(
+                                      onPressed: () {
+                                        if (selectedTimeslot.isNotEmpty &&
+                                            isBusy == false) {
+                                          if (selectedTimeslot.length <=
+                                              ownUser.hours) {
+                                            selectedTimeslot.sort(
+                                                (String a, String b) =>
+                                                    a.compareTo(b));
+                                            final scheduled = Scheduled(
+                                              lessionId: widget.lesson.id,
+                                              studentId: userStudent.uid,
+                                              title: widget.lesson.title,
+                                              category: widget.lesson.category,
+                                              tutorId: widget.user.id,
+                                              timeslot: selectedTimeslot,
+                                              date:
+                                                  Timestamp.fromDate(dateShown),
+                                              accepted: false,
+                                            );
+                                            send(
+                                                scheduled: scheduled,
+                                                userStudent: ownUser);
+                                          } else {
+                                            Navigator.pop(context);
+
+                                            Utils.showSnackBar(
+                                                'Not enough credits!');
+                                          }
+                                        }
+                                      },
+                                      style: TextButton.styleFrom(
+                                        primary: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                      child: Text('BOOK THE LESSON'),
+                                    );
+                                  } else {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                }),
                           ],
                         ),
                       ),

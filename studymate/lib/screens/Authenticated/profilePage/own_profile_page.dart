@@ -121,7 +121,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                     return Center(child: CircularProgressIndicator());
                   }
                 });
-            ;
+            
           } else {
             return Center(child: CircularProgressIndicator());
           }
