@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:studymate/screens/Authenticated/profilePage/components/edit_lesson_page.dart';
 
 import '../../../../component/utils.dart';
+import '../../../../functions/routingAnimation.dart';
 import '../../../../models/category.dart';
 import '../../../../models/lesson.dart';
 import '../../../../service/storage_service.dart';
@@ -138,6 +140,8 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                         trailing: PopupMenuButton<String>(
                           onSelected: (String? value) {
                             if (value == 'edit') {
+                              Navigator.of(context).push(
+                                  createRoute(EditLessonPage(lesson: lesson,)));
                             } else if (value == 'delete') {
                               showDialog<String>(
                                 context: context,

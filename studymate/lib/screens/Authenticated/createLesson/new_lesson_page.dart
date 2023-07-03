@@ -156,7 +156,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            DropdownCategory(callbackCategory, categories),
+                            DropdownCategory(callback: callbackCategory,categories: categories, initCategory: ""),
                             const SizedBox(height: 10),
                             TextFormField(
                               validator: (value) {

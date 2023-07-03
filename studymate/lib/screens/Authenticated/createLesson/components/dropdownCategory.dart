@@ -5,7 +5,13 @@ import '../../../../models/category.dart';
 class DropdownCategory extends StatefulWidget {
   final Function callback;
   final List<Category> categories;
-  const DropdownCategory(this.callback, this.categories, {super.key});
+  final String initCategory;
+  const DropdownCategory({
+    super.key,
+    required this.callback,
+    required this.categories,
+    required this.initCategory,
+  });
 
   @override
   State<DropdownCategory> createState() => _DropdownCategoryState();
@@ -13,6 +19,16 @@ class DropdownCategory extends StatefulWidget {
 
 class _DropdownCategoryState extends State<DropdownCategory> {
   String? dropdownValue;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initCategory != "") {
+      setState(() {
+        dropdownValue = widget.initCategory;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
