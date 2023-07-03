@@ -66,7 +66,10 @@ class _LessonCardState extends State<LessonCard> {
                                   image: NetworkImage(snapshot.data!),
                                 );
                               } else {
-                                return CircularProgressIndicator();
+                                return const Card(
+                                  shadowColor: Colors.transparent,
+                                  margin: EdgeInsets.zero,
+                                );
                               }
                             }),
                       ),

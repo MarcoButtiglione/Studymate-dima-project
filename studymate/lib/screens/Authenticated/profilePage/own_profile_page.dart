@@ -128,7 +128,13 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                     image: NetworkImage(snapshot.data!),
                   );
                 } else {
-                  return Container();
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: const Card(
+                      margin: EdgeInsets.zero,
+                    ),
+                  );
                 }
               }),
         ),
@@ -261,7 +267,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
               color: Theme.of(context).colorScheme.background,
             ),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height-320,
+            height: MediaQuery.of(context).size.height - 320,
             child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 90, 20, 0),
                 child: SingleChildScrollView(child: BodyProfilePage())),
@@ -299,7 +305,9 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                             image: NetworkImage(snapshot.data!),
                                           );
                                         } else {
-                                          return CircularProgressIndicator();
+                                          return const Card(
+                                            margin: EdgeInsets.zero,
+                                          );
                                         }
                                       })
                                   : Image(
