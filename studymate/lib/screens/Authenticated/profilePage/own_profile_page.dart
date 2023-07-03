@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +16,7 @@ import 'package:path/path.dart' as p;
 
 import '../../../../models/user.dart';
 import '../../../functions/routingAnimation.dart';
+import '../../../models/category.dart';
 import '../../../models/timeslot.dart';
 import '../hoursselection_page.dart';
 
@@ -25,6 +27,19 @@ class OwnProfilePage extends StatefulWidget {
 
 class _OwnProfilePageState extends State<OwnProfilePage> {
   File? _image;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Stream<List<Category>> readCategory(String category) => FirebaseFirestore
+      .instance
+      .collection('categories')
+      .where('name', isEqualTo: category)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
 
   Future _pickImage(ImageSource source) async {
     try {
@@ -135,6 +150,9 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
     us.categoriesOfInterest!.forEach((element) {
       interest.add(element.toString());
     });
+    int randNum = Random().nextInt(100);
+    String randomCategory =
+        us.categoriesOfInterest![randNum % us.categoriesOfInterest!.length];
     return Stack(
       children: [
         /*===IMMAGINE DI SFONDO===*/
@@ -142,26 +160,39 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
           top: 0,
           left: 0,
           width: MediaQuery.of(context).size.width,
-          child: FutureBuilder(
-              future: storage.downloadURL('Categories/Biomedical.jpg'),
-              builder: (context, snapshot) {
+          child: StreamBuilder<List<Category>>(
+              stream: readCategory(randomCategory),
+              builder: ((context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text("Something went wrong!");
                 } else if (snapshot.hasData) {
-                  return Image(
-                    fit: BoxFit.fill,
-                    image: NetworkImage(snapshot.data!),
-                  );
+                  final category = snapshot.data!.first;
+                  return FutureBuilder(
+                      future: storage.downloadURL(category.imageURL),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return const Text("Something went wrong!");
+                        } else if (snapshot.hasData) {
+                          return Image(
+                            fit: BoxFit.fill,
+                            image: NetworkImage(snapshot.data!),
+                          );
+                        } else {
+                          return SizedBox(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            child: Card(
+                              margin: EdgeInsets.zero,
+                            ),
+                          );
+                        }
+                      });
                 } else {
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: const Card(
-                      margin: EdgeInsets.zero,
-                    ),
-                  );
+                  return const Center(
+                      //child: CircularProgressIndicator(),
+                      );
                 }
-              }),
+              })),
         ),
         /*===SFUMATURA SFONDO===*/
         Positioned(
@@ -305,7 +336,8 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                           Navigator.pop(
                                               context, 'Insert timeslots');
                                           Navigator.of(context).push(
-                                              createRoute(const HoursSelectionPage()));
+                                              createRoute(
+                                                  const HoursSelectionPage()));
                                           return;
                                         },
                                         leading: const Icon(Icons.schedule),
