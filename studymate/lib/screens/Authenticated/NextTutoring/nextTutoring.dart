@@ -54,6 +54,7 @@ class _TutoringState extends State<NextTutoring> {
 
   @override
   Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
     return Scaffold(
         //appBar: AppBar(),
         body: SingleChildScrollView(
@@ -81,19 +82,55 @@ class _TutoringState extends State<NextTutoring> {
                                 ))),
                       ]),
                       const SizedBox(height: 10),
-                      AutocompleteSearchbar(onSelected: (selected) {
-                        setState(() {
-                          selectedLession = selected;
-                          // getData();
-                        });
-                      }),
-                      const SizedBox(height: 10),
-                      DropdownCategory(callbackCategory, onChanged: (selected) {
-                        setState(() {
-                          selectedCategory = selected;
-                          //getData();
-                        });
-                      }),
+                      w > 720
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  width: (w > 720) ? w * 0.4 : w * 0.8,
+                                  child: AutocompleteSearchbar(
+                                      onSelected: (selected) {
+                                    setState(() {
+                                      selectedLession = selected;
+                                      // getData();
+                                    });
+                                  }),
+                                ),
+                                SizedBox(
+                                  width: (w > 720) ? w * 0.4 : w * 0.8,
+                                  child: DropdownCategory(callbackCategory,
+                                      onChanged: (selected) {
+                                    setState(() {
+                                      selectedCategory = selected;
+                                      //getData();
+                                    });
+                                  }),
+                                ),
+                              ],
+                            )
+                          : Column(children: [
+                              SizedBox(
+                                width: (w > 720) ? w * 0.4 : w * 0.8,
+                                child: AutocompleteSearchbar(
+                                    onSelected: (selected) {
+                                  setState(() {
+                                    selectedLession = selected;
+                                    // getData();
+                                  });
+                                }),
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                width: (w > 720) ? w * 0.4 : w * 0.8,
+                                child: DropdownCategory(callbackCategory,
+                                    onChanged: (selected) {
+                                  setState(() {
+                                    selectedCategory = selected;
+                                    //getData();
+                                  });
+                                }),
+                              ),
+                            ]),
                       const SizedBox(
                         height: 10,
                       ),

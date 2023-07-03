@@ -93,8 +93,11 @@ class ClassCard extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     double h = size.height;
     double w = size.width;
+    
     return Container(
-      width: w > h ? 330 : 350,
+      width: lessonPage == false
+          ? (w > 490 ? w * 0.45 : w * 0.9)
+          : (w > 1000 ? w * 0.45 : w * 0.9),
       height: 200,
       margin: const EdgeInsets.all(2),
       decoration: BoxDecoration(
