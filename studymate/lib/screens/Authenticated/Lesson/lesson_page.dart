@@ -17,6 +17,7 @@ import '../../../models/lesson.dart';
 import '../../../models/user.dart';
 import '../../../service/storage_service.dart';
 import '../Chat/chat_msg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LessonPage extends StatefulWidget {
   final Lesson lesson;
@@ -374,6 +375,7 @@ class _LessonState extends State<LessonPage> {
                             const SizedBox(
                               height: 30,
                             ),
+                            /*
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -431,13 +433,15 @@ class _LessonState extends State<LessonPage> {
                                 )
                               ],
                             ),
+                            
                             const SizedBox(
                               height: 25,
                             ),
-                            const Align(
+                            */
+                            Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "Date",
+                                AppLocalizations.of(context)!.date,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold),
@@ -482,10 +486,10 @@ class _LessonState extends State<LessonPage> {
                                                                     15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Monday:",
+                                                                    "${AppLocalizations.of(context)!.monday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
@@ -502,7 +506,7 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : const Padding(
+                                                        : Padding(
                                                             padding: EdgeInsets
                                                                 .fromLTRB(0, 0,
                                                                     0, 15),
@@ -511,15 +515,16 @@ class _LessonState extends State<LessonPage> {
                                                                 Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Monday:",
+                                                                    "${AppLocalizations.of(context)!.monday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
                                                                   flex: 6,
                                                                   child: Column(
                                                                     children: [
-                                                                      Text(
-                                                                          'No lessons')
+                                                                      Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .noLessons)
                                                                     ],
                                                                   ),
                                                                 ),
@@ -550,10 +555,10 @@ class _LessonState extends State<LessonPage> {
                                                                     15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Tuesday:",
+                                                                    "${AppLocalizations.of(context)!.tuesday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
@@ -570,7 +575,7 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : const Padding(
+                                                        : Padding(
                                                             padding: EdgeInsets
                                                                 .fromLTRB(0, 0,
                                                                     0, 15),
@@ -579,15 +584,16 @@ class _LessonState extends State<LessonPage> {
                                                                 Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Tuesday:",
+                                                                    "${AppLocalizations.of(context)!.tuesday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
                                                                   flex: 6,
                                                                   child: Column(
                                                                     children: [
-                                                                      Text(
-                                                                          'No lessons')
+                                                                      Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .noLessons)
                                                                     ],
                                                                   ),
                                                                 ),
@@ -618,10 +624,10 @@ class _LessonState extends State<LessonPage> {
                                                                     15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Wednesday:",
+                                                                    "${AppLocalizations.of(context)!.wednesday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
@@ -638,7 +644,7 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : const Padding(
+                                                        : Padding(
                                                             padding: EdgeInsets
                                                                 .fromLTRB(0, 0,
                                                                     0, 15),
@@ -647,15 +653,16 @@ class _LessonState extends State<LessonPage> {
                                                                 Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Wednesday:",
+                                                                    "${AppLocalizations.of(context)!.wednesday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
                                                                   flex: 6,
                                                                   child: Column(
                                                                     children: [
-                                                                      Text(
-                                                                          'No lessons')
+                                                                      Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .noLessons)
                                                                     ],
                                                                   ),
                                                                 ),
@@ -686,10 +693,10 @@ class _LessonState extends State<LessonPage> {
                                                                     15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Thursday:",
+                                                                    "${AppLocalizations.of(context)!.thursday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
@@ -706,7 +713,7 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : const Padding(
+                                                        : Padding(
                                                             padding: EdgeInsets
                                                                 .fromLTRB(0, 0,
                                                                     0, 15),
@@ -715,15 +722,16 @@ class _LessonState extends State<LessonPage> {
                                                                 Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Thursday:",
+                                                                    "${AppLocalizations.of(context)!.thursday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
                                                                   flex: 6,
                                                                   child: Column(
                                                                     children: [
-                                                                      Text(
-                                                                          'No lessons')
+                                                                      Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .noLessons)
                                                                     ],
                                                                   ),
                                                                 ),
@@ -754,10 +762,10 @@ class _LessonState extends State<LessonPage> {
                                                                     15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Friday:",
+                                                                    "${AppLocalizations.of(context)!.friday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
@@ -774,7 +782,7 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : const Padding(
+                                                        : Padding(
                                                             padding: EdgeInsets
                                                                 .fromLTRB(0, 0,
                                                                     0, 15),
@@ -783,15 +791,16 @@ class _LessonState extends State<LessonPage> {
                                                                 Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Friday:",
+                                                                    "${AppLocalizations.of(context)!.friday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
                                                                   flex: 6,
                                                                   child: Column(
                                                                     children: [
-                                                                      Text(
-                                                                          'No lessons')
+                                                                      Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .noLessons)
                                                                     ],
                                                                   ),
                                                                 ),
@@ -822,10 +831,10 @@ class _LessonState extends State<LessonPage> {
                                                                     15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Saturday:",
+                                                                    "${AppLocalizations.of(context)!.saturday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
@@ -842,7 +851,7 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : const Padding(
+                                                        : Padding(
                                                             padding: EdgeInsets
                                                                 .fromLTRB(0, 0,
                                                                     0, 15),
@@ -851,15 +860,16 @@ class _LessonState extends State<LessonPage> {
                                                                 Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Saturday:",
+                                                                    "${AppLocalizations.of(context)!.saturday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
                                                                   flex: 6,
                                                                   child: Column(
                                                                     children: [
-                                                                      Text(
-                                                                          'No lessons')
+                                                                      Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .noLessons)
                                                                     ],
                                                                   ),
                                                                 ),
@@ -890,10 +900,10 @@ class _LessonState extends State<LessonPage> {
                                                                     15),
                                                             child: Row(
                                                               children: [
-                                                                const Expanded(
+                                                                 Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Sunday:",
+                                                                    "${AppLocalizations.of(context)!.sunday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
@@ -910,7 +920,7 @@ class _LessonState extends State<LessonPage> {
                                                               ],
                                                             ),
                                                           )
-                                                        : const Padding(
+                                                        : Padding(
                                                             padding: EdgeInsets
                                                                 .fromLTRB(0, 0,
                                                                     0, 15),
@@ -919,7 +929,7 @@ class _LessonState extends State<LessonPage> {
                                                                 Expanded(
                                                                   flex: 4,
                                                                   child: Text(
-                                                                    "Sunday:",
+                                                                    "${AppLocalizations.of(context)!.sunday}:",
                                                                   ),
                                                                 ),
                                                                 Expanded(
@@ -927,7 +937,7 @@ class _LessonState extends State<LessonPage> {
                                                                   child: Column(
                                                                     children: [
                                                                       Text(
-                                                                          'No lessons')
+                                                                          AppLocalizations.of(context)!.noLessons)
                                                                     ],
                                                                   ),
                                                                 ),
@@ -952,10 +962,10 @@ class _LessonState extends State<LessonPage> {
                             const SizedBox(
                               height: 10,
                             ),
-                            const Align(
+                            Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "About",
+                                AppLocalizations.of(context)!.about,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold),
@@ -974,10 +984,10 @@ class _LessonState extends State<LessonPage> {
                             const SizedBox(
                               height: 25,
                             ),
-                            const Align(
+                            Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "User rating",
+                                AppLocalizations.of(context)!.userRating,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.bold),

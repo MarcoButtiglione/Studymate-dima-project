@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/card.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../models/scheduled.dart';
 import '../../../models/user.dart';
 
@@ -50,8 +50,8 @@ class _nextTutoringState extends State<NextTutoringCard> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Row(children: <Widget>[
-                  Text("Your next tutoring",
+                Row(children: <Widget>[
+                  Text(AppLocalizations.of(context)!.nextTutoringTitle,
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 15,

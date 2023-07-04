@@ -1,11 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studymate/component/utils.dart';
 import 'package:studymate/provider/AuthService.dart';
 import 'package:studymate/screens/Login/login.dart';
 import 'package:studymate/screens/OnBoard/onBoard.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
+import 'l10n/l10n.dart';
 
 int? isviewed;
 void main() async {
@@ -40,6 +45,14 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 255, 81, 69)),
       ),
+      supportedLocales: L10n.all,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+
+      ],
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {

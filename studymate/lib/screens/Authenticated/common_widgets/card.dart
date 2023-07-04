@@ -9,6 +9,7 @@ import 'package:studymate/screens/Authenticated/qrCode/qrCodeScan.dart';
 import '../../../service/storage_service.dart';
 import '../NextLesson/nextLession.dart';
 import '../NextTutoring/nextTutoring.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ClassCard extends StatelessWidget {
   final String? id;
@@ -43,13 +44,13 @@ class ClassCard extends StatelessWidget {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete'),
+          title: Text(AppLocalizations.of(context)!.delete),
           content: SingleChildScrollView(
-            child: Text('Would you like to delete this lesson?'),
+            child: Text(AppLocalizations.of(context)!.deleteMessage),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Confirm'),
+              child: Text(AppLocalizations.of(context)!.confirm),
               onPressed: () async {
                 FirebaseFirestore.instance
                     .collection("scheduled")
@@ -76,7 +77,7 @@ class ClassCard extends StatelessWidget {
               },
             ),
             TextButton(
-              child: Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -193,7 +194,7 @@ class ClassCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    (tutor!) ? "Student:  " : "Tutor:  ",
+                    (tutor!) ? "${AppLocalizations.of(context)!.student}:  " : "${AppLocalizations.of(context)!.tutor}:  ",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Expanded(
@@ -203,8 +204,8 @@ class ClassCard extends StatelessWidget {
               ),
               Row(
                 children: [
-                  const Text(
-                    "Date:   ",
+                  Text(
+                    "${AppLocalizations.of(context)!.date}:   ",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Expanded(
@@ -266,8 +267,8 @@ class ClassCard extends StatelessWidget {
                                   MaterialPageRoute(
                                       builder: (context) => NextTutoring()));
                         },
-                        child: const Text(
-                          "see next...",
+                        child: Text(
+                          AppLocalizations.of(context)!.seeNext,
                           textAlign: TextAlign.right,
                         )),
                   ),

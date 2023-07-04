@@ -6,6 +6,7 @@ import 'package:studymate/screens/Authenticated/NextLesson/DropDownList.dart';
 import 'package:studymate/screens/Authenticated/NextLesson/autocomplete_searchbar.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/card.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 import '../../../models/scheduled.dart';
@@ -76,8 +77,8 @@ class _LessionState extends State<NextLession> {
                               Icons.arrow_back_ios,
                               size: 20,
                             )),
-                        const Expanded(
-                            child: Text("Lessons",
+                        Expanded(
+                            child: Text(AppLocalizations.of(context)!.lessons,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontSize: 25,

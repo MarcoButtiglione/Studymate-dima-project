@@ -11,6 +11,8 @@ import 'common_widgets/nextLession_card.dart';
 import 'common_widgets/nextTutoring_card.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
 import 'package:studymate/screens/Authenticated/notification/notification_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -65,9 +67,9 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 20),
             //Header
             Row(children: <Widget>[
-              const Expanded(
+               Expanded(
                 flex: 9,
-                child: Text("Welcome",
+                child: Text(AppLocalizations.of(context)!.welcome,
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 35,
@@ -200,14 +202,14 @@ class _HomePageState extends State<HomePage> {
             //--------------------
             //Suggested for you
             const SizedBox(height: 20),
-            const Row(children: <Widget>[
-              Text("Suggested for you",
+            Row(children: <Widget>[
+              Text(AppLocalizations.of(context)!.suggestedTitle,
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
             ]),
             const SizedBox(height: 10),
-            const Text(
-                "This is a list of possible community tutors you could study with.",
+             Text(
+                AppLocalizations.of(context)!.suggestedSubTitle,
                 textAlign: TextAlign.left,
                 style: TextStyle(fontSize: 13)),
             const SizedBox(height: 30),

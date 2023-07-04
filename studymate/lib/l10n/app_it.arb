@@ -1,0 +1,29 @@
+{
+   "welcome": "Benvenuto",
+   "suggestedTitle": "Suggerimenti per te",
+   "suggestedSubTitle": "Questa è una lista di possibili tutor della community con cui potresti studiare.",
+   "nextLessonTitle": "La tua prossima lezione",
+   "nextTutoringTitle": "Il tuo prossimo tutoraggio",
+
+   "monday": "Lunedì",
+   "tuesday": "Martedì",
+   "wednesday": "Mercoledì",
+   "thursday": "Giovedì",
+   "friday": "Venerdì",
+   "saturday": "Sabato",
+   "sunday": "Domenica",
+   "noLessons": "Nessuna lezione",
+   "about": "Informazioni",
+   "userRating": "Valutazione degli utenti",
+
+   "student": "Studente",
+   "lessons": "Lezioni",
+   "tutor": "Tutor",
+   "tutoring": "Tutoraggio",
+   "date": "Data",
+   "seeNext": "vedi successivo...",
+   "cancel": "Annulla",
+   "confirm": "Conferma",
+   "delete": "Elimina",
+   "deleteMessage": "Desideri eliminare questa lezione?"
+}

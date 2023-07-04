@@ -7,6 +7,7 @@ import 'package:studymate/screens/Authenticated/common_widgets/card.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../models/scheduled.dart';
 import '../../../models/user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NextTutoring extends StatefulWidget {
   @override
@@ -73,8 +74,8 @@ class _TutoringState extends State<NextTutoring> {
                               Icons.arrow_back_ios,
                               size: 20,
                             )),
-                        const Expanded(
-                            child: Text("Tutoring",
+                         Expanded(
+                            child: Text(AppLocalizations.of(context)!.tutoring,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontSize: 25,

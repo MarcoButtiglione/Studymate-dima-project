@@ -1,0 +1,112 @@
+{
+    "welcome":"Welcome",
+    "@welcome":{
+        "description": "Welcome message homepage"
+    },
+    "suggestedTitle":"Suggested for you",
+    "@suggestedTitle":{
+        "description": "Title of suggested section in homepage"
+    },
+    "suggestedSubTitle":"This is a list of possible community tutors you could study with.",
+    "@suggestedSubTitle":{
+        "description": "Subtitle of suggested section in homepage"
+    },
+    "nextLessonTitle":"Your next lesson",
+    "@nextLessonTitle":{
+        "description": "Title of next lesson part"
+    },
+    "nextTutoringTitle":"Your next tutoring",
+    "@nextTutoringTitle":{
+        "description": "Title of next tutoring part"
+    },
+
+
+
+
+
+
+
+
+    "monday":"Monday",
+    "@monday":{
+        "description": "Monday"
+    },
+    "tuesday":"Tuesday",
+    "@tuesday":{
+        "description": "Tuesday"
+    },
+    "wednesday":"Wednesday",
+    "@wednesday":{
+        "description": "Wednesday"
+    },
+    "thursday":"Thursday",
+    "@thursday":{
+        "description": "Thursday"
+    },
+    "friday":"Friday",
+    "@friday":{
+        "description": "Friday"
+    },
+    "saturday":"Saturday",
+    "@saturday":{
+        "description": "Saturday"
+    },
+    "sunday":"Sunday",
+    "@sunday":{
+        "description": "Sunday"
+    },
+    "noLessons":"No lessons",
+    "@noLessons":{
+        "description": "No lessons"
+    },
+    "about":"About",
+    "@about":{
+        "description": "About"
+    },
+    "userRating":"User rating",
+    "@userRating":{
+        "description": "User rating"
+    },
+
+
+    "student":"Student",
+    "@student":{
+        "description": "Student"
+    },
+    "lessons":"Lessons",
+    "@lessons":{
+        "description": "Lessons"
+    },
+    "tutor":"Tutor",
+    "@tutor":{
+        "description": "Tutor"
+    },
+    "tutoring":"Tutoring",
+    "@tutoring":{
+        "description": "Tutoring"
+    },
+    "date":"Date",
+    "@date":{
+        "description": "Date"
+    },
+    "seeNext":"see next...",
+    "@seeNext":{
+        "description": "see next..."
+    },
+    "cancel":"Cancel",
+    "@cancel":{
+        "description": "Cancel"
+    },
+    "confirm":"Confirm",
+    "@confirm":{
+        "description": "Confirm"
+    },
+    "delete":"Delete",
+    "@delete":{
+        "description": "Delete"
+    },
+    "deleteMessage":"Would you like to delete this lesson?",
+    "@deleteMessage":{
+        "description": "Delete message"
+    }
+}

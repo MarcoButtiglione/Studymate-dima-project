@@ -6,6 +6,7 @@ import 'package:studymate/screens/Authenticated/common_widgets/card.dart';
 
 import '../../../models/scheduled.dart';
 import '../../../models/user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NextLessionCard extends StatefulWidget {
   final User user;
@@ -49,8 +50,8 @@ class _nextLessionState extends State<NextLessionCard> {
             var schedule = snapshot.data!;
             if (schedule.length > 0) {
               return Column(children: [
-                const Row(children: <Widget>[
-                  Text("Your next lesson",
+                Row(children: <Widget>[
+                  Text(AppLocalizations.of(context)!.nextLessonTitle,
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 15,

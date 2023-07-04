@@ -1,0 +1,30 @@
+{
+   "welcome": "欢迎",
+   "suggestedTitle": "为您推荐",
+   "suggestedSubTitle": "这是一份可能与之一起学习的社区导师列表。",
+   "nextLessonTitle": "您的下一堂课",
+   "nextTutoringTitle": "您的下一次辅导",
+
+
+   "monday": "星期一",
+   "tuesday": "星期二",
+   "wednesday": "星期三",
+   "thursday": "星期四",
+   "friday": "星期五",
+   "saturday": "星期六",
+   "sunday": "星期日",
+   "noLessons": "无课程",
+   "about": "关于",
+   "userRating": "用户评分", 
+
+   "student": "学生",
+   "lessons": "课程",
+   "tutor": "导师",
+   "tutoring": "辅导",
+   "date": "日期",
+   "seeNext": "查看下一个...",
+   "cancel": "取消",
+   "confirm": "确认",
+   "delete": "删除",
+   "deleteMessage": "您是否要删除此课程？"
+}
