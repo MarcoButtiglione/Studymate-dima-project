@@ -10,6 +10,8 @@ import '../../../component/utils.dart';
 import '../../../models/lesson.dart';
 import '../../../models/notification.dart';
 import '../../../models/user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class BookLessonModal extends StatefulWidget {
   final Lesson lesson;
@@ -189,7 +191,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
       });
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lesson booked!')),
+         SnackBar(content: Text(AppLocalizations.of(context)!.lessonBookedConfirm)),
       );
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -239,7 +241,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text("Select the timeslots:",
+                      Text(AppLocalizations.of(context)!.selectTimeslotTitle,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           )),
@@ -349,8 +351,8 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                                         }).toList(),
                                                       );
                                                     } else {
-                                                      return const Text(
-                                                          'No lessons in this day.');
+                                                      return Text(
+                                                          AppLocalizations.of(context)!.noLessonsInDay);
                                                     }
                                                   }()));
                                             });
@@ -362,7 +364,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
                       ),
                       Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                             flex: 2,
                             child: Align(
                               alignment: Alignment.centerLeft,
@@ -370,7 +372,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                 children: [
                                   Row(
                                     children: [
-                                      Text("Credits available:",
+                                      Text("${AppLocalizations.of(context)!.creditAvailable}:",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                           )),
@@ -378,7 +380,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                   ),
                                   Row(
                                     children: [
-                                      Text("(1 credit/1 hour)",
+                                      Text(AppLocalizations.of(context)!.oneCreditHour,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                           )),
@@ -430,7 +432,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                 primary:
                                     Theme.of(context).colorScheme.secondary,
                               ),
-                              child: Text('CLOSE'),
+                              child: Text(AppLocalizations.of(context)!.closeCaps),
                             ),
                             StreamBuilder(
                                 stream: readUsers(),
@@ -466,7 +468,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                             Navigator.pop(context);
 
                                             Utils.showSnackBar(
-                                                'Not enough credits!');
+                                                AppLocalizations.of(context)!.noCredits);
                                           }
                                         }
                                       },
@@ -475,7 +477,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                             .colorScheme
                                             .primary,
                                       ),
-                                      child: Text('BOOK THE LESSON'),
+                                      child: Text(AppLocalizations.of(context)!.bookLessonCaps),
                                     );
                                   } else {
                                     return Center(
@@ -495,7 +497,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
                   );
                 }
               }
-              return const Text("No timestamp");
+              return  Text(AppLocalizations.of(context)!.noTimestamp);
             } else {
               return const Center(
                 child: CircularProgressIndicator(),

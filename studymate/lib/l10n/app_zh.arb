@@ -5,6 +5,15 @@
    "nextLessonTitle": "您的下一堂课",
    "nextTutoringTitle": "您的下一次辅导",
 
+   "lessonBookedConfirm": "预订成功！",
+   "selectTimeslotTitle": "选择时间段",
+   "noLessonsInDay": "当天没有课程。",
+   "creditAvailable": "可用积分",
+   "oneCreditHour": "(1积分/1小时)",
+   "closeCaps": "关闭",
+   "noCredits": "积分不足！",
+   "bookLessonCaps": "预订课程",
+   "noTimestamp": "无时间戳",
 
    "monday": "星期一",
    "tuesday": "星期二",

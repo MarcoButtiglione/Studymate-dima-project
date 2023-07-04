@@ -950,7 +950,7 @@ class _LessonState extends State<LessonPage> {
                                             );
                                           }
                                         }
-                                        return const Text("No timestamp");
+                                        return Text(AppLocalizations.of(context)!.noTimestamp);
                                       } else {
                                         return const Center(
                                           child: CircularProgressIndicator(),

@@ -5,6 +5,16 @@
    "nextLessonTitle": "Tu próxima lección",
    "nextTutoringTitle": "Tu próxima tutoría",
 
+   "lessonBookedConfirm": "¡Lección reservada!",
+   "selectTimeslotTitle": "Selecciona los horarios",
+   "noLessonsInDay": "No hay lecciones en este día.",
+   "creditAvailable": "Créditos disponibles",
+   "oneCreditHour": "(1 crédito/1 hora)",
+   "closeCaps": "CERRAR",
+   "noCredits": "¡No tienes suficientes créditos!",
+   "bookLessonCaps": "RESERVAR LA LECCIÓN",
+   "noTimestamp": "Sin marca de tiempo",
+
    "monday": "Lunes",
    "tuesday": "Martes",
    "wednesday": "Miércoles",

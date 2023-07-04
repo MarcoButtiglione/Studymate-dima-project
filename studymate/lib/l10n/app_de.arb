@@ -5,6 +5,16 @@
    "nextLessonTitle": "Deine nächste Lektion",
    "nextTutoringTitle": "Deine nächste Nachhilfestunde",
 
+   "lessonBookedConfirm": "Lektion gebucht!",
+   "selectTimeslotTitle": "Wähle die Zeitfenster aus",
+   "noLessonsInDay": "Keine Lektionen an diesem Tag.",
+   "creditAvailable": "Verfügbare Credits",
+   "oneCreditHour": "(1 Credit/1 Stunde)",
+   "closeCaps": "SCHLIESSEN",
+   "noCredits": "Nicht genügend Credits!",
+   "bookLessonCaps": "LEKTION BUCHEN",
+   "noTimestamp": "Kein Zeitstempel",
+
    "monday": "Montag",
    "tuesday": "Dienstag",
    "wednesday": "Mittwoch",

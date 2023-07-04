@@ -21,7 +21,42 @@
     },
 
 
-
+    "lessonBookedConfirm":"Lesson booked!",
+    "@lessonBookedConfirm":{
+        "description": "Lesson booked!"
+    },
+    "selectTimeslotTitle":"Select the timeslots",
+    "@selectTimeslotTitle":{
+        "description": "Title for the selection of the timeslots"
+    },
+    "noLessonsInDay":"No lessons in this day.",
+    "@noLessonsInDay":{
+        "description": "No lessons in this day message if no timeslot in a day"
+    },
+    "creditAvailable":"Credits available",
+    "@creditAvailable":{
+        "description": "Credits available on booking lesson"
+    },
+    "oneCreditHour":"(1 credit/1 hour)",
+    "@oneCreditHour":{
+        "description": "Explaination of the value of a credit in hours"
+    },
+    "closeCaps":"CLOSE",
+    "@closeCaps":{
+        "description": "CLOSE button modal"
+    },
+    "noCredits":"Not enough credits!",
+    "@noCredits":{
+        "description": "Not enough credits! message when booking"
+    },
+    "bookLessonCaps":"BOOK THE LESSON",
+    "@bookLessonCaps":{
+        "description": "BOOK THE LESSON button modal"
+    },
+    "noTimestamp":"No timestamp",
+    "@noTimestamp":{
+        "description": "No timestamp error message"
+    },   
 
 
 
