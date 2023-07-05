@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studymate/models/timeslot.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const List<String> hours = [
   "00:00",
@@ -30,15 +31,6 @@ const List<String> hours = [
   "22:00",
   "23:00",
   "24:00",
-];
-const List<String> day = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
 ];
 
 class EditTimeslotsPage extends StatefulWidget {
@@ -131,8 +123,8 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
 
     if (list[index].to != null) {
       if (hours.indexOf(value) >= hours.indexOf(list[index].to!)) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Incorrect time entered"),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.incorrectTime),
           duration: Duration(seconds: 2),
           backgroundColor: Color.fromARGB(255, 255, 68, 35),
         ));
@@ -143,8 +135,8 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
     if (list.length >= 2) {
       bool isOverlapped = checkingOverlappingFrom(value, index, day);
       if (isOverlapped) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Incorrect time entered. Possible overlaps."),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.incorrectTimeOverlaps),
           duration: Duration(seconds: 2),
           backgroundColor: Color.fromARGB(255, 255, 68, 35),
         ));
@@ -163,8 +155,8 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
     List<SelectedHourField> list = selectedHourWeek[day];
     if (list[index].from != null) {
       if (hours.indexOf(value) <= hours.indexOf(list[index].from!)) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Incorrect time entered."),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.incorrectTime),
           duration: Duration(seconds: 2),
           backgroundColor: Color.fromARGB(255, 255, 68, 35),
         ));
@@ -174,8 +166,8 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
     if (list.length >= 2) {
       bool isOverlapped = checkingOverlappingTo(value, index, day);
       if (isOverlapped) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Incorrect time entered. Possible overlaps."),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.incorrectTimeOverlaps),
           duration: Duration(seconds: 2),
           backgroundColor: Color.fromARGB(255, 255, 68, 35),
         ));
@@ -261,15 +253,15 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
         isBusy = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Time slots added!')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.timeslotAdded)),
       );
     } on FirebaseAuthException catch (e) {
       setState(() {
         isBusy = false;
       });
       print(e);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Fill out the previous form first."),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context)!.createTimeslotSnackError),
         duration: Duration(seconds: 2),
         backgroundColor: Color.fromARGB(255, 255, 68, 35),
       ));
@@ -430,6 +422,15 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> day = [
+      AppLocalizations.of(context)!.monday,
+      AppLocalizations.of(context)!.tuesday,
+      AppLocalizations.of(context)!.wednesday,
+      AppLocalizations.of(context)!.thursday,
+      AppLocalizations.of(context)!.friday,
+      AppLocalizations.of(context)!.saturday,
+      AppLocalizations.of(context)!.sunday,
+    ];
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -453,7 +454,7 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                               Icons.arrow_back_ios,
                               size: 20,
                             )),
-                        const Text("Edit timeslots",
+                        Text(AppLocalizations.of(context)!.editTimeslotTitle,
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontSize: 25,
@@ -526,7 +527,7 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                               decoration: InputDecoration(
                                                 errorStyle:
                                                     const TextStyle(height: 0),
-                                                labelText: "From",
+                                                labelText: AppLocalizations.of(context)!.from,
                                                 hintText: "--:--",
                                                 border: OutlineInputBorder(
                                                   borderRadius:
@@ -615,7 +616,7 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                               decoration: InputDecoration(
                                                 errorStyle:
                                                     const TextStyle(height: 0),
-                                                labelText: "To",
+                                                labelText: AppLocalizations.of(context)!.to,
                                                 hintText: "--:--",
                                                 border: OutlineInputBorder(
                                                   borderRadius:
@@ -703,9 +704,9 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                           });
                                         } else {
                                           ScaffoldMessenger.of(context)
-                                              .showSnackBar(const SnackBar(
+                                              .showSnackBar(SnackBar(
                                             content: Text(
-                                                "Fill out the previous form first."),
+                                                AppLocalizations.of(context)!.createTimeslotFillAllSnack),
                                             duration: Duration(seconds: 2),
                                             backgroundColor: Color.fromARGB(
                                                 255, 255, 68, 35),
@@ -717,7 +718,7 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                         });
                                       }
                                     },
-                                    label: Text('Add a new time slot'),
+                                    label: Text(AppLocalizations.of(context)!.addTimeslotButton),
                                   ),
                                 ],
                               ),
@@ -734,7 +735,7 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                     const Color.fromARGB(255, 233, 64, 87),
                               ),
                               onPressed: () {
-                                if(isBusy){
+                                if (isBusy) {
                                   return;
                                 }
                                 // Validate returns true if the form is valid, or false otherwise.
@@ -756,9 +757,9 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                       send();
                                     } else {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
+                                          .showSnackBar( SnackBar(
                                         content: Text(
-                                            "Fill out all the previous fields first."),
+                                            AppLocalizations.of(context)!.createTimeslotFillAllSnack),
                                         duration: Duration(seconds: 2),
                                         backgroundColor:
                                             Color.fromARGB(255, 255, 68, 35),
@@ -766,9 +767,9 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                     }
                                   } else {
                                     ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
+                                        .showSnackBar(SnackBar(
                                       content: Text(
-                                          "Please enter at least one valid field."),
+                                          AppLocalizations.of(context)!.createTimeslotFillOneSnack),
                                       duration: Duration(seconds: 2),
                                       backgroundColor:
                                           Color.fromARGB(255, 255, 68, 35),
@@ -776,15 +777,15 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                   }
                                 } else {
                                   ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content: Text("Some invalid fields."),
+                                      .showSnackBar(SnackBar(
+                                    content: Text(AppLocalizations.of(context)!.createTimeslotInvalidFieldSnack),
                                     duration: Duration(seconds: 2),
                                     backgroundColor:
                                         Color.fromARGB(255, 255, 68, 35),
                                   ));
                                 }
                               },
-                              child: const Text('Submit',
+                              child: Text(AppLocalizations.of(context)!.submit,
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),
                                   )),

@@ -18,7 +18,7 @@ import '../../../../models/user.dart';
 import '../../../functions/routingAnimation.dart';
 import '../../../models/category.dart';
 import '../../../models/timeslot.dart';
-import '../hoursselection_page.dart';
+import 'components/hoursselection_page.dart';
 
 class OwnProfilePage extends StatefulWidget {
   @override

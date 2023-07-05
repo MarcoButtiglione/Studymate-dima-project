@@ -59,7 +59,60 @@
     },   
 
 
+    "createTimeslotTitle":"Select your free time",
+    "@selectFreeTime":{
+        "description": "Title create timeslot"
+    },
+    "createTimeslotSubtitle":"Before creating your first lesson, enter the time slots of the week when you would be free to give lessons.",
+    "@createTimeslotSubtitle":{
+        "description": "Subtitle create timeslot"
+    },
+    "from":"From",
+    "@from":{
+        "description": "From"
+    },
+    "to":"To",
+    "@to":{
+        "description": "To"
+    },
+    "createTimeslotSnackError":"Fill out the previous form first.",
+    "@createTimeslotSnackError":{
+        "description": "Snackbar error create timeslot"
+    },
+    "addTimeslotButton":"Add a new time slot",
+    "@addTimeslotButton":{
+        "description": "Add timeslot button"
+    },
+    "createTimeslotFillAllSnack":"Fill out all the previous fields first.",
+    "@createTimeslotFillAllSnack":{
+        "description": "create Timeslot Fill All Snack"
+    },
+    "createTimeslotFillOneSnack":"Please enter at least one valid field.",
+    "@createTimeslotFillOneSnack":{
+        "description": "Please enter at least one valid field."
+    },
+    "createTimeslotInvalidFieldSnack":"Some invalid fields.",
+    "@createTimeslotInvalidFieldSnack":{
+        "description": "Some invalid fields."
+    },
 
+
+    "incorrectTime":"Incorrect time entered.",
+    "@incorrectTime":{
+        "description": "Incorrect time entered error."
+    },
+    "incorrectTimeOverlaps":"Incorrect time entered. Possible overlaps.",
+    "@incorrectTimeOverlaps":{
+        "description": "Incorrect time entered. Possible overlaps. error"
+    },
+    "timeslotAdded":"Time slots added!",
+    "@timeslotAdded":{
+        "description": "Time slots added!r"
+    },
+    "editTimeslotTitle":"Edit timeslots",
+    "@editTimeslotTitle":{
+        "description": "Edit timeslots"
+    },   
 
 
     "monday":"Monday",
@@ -167,6 +220,10 @@
     "@submit":{
         "description": "Submit"
     },
+
+
+
+
 
 
     "student":"Student",

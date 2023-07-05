@@ -15,6 +15,20 @@
    "bookLessonCaps": "LEKTION BUCHEN",
    "noTimestamp": "Kein Zeitstempel",
 
+   "createTimeslotTitle": "Wähle deine freie Zeit",
+   "createTimeslotSubtitle": "Bevor du deine erste Lektion erstellst, gib die Zeitfenster der Woche ein, in denen du frei wärst, um Unterricht zu geben.",
+   "from": "Von",
+   "to": "Bis",
+   "createTimeslotSnackError": "Fülle zuerst das vorherige Formular aus.",
+   "addTimeslotButton": "Neues Zeitfenster hinzufügen",
+   "createTimeslotFillAllSnack": "Fülle zuerst alle vorherigen Felder aus.",
+   "createTimeslotFillOneSnack": "Bitte gib mindestens ein gültiges Feld ein.",
+   "createTimeslotInvalidFieldSnack": "Einige ungültige Felder.",
+   "incorrectTime": "Falsche Zeit eingegeben.",
+   "incorrectTimeOverlaps": "Falsche Zeit eingegeben. Mögliche Überschneidungen.",
+   "timeslotAdded": "Zeitfenster hinzugefügt!",
+   "editTimeslotTitle": "Zeitfenster bearbeiten",
+
    "monday": "Montag",
    "tuesday": "Dienstag",
    "wednesday": "Mittwoch",
@@ -54,3 +68,4 @@
    "delete": "Löschen",
    "deleteMessage": "Möchtest du diese Lektion löschen?"
 }
+

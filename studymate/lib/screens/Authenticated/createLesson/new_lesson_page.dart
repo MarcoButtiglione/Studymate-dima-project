@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:studymate/models/lesson.dart';
-import 'package:studymate/screens/Authenticated/hoursselection_page.dart';
+import 'package:studymate/screens/Authenticated/profilePage/components/hoursselection_page.dart';
 
 import '../../../component/utils.dart';
 import '../../../functions/routingAnimation.dart';

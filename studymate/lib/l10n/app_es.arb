@@ -14,7 +14,21 @@
    "noCredits": "¡No tienes suficientes créditos!",
    "bookLessonCaps": "RESERVAR LA LECCIÓN",
    "noTimestamp": "Sin marca de tiempo",
-
+   
+   "createTimeslotTitle": "Selecciona tu tiempo libre",
+   "createTimeslotSubtitle": "Antes de crear tu primera lección, ingresa los horarios de la semana en los que estarías libre para dar clases.",
+   "from": "Desde",
+   "to": "Hasta",
+   "createTimeslotSnackError": "Completa el formulario anterior primero.",
+   "addTimeslotButton": "Agregar un nuevo horario",
+   "createTimeslotFillAllSnack": "Completa todos los campos anteriores primero.",
+   "createTimeslotFillOneSnack": "Por favor, ingresa al menos un campo válido.",
+   "createTimeslotInvalidFieldSnack": "Algunos campos no son válidos.",
+   "incorrectTime": "Hora incorrecta ingresada.",
+   "incorrectTimeOverlaps": "Hora incorrecta ingresada. Posibles superposiciones.",
+   "timeslotAdded": "¡Horarios agregados!",
+   "editTimeslotTitle": "Editar horarios",
+   
    "monday": "Lunes",
    "tuesday": "Martes",
    "wednesday": "Miércoles",
