@@ -28,7 +28,9 @@
    "incorrectTimeOverlaps": "Hora incorrecta ingresada. Posibles superposiciones.",
    "timeslotAdded": "¡Horarios agregados!",
    "editTimeslotTitle": "Editar horarios",
-   
+
+   "messages": "Mensajes",
+
    "monday": "Lunes",
    "tuesday": "Martes",
    "wednesday": "Miércoles",

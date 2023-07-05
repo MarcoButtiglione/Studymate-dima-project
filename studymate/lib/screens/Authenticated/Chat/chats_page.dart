@@ -6,6 +6,8 @@ import 'package:studymate/screens/Authenticated/Chat/chat_msg.dart';
 import 'package:studymate/screens/Authenticated/Chat/widget/contact_card.dart';
 import '../../../models/chat.dart';
 import 'widget/autocomplete_searchbar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ChatsPage extends StatefulWidget {
   @override
@@ -65,9 +67,9 @@ class _ChatState extends State<ChatsPage> {
             //mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
-                child: Text("Messages",
+                child: Text(AppLocalizations.of(context)!.messages,
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,

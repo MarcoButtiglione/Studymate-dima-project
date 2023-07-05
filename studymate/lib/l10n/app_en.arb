@@ -115,6 +115,13 @@
     },   
 
 
+    "messages":"Messages",
+    "@messages":{
+        "description": "Messages"
+    },
+
+
+
     "monday":"Monday",
     "@monday":{
         "description": "Monday"
