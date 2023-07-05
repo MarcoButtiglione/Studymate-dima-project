@@ -104,6 +104,71 @@
     },
 
 
+    "search":"Search",
+    "@search":{
+        "description": "Search"
+    },
+    "categories":"Categories",
+    "@categories":{
+        "description": "Categories"
+    },
+    "recent":"Recent",
+    "@recent":{
+        "description": "Recent"
+    },
+    "searchLessonHint":"Search a lesson",
+    "@searchLessonHint":{
+        "description": "Search a lesson"
+    },
+
+
+
+    "lessonAdded":"Lesson added!",
+    "@lessonAdded":{
+        "description": "Lesson added!"
+    },
+    "createLessonTitle":"Create a lesson",
+    "@createLessonTitle":{
+        "description": "Create a lesson title page"
+    },
+    "createLessonSubtitle":"Here you can create your lesson. Give lessons to other people in the community to receive points that you can spend on other community lessons.",
+    "@createLessonSubtitle":{
+        "description": "Create a lesson subtitle page"
+    },
+    "pleaseEnterText":"Please enter some text",
+    "@pleaseEnterText":{
+        "description": "Hint message textfiled"
+    },
+    "title":"Title",
+    "@title":{
+        "description": "Title"
+    },
+    "titleFieldHint":"Type the title of your lesson",
+    "@titleFieldHint":{
+        "description": "hint textfield title"
+    },
+    "descriptionFieldHint":"Type the description of your lesson",
+    "@descriptionFieldHint":{
+        "description": "hint textfield description"
+    },
+    "category":"Category",
+    "@category":{
+        "description": "Category"
+    },
+    "pleaseCategoryText":"Please select a category",
+    "@categoryFieldHint":{
+        "description": "Select one category message error"
+    },
+    "categoryFieldHint":"Select the category of your lesson",
+    "@categoryFieldHint":{
+        "description": "hint textfield category"
+    },
+    "submit":"Submit",
+    "@submit":{
+        "description": "Submit"
+    },
+
+
     "student":"Student",
     "@student":{
         "description": "Student"

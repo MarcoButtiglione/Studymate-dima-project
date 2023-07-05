@@ -9,6 +9,8 @@ import '../../../component/utils.dart';
 import '../../../functions/routingAnimation.dart';
 import '../../../models/category.dart';
 import 'components/dropdownCategory.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 Stream<List<Category>> readCategory() => FirebaseFirestore.instance
     .collection('categories')
@@ -82,7 +84,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
         duration = 1;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lesson added!')),
+         SnackBar(content: Text(AppLocalizations.of(context)!.lessonAdded)),
       );
       titleController.clear();
       desciptionController.clear();
@@ -112,16 +114,16 @@ class _NewLessonPageState extends State<NewLessonPage> {
                         return Column(
                           children: [
                             const SizedBox(height: 60),
-                            Row(children: const <Widget>[
-                              Text("Create a lesson",
+                            Row(children: <Widget>[
+                              Text(AppLocalizations.of(context)!.createLessonTitle,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
                                   )),
                             ]),
-                            const Text(
-                                "Here you can create your lesson. Give lessons to other people in the community to receive points that you can spend on other community lessons.",
+                            Text(
+                                AppLocalizations.of(context)!.createLessonSubtitle,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(fontSize: 13)),
                             const SizedBox(height: 30),
@@ -129,15 +131,15 @@ class _NewLessonPageState extends State<NewLessonPage> {
                               controller: titleController,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter some text';
+                                  return AppLocalizations.of(context)!.pleaseEnterText;
                                 }
                                 return null;
                               },
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               decoration: InputDecoration(
-                                labelText: "Title",
-                                hintText: "Type the title of your lesson",
+                                labelText: AppLocalizations.of(context)!.title,
+                                hintText: AppLocalizations.of(context)!.titleFieldHint,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   borderSide:
@@ -161,7 +163,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                             TextFormField(
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter some text';
+                                  return AppLocalizations.of(context)!.pleaseEnterText;
                                 }
                                 return null;
                               },
@@ -173,7 +175,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                               maxLines: 7,
                               decoration: InputDecoration(
                                 //labelText: "Description",
-                                hintText: "Type the description of your lesson",
+                                hintText: AppLocalizations.of(context)!.descriptionFieldHint,
 
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
@@ -237,7 +239,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                         //  const HoursSelectionPage()));
                                       }
                                     },
-                                    child: const Text('Submit',
+                                    child: Text(AppLocalizations.of(context)!.submit,
                                         style: TextStyle(
                                           color: Color.fromARGB(
                                               255, 255, 255, 255),

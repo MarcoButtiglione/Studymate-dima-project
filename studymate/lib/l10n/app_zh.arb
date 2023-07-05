@@ -26,6 +26,24 @@
    "about": "关于",
    "userRating": "用户评分", 
 
+   "search": "搜索",
+   "categories": "分类",
+   "recent": "最近",
+   "searchLessonHint": "搜索课程",
+
+   "lessonAdded": "课程已添加！",
+   "createLessonTitle": "创建课程",
+   "createLessonSubtitle": "在这里你可以创建你的课程。为社区的其他人提供课程，以获得可以用于其他社区课程的积分。",
+   "pleaseEnterText": "请输入一些文本",
+   "title": "标题",
+   "titleFieldHint": "输入你的课程标题",
+   "descriptionFieldHint": "输入你的课程描述",
+   "category": "类别",
+   "pleaseCategoryText": "请选择一个类别",
+   "categoryFieldHint": "选择你的课程类别",
+   "submit": "提交",
+
+
    "student": "学生",
    "lessons": "课程",
    "tutor": "导师",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../models/category.dart';
 
@@ -38,14 +39,14 @@ class _DropdownCategoryState extends State<DropdownCategory> {
         value: dropdownValue,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please select a category';
+            return AppLocalizations.of(context)!.pleaseCategoryText;
           }
           return null;
         },
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
-          labelText: "Category",
-          hintText: "Select the category of your lesson",
+          labelText: AppLocalizations.of(context)!.category,
+          hintText: AppLocalizations.of(context)!.categoryFieldHint,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: Colors.grey[300]!),

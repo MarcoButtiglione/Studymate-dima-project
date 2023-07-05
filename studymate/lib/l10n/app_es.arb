@@ -26,6 +26,23 @@
    "about": "Acerca de",
    "userRating": "Valoración del usuario",
 
+   "search": "Buscar",
+   "categories": "Categorías",
+   "recent": "Reciente",
+   "searchLessonHint": "Buscar una lección",
+
+   "lessonAdded": "¡Lección añadida!",
+   "createLessonTitle": "Crear una lección",
+   "createLessonSubtitle": "Aquí puedes crear tu lección. Da lecciones a otras personas de la comunidad para recibir puntos que puedes usar en otras lecciones de la comunidad.",
+   "pleaseEnterText": "Por favor, ingresa algo de texto",
+   "title": "Título",
+   "titleFieldHint": "Escribe el título de tu lección",
+   "descriptionFieldHint": "Escribe la descripción de tu lección",
+   "category": "Categoría",
+   "pleaseCategoryText": "Por favor, selecciona una categoría",
+   "categoryFieldHint": "Selecciona la categoría de tu lección",
+   "submit": "Enviar",
+
    "student": "Estudiante",
    "lessons": "Lecciones",
    "tutor": "Tutor",

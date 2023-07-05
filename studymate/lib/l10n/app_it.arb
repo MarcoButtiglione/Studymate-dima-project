@@ -25,6 +25,23 @@
    "noLessons": "Nessuna lezione",
    "about": "Informazioni",
    "userRating": "Valutazione degli utenti",
+   
+   "search": "Cerca",
+   "categories": "Categorie",
+   "recent": "Recente",
+   "searchLessonHint": "Cerca una lezione",
+
+   "lessonAdded": "Lezione aggiunta!",
+   "createLessonTitle": "Crea una lezione",
+   "createLessonSubtitle": "Qui puoi creare la tua lezione. Offri lezioni ad altre persone della comunità per ricevere punti che puoi spendere per altre lezioni della comunità.",
+   "pleaseEnterText": "Inserisci del testo",
+   "title": "Titolo",
+   "titleFieldHint": "Inserisci il titolo della tua lezione",
+   "descriptionFieldHint": "Inserisci la descrizione della tua lezione",
+   "category": "Categoria",
+   "pleaseCategoryText": "Seleziona una categoria",
+   "categoryFieldHint": "Seleziona la categoria della tua lezione",
+   "submit": "Invia",
 
    "student": "Studente",
    "lessons": "Lezioni",

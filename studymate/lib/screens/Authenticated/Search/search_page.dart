@@ -12,6 +12,8 @@ import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart'
 
 import '../../../models/category.dart';
 import '../../../models/lesson.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SearchPage extends StatefulWidget {
   @override
@@ -105,9 +107,9 @@ class _SearchPageState extends State<SearchPage> {
                 return Column(
                   children: [
                     const SizedBox(height: 20),
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("Search",
+                      child: Text(AppLocalizations.of(context)!.search,
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
@@ -127,8 +129,8 @@ class _SearchPageState extends State<SearchPage> {
                       },
                     ),
                     //Categories
-                    Row(children: const <Widget>[
-                      Text("Categories",
+                    Row(children: <Widget>[
+                      Text(AppLocalizations.of(context)!.categories,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
@@ -189,8 +191,8 @@ class _SearchPageState extends State<SearchPage> {
                         return Column(
                           children: [
                             //Recent
-                            Row(children: const <Widget>[
-                              Text("Recent",
+                            Row(children: <Widget>[
+                              Text(AppLocalizations.of(context)!.recent,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       fontSize: 15,
@@ -293,11 +295,11 @@ class _SearchPageState extends State<SearchPage> {
                                       );
                                     } else {
                                       return Column(
-                                        children: const [
+                                        children: [
                                           SizedBox(
                                             height: 30,
                                           ),
-                                          Text('No lessons here.'),
+                                          Text(AppLocalizations.of(context)!.noLessons),
                                         ],
                                       );
                                     }
@@ -332,11 +334,11 @@ class _SearchPageState extends State<SearchPage> {
                                     );
                                   } else {
                                     return Column(
-                                      children: const [
+                                      children: [
                                         SizedBox(
                                           height: 30,
                                         ),
-                                        Text('No lessons here.'),
+                                        Text(AppLocalizations.of(context)!.noLessons),
                                       ],
                                     );
                                   }
@@ -371,11 +373,11 @@ class _SearchPageState extends State<SearchPage> {
                                     );
                                   } else {
                                     return Column(
-                                      children: const [
+                                      children: [
                                         SizedBox(
                                           height: 30,
                                         ),
-                                        Text('No lessons here.'),
+                                        Text(AppLocalizations.of(context)!.noLessons),
                                       ],
                                     );
                                   }

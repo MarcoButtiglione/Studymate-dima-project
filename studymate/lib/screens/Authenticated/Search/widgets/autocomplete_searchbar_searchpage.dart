@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:substring_highlight/substring_highlight.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AutocompleteSearchbarSearchPage extends StatefulWidget {
   final List<String> lessonsTitle;
@@ -97,7 +98,7 @@ class _AutocompleteSearchbarSearchPageState
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: Colors.grey[300]!),
                   ),
-                  hintText: "Search a lesson",
+                  hintText: AppLocalizations.of(context)!.searchLessonHint,
                   prefixIcon: Icon(Icons.search),
                   suffixIcon: controller.text!=''?IconButton(
                       onPressed: () {
