@@ -8,13 +8,8 @@ import 'package:studymate/screens/Authenticated/qrCode/qrCodeGenerate.dart';
 import 'package:studymate/screens/Authenticated/qrCode/qrCodeScan.dart';
 
 import '../../../service/storage_service.dart';
-<<<<<<< Updated upstream
-import '../NextLesson/nextLession.dart';
-import '../NextTutoring/nextTutoring.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-=======
 import '../NextScheduled/next_scheduled.dart';
->>>>>>> Stashed changes
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ClassCard extends StatelessWidget {
   final String? id;
@@ -207,11 +202,7 @@ class ClassCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-<<<<<<< Updated upstream
-                    (tutor!) ? "${AppLocalizations.of(context)!.student}:  " : "${AppLocalizations.of(context)!.tutor}:  ",
-=======
-                    (isTutor!) ? "Student:  " : "Tutor:  ",
->>>>>>> Stashed changes
+                    (isTutor!) ? "${AppLocalizations.of(context)!.student}:  " : "${AppLocalizations.of(context)!.tutor}:  ",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Expanded(

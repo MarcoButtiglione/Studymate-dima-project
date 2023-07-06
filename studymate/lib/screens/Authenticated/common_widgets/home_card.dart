@@ -66,14 +66,10 @@ class _HomeCardState extends State<HomeCard> {
                   height: 10,
                 ),
                 Row(children: <Widget>[
-<<<<<<< Updated upstream:studymate/lib/screens/Authenticated/common_widgets/nextTutoring_card.dart
-                  Text(AppLocalizations.of(context)!.nextTutoringTitle,
-=======
                   Text(
                       widget.isTutoring
-                          ? "Your next tutoring"
-                          : "Your next lesson",
->>>>>>> Stashed changes:studymate/lib/screens/Authenticated/common_widgets/home_card.dart
+                          ? AppLocalizations.of(context)!.nextTutoringTitle
+                          : AppLocalizations.of(context)!.nextLessonTitle,
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         fontSize: 15,

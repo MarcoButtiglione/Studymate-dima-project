@@ -91,24 +91,16 @@ class _NextScheduledState extends State<NextScheduled> {
                               Icons.arrow_back_ios,
                               size: 20,
                             )),
-<<<<<<< Updated upstream:studymate/lib/screens/Authenticated/NextTutoring/nextTutoring.dart
-                         Expanded(
-                            child: Text(AppLocalizations.of(context)!.tutoring,
+                        Expanded(
+                            child: Text(
+                                widget.isTutoring
+                                    ? AppLocalizations.of(context)!.tutoring
+                                    : AppLocalizations.of(context)!.lessons,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
                                 ))),
-=======
-                        Expanded(
-                            child:
-                                Text(widget.isTutoring ? "Tutoring" : "Lessons",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold,
-                                    ))),
->>>>>>> Stashed changes:studymate/lib/screens/Authenticated/NextScheduled/next_scheduled.dart
                       ]),
                       const SizedBox(height: 10),
                       w > 720
