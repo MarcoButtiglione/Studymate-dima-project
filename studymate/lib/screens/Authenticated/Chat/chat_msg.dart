@@ -59,7 +59,7 @@ class _MsgState extends State<ChatMsg> {
               decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.circular(20)),
-              padding: const EdgeInsets.only(top: 50.0, bottom: 10),
+              padding: const EdgeInsets.only(top: 60.0, bottom: 10),
               child: Row(
                 children: [
                   IconButton(
@@ -97,7 +97,7 @@ class _MsgState extends State<ChatMsg> {
                                   widget.reciver.lastname.length <
                               15)
                           ? "${widget.reciver.firstname} ${widget.reciver.lastname}"
-                          : "${widget.reciver.firstname} \n ${widget.reciver.lastname}",
+                          : "${widget.reciver.firstname} \n${widget.reciver.lastname}",
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         fontSize: 16,

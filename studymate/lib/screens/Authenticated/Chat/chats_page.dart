@@ -8,7 +8,6 @@ import '../../../models/chat.dart';
 import 'widget/autocomplete_searchbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class ChatsPage extends StatefulWidget {
   @override
   _ChatState createState() => _ChatState();
@@ -120,15 +119,13 @@ class _ChatState extends State<ChatsPage> {
             //String firstname = "", lastname = "";
             if (chat.last_msg != "") {
               if (selected != "") {
-                if (users.first.firstname.toLowerCase() ==
-                        selected.split(' ')[0] &&
-                    users.first.lastname.toLowerCase() ==
-                        selected.split(' ')[1]) {
+                if ("${users.first.firstname.toLowerCase()} ${users.first.lastname.toLowerCase()}" ==
+                    selected.toLowerCase()) {
                   return Column(
                     children: [
                       SizedBox(
-                      height: 5,
-                    ),
+                        height: 5,
+                      ),
                       InkWell(
                           onTap: () => openChat(chat, users.first),
                           child: user.uid == chat.from_uid
@@ -150,7 +147,7 @@ class _ChatState extends State<ChatsPage> {
                                   msg_num: chat.num_msg,
                                 )),
                       SizedBox(
-                        height: 50,
+                        height: 5,
                       ),
                       Divider(),
                     ],
