@@ -284,6 +284,7 @@ class _SetUserState extends State<SetUser> {
         barrierDismissible: false,
         builder: (context) => const Center(child: CircularProgressIndicator()));
     try {
+<<<<<<< Updated upstream
       if (_image != null) {
         final path = _image!.path;
         final extension = p.extension(path); // '.jpg'
@@ -315,6 +316,19 @@ class _SetUserState extends State<SetUser> {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => Intrest(addUser: addUser)));
       }
+=======
+      final addUser = Users(
+          id: user.uid,
+          firstname: firstnameControler.text.trim(),
+          lastname: lastnameControler.text.trim(),
+          profileImageURL:
+              'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
+          userRating: "0",
+          hours: 20,
+          numRating: 0);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => Intrest(addUser: addUser)));
+>>>>>>> Stashed changes
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
       Navigator.of(context).pop();

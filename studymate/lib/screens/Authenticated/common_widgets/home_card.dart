@@ -6,18 +6,32 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../models/scheduled.dart';
 import '../../../models/user.dart';
 
-class NextTutoringCard extends StatefulWidget {
+class HomeCard extends StatefulWidget {
   final User user;
-
-  const NextTutoringCard({super.key, required this.user});
+  final bool isTutoring;
+  const HomeCard({super.key, required this.user, required this.isTutoring});
   @override
-  State<NextTutoringCard> createState() => _nextTutoringState();
+  State<HomeCard> createState() => _HomeCardState();
 }
 
-class _nextTutoringState extends State<NextTutoringCard> {
-  Stream<List<Scheduled>> readScheduled() => FirebaseFirestore.instance
+class _HomeCardState extends State<HomeCard> {
+  Stream<List<Scheduled>> readScheduledTutoring() => FirebaseFirestore.instance
       .collection('scheduled')
       .where('tutorId', isEqualTo: widget.user.uid)
+      .where('accepted', isEqualTo: true)
+      .where('date',
+          isGreaterThan: Timestamp.fromDate(DateTime.utc(
+                  DateTime.now().year, DateTime.now().month, DateTime.now().day)
+              .subtract(const Duration(days: 1))))
+      .orderBy('date', descending: false)
+      .limit(1)
+      .snapshots()
+      .map(((snapshot) => snapshot.docs
+          .map((doc) => Scheduled.fromFirestore(doc.data()))
+          .toList()));
+  Stream<List<Scheduled>> readScheduledLesson() => FirebaseFirestore.instance
+      .collection('scheduled')
+      .where('studentId', isEqualTo: widget.user.uid)
       .where('accepted', isEqualTo: true)
       .where('date',
           isGreaterThan: Timestamp.fromDate(DateTime.utc(
@@ -41,7 +55,8 @@ class _nextTutoringState extends State<NextTutoringCard> {
     return Container(
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
       child: StreamBuilder(
-        stream: readScheduled(),
+        stream:
+            widget.isTutoring ? readScheduledTutoring() : readScheduledLesson(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var schedule = snapshot.data!;
@@ -51,9 +66,16 @@ class _nextTutoringState extends State<NextTutoringCard> {
                   height: 10,
                 ),
                 Row(children: <Widget>[
+<<<<<<< Updated upstream:studymate/lib/screens/Authenticated/common_widgets/nextTutoring_card.dart
                   Text(AppLocalizations.of(context)!.nextTutoringTitle,
+=======
+                  Text(
+                      widget.isTutoring
+                          ? "Your next tutoring"
+                          : "Your next lesson",
+>>>>>>> Stashed changes:studymate/lib/screens/Authenticated/common_widgets/home_card.dart
                       textAlign: TextAlign.left,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       )),
@@ -63,20 +85,27 @@ class _nextTutoringState extends State<NextTutoringCard> {
                     stream: readUser(schedule.first.studentId),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        var users = snapshot.data!;
-                        return ClassCard(
-                          tutorId: schedule.first.tutorId,
-                          studentId: schedule.first.studentId,
-                          id: schedule.first.id,
-                          date: schedule.first.date,
-                          title: schedule.first.title,
-                          firstname: users.first.firstname,
-                          lastname: users.first.lastname,
-                          userImageURL: users.first.profileImageURL,
-                          timeslot: schedule.first.timeslot,
-                          tutor: true,
-                          lessonPage: false,
-                        );
+                        var students = snapshot.data!;
+                        return StreamBuilder(
+                            stream: readUser(schedule.first.tutorId),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                var tutors = snapshot.data!;
+                                return ClassCard(
+                                    tutor: tutors.first,
+                                    student: students.first,
+                                    id: schedule.first.id,
+                                    date: schedule.first.date,
+                                    title: schedule.first.title,
+                                    timeslot: schedule.first.timeslot,
+                                    isTutor: widget.isTutoring,
+                                    lessonPage: false);
+                              } else if (snapshot.hasError) {
+                                return Text(snapshot.error.toString());
+                              } else {
+                                return const SizedBox();
+                              }
+                            });
                       } else if (snapshot.hasError) {
                         return Text(snapshot.error.toString());
                       } else {

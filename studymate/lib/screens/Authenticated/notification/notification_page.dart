@@ -32,6 +32,8 @@ class _NotificationState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double h = size.height;
     return Scaffold(
         //appBar: AppBar(),
         body: SingleChildScrollView(
@@ -58,26 +60,28 @@ class _NotificationState extends State<NotificationPage> {
                           fontWeight: FontWeight.bold,
                         ))),
               ]),
-              const SizedBox(height: 10),
-              StreamBuilder<List<Notifications>>(
-                  stream: readNotifications(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return const Text('Something went wrong!');
-                    } else if (snapshot.hasData) {
-                      final notifications = snapshot.data!;
-                      if (notifications.isNotEmpty) {
-                        return ListView(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            children: notifications.map(buildNot).toList());
+              SizedBox(
+                height: h * 0.9,
+                child: StreamBuilder<List<Notifications>>(
+                    stream: readNotifications(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Text('Something went wrong!');
+                      } else if (snapshot.hasData) {
+                        final notifications = snapshot.data!;
+                        if (notifications.isNotEmpty) {
+                          return ListView(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              children: notifications.map(buildNot).toList());
+                        } else {
+                          return SizedBox();
+                        }
                       } else {
-                        return SizedBox();
+                        return Center(child: CircularProgressIndicator());
                       }
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  }),
+                    }),
+              )
             ],
           )),
     ));

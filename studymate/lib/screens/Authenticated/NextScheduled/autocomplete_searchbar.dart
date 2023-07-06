@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
-
-
 class AutocompleteSearchbar extends StatefulWidget {
   final Function(String) onSelected;
-  const AutocompleteSearchbar({super.key, required this.onSelected});
+  final bool isTutoring;
+  const AutocompleteSearchbar(
+      {super.key, required this.onSelected, required this.isTutoring});
   @override
   _AutocompleteSearchbarState createState() => _AutocompleteSearchbarState();
 }
@@ -25,10 +25,11 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
   @override
   void initState() {
     super.initState();
-    getData();
+
+    widget.isTutoring ? getDataTutor() : getDataLesson();
   }
 
-  Future<void> getData() async {
+  Future<void> getDataTutor() async {
     autoCompleteData = [];
     QuerySnapshot querySnapshot = await _scheduleRef
         .where("tutorId", isEqualTo: user.uid)
@@ -39,7 +40,25 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
                 .subtract(const Duration(days: 1))))
         .orderBy('date', descending: true)
         .get();
-    //var allData = 
+    //var allData =
+    querySnapshot.docs.map((doc) {
+      autoCompleteData.add(doc.get("title"));
+    }).toList();
+    print(autoCompleteData);
+  }
+
+  Future<void> getDataLesson() async {
+    autoCompleteData = [];
+    QuerySnapshot querySnapshot = await _scheduleRef
+        .where("studentId", isEqualTo: user.uid)
+        .where('accepted', isEqualTo: true)
+        .where('date',
+            isGreaterThan: Timestamp.fromDate(DateTime.utc(DateTime.now().year,
+                    DateTime.now().month, DateTime.now().day)
+                .subtract(const Duration(days: 1))))
+        .orderBy('date', descending: true)
+        .get();
+    //var allData =
     querySnapshot.docs.map((doc) {
       autoCompleteData.add(doc.get("title"));
     }).toList();

@@ -1,11 +1,10 @@
-
 class Users {
   String id;
   final String firstname;
   final String lastname;
   final String profileImageURL;
   final List<dynamic>? categoriesOfInterest;
-  final int userRating;
+  final String userRating;
   final int hours;
   final int numRating;
 

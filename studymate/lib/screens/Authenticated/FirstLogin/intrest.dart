@@ -124,7 +124,7 @@ class _IntrestState extends State<Intrest> {
             firstname: widget.addUser.firstname,
             lastname: widget.addUser.lastname,
             profileImageURL: widget.addUser.profileImageURL,
-            userRating: 0,
+            userRating: "0",
             hours: 20,
             categoriesOfInterest: selectedCatList);
         final json = toAdd.toJson();

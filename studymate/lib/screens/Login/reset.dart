@@ -88,7 +88,7 @@ class _ResetState extends State<Reset> {
                     ),
                     Container(
                       margin: EdgeInsets.only(
-                          top: 0.03 * h, left: 0.03 * h, right: 0.03 * h),
+                          top: 0.03 * h, left: 0.02 * w, right: 0.02 * w),
                       height: 0.08 * h,
                       width: 0.8 * w,
                       child: ElevatedButton(

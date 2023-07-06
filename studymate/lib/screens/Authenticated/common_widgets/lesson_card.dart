@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../../../models/lesson.dart';
 import '../../../models/user.dart';
@@ -94,44 +95,20 @@ class _LessonCardState extends State<LessonCard> {
                               Text(user.firstname + " " + user.lastname),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Icon(
-                                user.userRating >= 1
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                size: 13,
-                                color: const Color.fromARGB(255, 101, 101, 101),
-                              ),
-                              Icon(
-                                user.userRating >= 2
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                size: 13,
-                                color: const Color.fromARGB(255, 101, 101, 101),
-                              ),
-                              Icon(
-                                user.userRating >= 3
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                size: 13,
-                                color: const Color.fromARGB(255, 101, 101, 101),
-                              ),
-                              Icon(
-                                user.userRating >= 4
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                size: 13,
-                                color: const Color.fromARGB(255, 101, 101, 101),
-                              ),
-                              Icon(
-                                user.userRating >= 5
-                                    ? Icons.star
-                                    : Icons.star_border,
-                                size: 13,
-                                color: const Color.fromARGB(255, 101, 101, 101),
-                              ),
-                            ],
+                          RatingBar.builder(
+                            ignoreGestures: true,
+                            initialRating: double.parse(user.userRating),
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemSize: 13,
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (double value) {},
                           ),
                         ],
                       ),

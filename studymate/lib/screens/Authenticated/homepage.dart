@@ -6,9 +6,8 @@ import 'package:badges/badges.dart' as badges;
 import 'package:studymate/functions/routingAnimation.dart';
 import 'package:studymate/models/lesson.dart';
 import 'package:studymate/models/user.dart';
+import 'package:studymate/screens/Authenticated/common_widgets/home_card.dart';
 import '../../models/notification.dart';
-import 'common_widgets/nextLession_card.dart';
-import 'common_widgets/nextTutoring_card.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
 import 'package:studymate/screens/Authenticated/notification/notification_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -171,13 +170,15 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       //--------------------
                       //Your next lesson
-                      NextLessionCard(
+                      HomeCard(
                         user: user,
+                        isTutoring: false,
                       ),
                       //--------------------
                       //Your next tutoring
-                      NextTutoringCard(
+                      HomeCard(
                         user: user,
+                        isTutoring: true,
                       ),
                     ],
                   )
@@ -186,15 +187,17 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       //--------------------
                       //Your next lesson
-                      NextLessionCard(
+                      HomeCard(
                         user: user,
+                        isTutoring: false,
                       ),
 
                       //--------------------
                       //Your next tutoring
 
-                      NextTutoringCard(
+                      HomeCard(
                         user: user,
+                        isTutoring: true,
                       ),
                     ],
                   ),

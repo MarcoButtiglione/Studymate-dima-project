@@ -3,38 +3,47 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:studymate/models/notification.dart';
+import 'package:studymate/models/user.dart';
 import 'package:studymate/screens/Authenticated/qrCode/qrCodeGenerate.dart';
 import 'package:studymate/screens/Authenticated/qrCode/qrCodeScan.dart';
 
 import '../../../service/storage_service.dart';
+<<<<<<< Updated upstream
 import '../NextLesson/nextLession.dart';
 import '../NextTutoring/nextTutoring.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+=======
+import '../NextScheduled/next_scheduled.dart';
+>>>>>>> Stashed changes
 
 class ClassCard extends StatelessWidget {
   final String? id;
   final String? title;
-  final String? tutorId;
-  final String? studentId;
-  final String? firstname;
-  final String? lastname;
-  final String? userImageURL;
+  //final String? tutorId;
+  //final String? studentId;
+  //final String? firstname;
+  //final String? lastname;
+  final Users tutor;
+  final Users student;
+  //final String? userImageURL;
   final Timestamp? date;
   final List<dynamic>? timeslot;
-  final bool? tutor;
+  final bool? isTutor;
   final bool? lessonPage;
   const ClassCard(
       {super.key,
-      this.tutorId,
-      this.studentId,
+      //this.tutorId,
+      //this.studentId,
       required this.id,
       required this.title,
-      required this.firstname,
-      required this.lastname,
-      required this.userImageURL,
+      //required this.firstname,
+      //required this.lastname,
+      //required this.userImageURL,
+      required this.student,
+      required this.tutor,
       required this.date,
       required this.timeslot,
-      required this.tutor,
+      required this.isTutor,
       required this.lessonPage});
 
   Future<void> _showMyDialog(BuildContext context) async {
@@ -56,16 +65,20 @@ class ClassCard extends StatelessWidget {
                     .collection("scheduled")
                     .doc(id)
                     .delete();
+                FirebaseFirestore.instance
+                    .collection("scheduled")
+                    .doc(student.id)
+                    .update({"hours": student.hours + timeslot!.length});
                 final docChat =
                     FirebaseFirestore.instance.collection('notification');
                 await docChat.add({}).then((DocumentReference doc) {
                   var notif = Notifications(
                     id: doc.id,
                     from_id: currUser.uid,
-                    to_id: (currUser.uid == studentId) ? tutorId : studentId,
+                    to_id: (currUser.uid == student.id) ? tutor.id : student.id,
                     type: "response",
                     content:
-                        " deleted the ${(tutor!) ? "tutoring" : "lesson"} on ${DateFormat.yMd().format(date!.toDate())}",
+                        " deleted the ${(isTutor!) ? "tutoring" : "lesson"} on ${DateFormat.yMd().format(date!.toDate())}",
                     view: false,
                     time: Timestamp.now(),
                   );
@@ -99,7 +112,7 @@ class ClassCard extends StatelessWidget {
       width: lessonPage == false
           ? (w > 490 ? w * 0.45 : w * 0.9)
           : (w > 1000 ? w * 0.45 : w * 0.9),
-      height: 200,
+      height: 225,
       margin: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -127,7 +140,7 @@ class ClassCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(35),
                 child: FutureBuilder(
-                    future: storage.downloadURL(userImageURL!),
+                    future: storage.downloadURL(student.profileImageURL!),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return const Text("Something went wrong!");
@@ -166,13 +179,13 @@ class ClassCard extends StatelessWidget {
                           color: Color.fromARGB(255, 233, 64, 87), size: 20)),
                   IconButton(
                       onPressed: () {
-                        if (tutor!) {
+                        if (isTutor!) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => QrCodeGenerate(
                                         id: id,
-                                        studentId: studentId!,
+                                        studentId: student.id,
                                       )));
                         } else {
                           Navigator.push(
@@ -180,7 +193,7 @@ class ClassCard extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (context) => QrCodeScan(
                                         id: id,
-                                        tutorId: tutorId,
+                                        tutor: tutor,
                                       )));
                         }
                       },
@@ -194,11 +207,17 @@ class ClassCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
+<<<<<<< Updated upstream
                     (tutor!) ? "${AppLocalizations.of(context)!.student}:  " : "${AppLocalizations.of(context)!.tutor}:  ",
+=======
+                    (isTutor!) ? "Student:  " : "Tutor:  ",
+>>>>>>> Stashed changes
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Expanded(
-                    child: Text("$firstname $lastname"),
+                    child: (isTutor!)
+                        ? Text("${student.firstname} ${student.lastname}")
+                        : Text("${tutor.firstname} ${tutor.lastname}"),
                   ),
                 ],
               ),
@@ -257,15 +276,19 @@ class ClassCard extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                         onPressed: () {
-                          tutor! == false
+                          isTutor! == false
                               ? Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => NextLession()))
+                                      builder: (context) => const NextScheduled(
+                                            isTutoring: false,
+                                          )))
                               : Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => NextTutoring()));
+                                      builder: (context) => const NextScheduled(
+                                            isTutoring: true,
+                                          )));
                         },
                         child: Text(
                           AppLocalizations.of(context)!.seeNext,

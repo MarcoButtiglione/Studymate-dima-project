@@ -1,20 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:studymate/screens/Authenticated/NextTutoring/DropDownList.dart';
-import 'package:studymate/screens/Authenticated/NextTutoring/autocomplete_searchbar.dart';
+import 'package:studymate/screens/Authenticated/NextScheduled/DropDownList.dart';
+import 'package:studymate/screens/Authenticated/NextScheduled/autocomplete_searchbar.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/card.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../models/scheduled.dart';
 import '../../../models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class NextTutoring extends StatefulWidget {
+class NextScheduled extends StatefulWidget {
+  final bool isTutoring;
+
+  const NextScheduled({super.key, required this.isTutoring});
   @override
-  _TutoringState createState() => _TutoringState();
+  _NextScheduledState createState() => _NextScheduledState();
 }
 
-class _TutoringState extends State<NextTutoring> {
+class _NextScheduledState extends State<NextScheduled> {
   final user = FirebaseAuth.instance.currentUser!;
   DateTime today = DateTime.now();
   String selectedLession = "";
@@ -39,9 +42,23 @@ class _TutoringState extends State<NextTutoring> {
       .map(((snapshot) =>
           snapshot.docs.map((doc) => Users.fromJson(doc.data())).toList()));
 
-  Stream<List<Scheduled>> readScheduled() => FirebaseFirestore.instance
+  Stream<List<Scheduled>> readScheduledTutoring() => FirebaseFirestore.instance
       .collection('scheduled')
       .where('tutorId', isEqualTo: user.uid)
+      .where('accepted', isEqualTo: true)
+      .where('date',
+          isGreaterThan: Timestamp.fromDate(DateTime.utc(
+                  DateTime.now().year, DateTime.now().month, DateTime.now().day)
+              .subtract(const Duration(days: 1))))
+      .orderBy('date', descending: true)
+      .snapshots()
+      .map(((snapshot) => snapshot.docs
+          .map((doc) => Scheduled.fromFirestore(doc.data()))
+          .toList()));
+
+  Stream<List<Scheduled>> readScheduledLesson() => FirebaseFirestore.instance
+      .collection('scheduled')
+      .where('studentId', isEqualTo: user.uid)
       .where('accepted', isEqualTo: true)
       .where('date',
           isGreaterThan: Timestamp.fromDate(DateTime.utc(
@@ -74,6 +91,7 @@ class _TutoringState extends State<NextTutoring> {
                               Icons.arrow_back_ios,
                               size: 20,
                             )),
+<<<<<<< Updated upstream:studymate/lib/screens/Authenticated/NextTutoring/nextTutoring.dart
                          Expanded(
                             child: Text(AppLocalizations.of(context)!.tutoring,
                                 textAlign: TextAlign.left,
@@ -81,6 +99,16 @@ class _TutoringState extends State<NextTutoring> {
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
                                 ))),
+=======
+                        Expanded(
+                            child:
+                                Text(widget.isTutoring ? "Tutoring" : "Lessons",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                    ))),
+>>>>>>> Stashed changes:studymate/lib/screens/Authenticated/NextScheduled/next_scheduled.dart
                       ]),
                       const SizedBox(height: 10),
                       w > 720
@@ -90,12 +118,13 @@ class _TutoringState extends State<NextTutoring> {
                                 SizedBox(
                                   width: (w > 720) ? w * 0.4 : w * 0.8,
                                   child: AutocompleteSearchbar(
+                                      isTutoring: widget.isTutoring,
                                       onSelected: (selected) {
-                                    setState(() {
-                                      selectedLession = selected;
-                                      // getData();
-                                    });
-                                  }),
+                                        setState(() {
+                                          selectedLession = selected;
+                                          // getData();
+                                        });
+                                      }),
                                 ),
                                 SizedBox(
                                   width: (w > 720) ? w * 0.4 : w * 0.8,
@@ -113,12 +142,13 @@ class _TutoringState extends State<NextTutoring> {
                               SizedBox(
                                 width: (w > 720) ? w * 0.4 : w * 0.8,
                                 child: AutocompleteSearchbar(
+                                    isTutoring: widget.isTutoring,
                                     onSelected: (selected) {
-                                  setState(() {
-                                    selectedLession = selected;
-                                    // getData();
-                                  });
-                                }),
+                                      setState(() {
+                                        selectedLession = selected;
+                                        // getData();
+                                      });
+                                    }),
                               ),
                               const SizedBox(height: 10),
                               SizedBox(
@@ -136,7 +166,9 @@ class _TutoringState extends State<NextTutoring> {
                         height: 10,
                       ),
                       StreamBuilder(
-                          stream: readScheduled(),
+                          stream: widget.isTutoring
+                              ? readScheduledTutoring()
+                              : readScheduledLesson(),
                           builder: (context, snapshot) {
                             List<Scheduled> schedules = [];
                             List<DateTime> dates = [];
@@ -204,41 +236,54 @@ class _TutoringState extends State<NextTutoring> {
                                                 .first,
                                             builder: ((context, snapshot) {
                                               if (snapshot.hasData) {
-                                                var users = snapshot.data!;
-                                                if (users.isNotEmpty) {
-                                                  return (isSameDay(
-                                                          schedules[index]
-                                                              .date!
-                                                              .toDate(),
-                                                          today))
-                                                      ? ClassCard(
-                                                          tutorId:
+                                                var students = snapshot.data!;
+                                                if (students.isNotEmpty) {
+                                                  return FutureBuilder(
+                                                      future: readUser(
                                                               schedules[index]
-                                                                  .tutorId,
-                                                          studentId:
-                                                              schedules[index]
-                                                                  .studentId,
-                                                          id: schedules[index]
-                                                              .id,
-                                                          title:
-                                                              schedules[index]
-                                                                  .title,
-                                                          firstname: users
-                                                              .first.firstname,
-                                                          lastname: users
-                                                              .first.lastname,
-                                                          userImageURL: users
-                                                              .first
-                                                              .profileImageURL,
-                                                          date: schedules[index]
-                                                              .date,
-                                                          timeslot:
-                                                              schedules[index]
-                                                                  .timeslot,
-                                                          tutor: true,
-                                                          lessonPage: true,
-                                                        )
-                                                      : SizedBox();
+                                                                  .tutorId)
+                                                          .first,
+                                                      builder:
+                                                          ((context, snapshot) {
+                                                        if (snapshot.hasData) {
+                                                          var tutors =
+                                                              snapshot.data!;
+                                                          if (tutors
+                                                              .isNotEmpty) {
+                                                            return (isSameDay(
+                                                                    schedules[
+                                                                            index]
+                                                                        .date!
+                                                                        .toDate(),
+                                                                    today))
+                                                                ? ClassCard(
+                                                                    tutor: tutors
+                                                                        .first,
+                                                                    student:
+                                                                        students
+                                                                            .first,
+                                                                    id: schedules[
+                                                                            index]
+                                                                        .id,
+                                                                    title: schedules[
+                                                                            index]
+                                                                        .title,
+                                                                    date: schedules[
+                                                                            index]
+                                                                        .date,
+                                                                    timeslot: schedules[
+                                                                            index]
+                                                                        .timeslot,
+                                                                    isTutor: widget
+                                                                        .isTutoring,
+                                                                    lessonPage:
+                                                                        true,
+                                                                  )
+                                                                : SizedBox();
+                                                          }
+                                                        }
+                                                        return SizedBox();
+                                                      }));
                                                 }
                                               }
                                               return SizedBox();

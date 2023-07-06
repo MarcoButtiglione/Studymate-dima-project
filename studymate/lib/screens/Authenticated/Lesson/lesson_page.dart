@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:studymate/component/utils.dart';
 import 'package:studymate/models/category.dart';
 import 'package:studymate/models/recordLessonViewed.dart';
@@ -995,43 +996,27 @@ class _LessonState extends State<LessonPage> {
                             ),
                             Row(
                               children: [
-                                Icon(
-                                  widget.user.userRating >= 1
-                                      ? Icons.star
-                                      : Icons.star_border,
-                                  color:
-                                      const Color.fromARGB(255, 101, 101, 101),
-                                ),
-                                Icon(
-                                  widget.user.userRating >= 2
-                                      ? Icons.star
-                                      : Icons.star_border,
-                                  color:
-                                      const Color.fromARGB(255, 101, 101, 101),
-                                ),
-                                Icon(
-                                  widget.user.userRating >= 3
-                                      ? Icons.star
-                                      : Icons.star_border,
-                                  color:
-                                      const Color.fromARGB(255, 101, 101, 101),
-                                ),
-                                Icon(
-                                  widget.user.userRating >= 4
-                                      ? Icons.star
-                                      : Icons.star_border,
-                                  color:
-                                      const Color.fromARGB(255, 101, 101, 101),
-                                ),
-                                Icon(
-                                  widget.user.userRating >= 5
-                                      ? Icons.star
-                                      : Icons.star_border,
-                                  color:
-                                      const Color.fromARGB(255, 101, 101, 101),
+                                RatingBar.builder(
+                                  ignoreGestures: true,
+                                  initialRating:
+                                      double.parse(widget.user.userRating),
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  itemSize: 20,
+                                  itemPadding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0, vertical: 5.0),
+                                  itemBuilder: (context, _) => const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  onRatingUpdate: (double value) {},
                                 ),
                               ],
                             ),
+                            SizedBox(
+                              height: 20,
+                            )
                           ],
                         ),
                       ),
