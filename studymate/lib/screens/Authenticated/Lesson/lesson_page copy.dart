@@ -1037,17 +1037,31 @@ class _LessonState extends State<LessonPage> {
                         .center, //Center Row contents horizontally,
 
                     children: [
-                      SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: IconButton(
-                            icon: const Icon(Icons.message_outlined),
-                            onPressed: () {
-                              Users receiver = widget.user;
-                              send(receiver);
-                            },
-                            style: messageButtonStyle()),
-                      ),
+                      StreamBuilder<List<Chat>>(
+                          stream: readChat(widget.user.id, userFirebase.uid),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return const Text('Something went wrong!');
+                            } else {
+                              Chat chat;
+                              if (snapshot.hasData &&
+                                  snapshot.data!.isNotEmpty) {
+                                chat = snapshot.data!.first;
+                              } else {
+                                chat = Chat();
+                              }
+                              return SizedBox(
+                                width: 50,
+                                height: 50,
+                                child: IconButton(
+                                    icon: const Icon(Icons.message_outlined),
+                                    onPressed: () {
+                                      send(chat);
+                                    },
+                                    style: messageButtonStyle()),
+                              );
+                            }
+                          }),
                       const SizedBox(
                         width: 20,
                       ),
@@ -1166,28 +1180,20 @@ class _LessonState extends State<LessonPage> {
     );
   }
 
-  Stream<List<Chat>> readChat(String user) => FirebaseFirestore.instance
+  Stream<List<Chat>> readChat(String user1, String user2) => FirebaseFirestore
+      .instance
       .collection('chat')
-      .where('member', arrayContains: user)
+      .where('member', arrayContains: [user1, user2])
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Chat.fromFirestore(doc.data())).toList());
 
-  Future send(Users reciver) async {
+  Future send(Chat chat) async {
     try {
-      List<Chat> chats1 = await readChat(reciver.id).first;
-      List<Chat> chats2 = await readChat(userFirebase.uid).first;
-      Chat chat = Chat();
-      chats1.forEach((element1) {
-        chats2.forEach((element2) {
-          if (element1.id == element2.id) {
-            chat = element1;
-          }
-        });
-      });
+      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ${chat.id}");
       if (chat.id == null) {
         final docChat = FirebaseFirestore.instance.collection('chat');
-        List<String> member = [reciver.id, userFirebase.uid];
+        List<String> member = [widget.user.id, userFirebase.uid];
         await docChat.add({}).then((DocumentReference doc) {
           chat = Chat(member: member, num_msg: 0, last_msg: "", id: doc.id);
           final json = chat.toFirestore();
@@ -1200,7 +1206,7 @@ class _LessonState extends State<LessonPage> {
           MaterialPageRoute(
               builder: (context) => ChatMsg(
                     chat: chat,
-                    reciver: reciver,
+                    reciver: widget.user,
                   )));
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
