@@ -58,106 +58,105 @@ class _QrCodeGenerateState extends State<QrCodeGenerate> {
                               }
 
                               selectedTimeslot = up;
-                              if (selectedTimeslot.isNotEmpty) {
-                                return Column(
-                                  children: [
-                                    Row(children: <Widget>[
-                                      IconButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          icon: const Icon(
-                                            Icons.arrow_back_ios,
-                                            size: 20,
-                                          )),
-                                      Expanded(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .scanQrCodeTitle,
-                                              textAlign: TextAlign.left,
-                                              style: const TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 233, 64, 87),
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold,
-                                              ))),
-                                    ]),
-                                    const SizedBox(height: 10),
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Text(
-                                          AppLocalizations.of(context)!
-                                              .scanQrCodeGenSubTitle,
-                                          style: const TextStyle(
-                                            fontFamily: "Crimson Pro",
-                                            fontSize: 16,
-                                            color: Color.fromARGB(
-                                                255, 104, 104, 104),
-                                          )),
+                              return Column(
+                                children: [
+                                  Row(children: <Widget>[
+                                    IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(
+                                          Icons.arrow_back_ios,
+                                          size: 20,
+                                        )),
+                                    Expanded(
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .scanQrCodeTitle,
+                                            textAlign: TextAlign.left,
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 233, 64, 87),
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold,
+                                            ))),
+                                  ]),
+                                  const SizedBox(height: 10),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(
+                                        AppLocalizations.of(context)!
+                                            .scanQrCodeGenSubTitle,
+                                        style: const TextStyle(
+                                          fontFamily: "Crimson Pro",
+                                          fontSize: 16,
+                                          color: Color.fromARGB(
+                                              255, 104, 104, 104),
+                                        )),
+                                  ),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.vertical,
+                                    child: Column(
+                                      children: [
+                                        MultiSelectChip(
+                                            schedules.first.timeslot!,
+                                            onSelectionChanged: (selectedList) {
+                                          setState(() {
+                                            selectedTimeslot = selectedList;
+                                          });
+                                        }),
+                                        (selectedTimeslot.isNotEmpty)
+                                            ? QRImage(selectedTimeslot,
+                                                tutorId: user.uid,
+                                                studentId: widget.studentId,
+                                                id: widget.id)
+                                            : SizedBox(),
+                                      ],
                                     ),
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.vertical,
-                                      child: Column(
-                                        children: [
-                                          MultiSelectChip(
-                                              schedules.first.timeslot!,
-                                              onSelectionChanged:
-                                                  (selectedList) {
-                                            setState(() {
-                                              selectedTimeslot = selectedList;
-                                            });
-                                          }),
-                                          QRImage(selectedTimeslot,
-                                              tutorId: user.uid,
-                                              studentId: widget.studentId,
-                                              id: widget.id)
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              } else {
-                                return Column(
-                                  children: [
-                                    Row(children: <Widget>[
-                                      IconButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          icon: const Icon(
-                                            Icons.arrow_back_ios,
-                                            size: 20,
-                                          )),
-                                      const Expanded(
-                                          child: Text(
-                                              /*AppLocalizations.of(context)!
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return Column(
+                                children: [
+                                  Row(children: <Widget>[
+                                    IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(
+                                          Icons.arrow_back_ios,
+                                          size: 20,
+                                        )),
+                                    const Expanded(
+                                        child: Text(
+                                            /*AppLocalizations.of(context)!
                                                 .scanQrCodeTitle,*/
-                                              "Lesson done!",
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 233, 64, 87),
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold,
-                                              ))),
-                                    ]),
-                                    const SizedBox(height: 10),
-                                    const Padding(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Text(
-                                          /*AppLocalizations.of(context)!
+                                            "Lesson done!",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 233, 64, 87),
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold,
+                                            ))),
+                                  ]),
+                                  const SizedBox(height: 10),
+                                  const Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Text(
+                                        /*AppLocalizations.of(context)!
                                             .scanQrCodeGenSubTitle,*/
-                                          "Thank for sharing your knowledge, we've added hours to your time credit!",
-                                          style: TextStyle(
-                                            fontFamily: "Crimson Pro",
-                                            fontSize: 16,
-                                            color: Color.fromARGB(
-                                                255, 104, 104, 104),
-                                          )),
-                                    ),
-                                  ],
-                                );
-                              }
+                                        "Thank for sharing your knowledge, we've added hours to your time credit!",
+                                        style: TextStyle(
+                                          fontFamily: "Crimson Pro",
+                                          fontSize: 16,
+                                          color: Color.fromARGB(
+                                              255, 104, 104, 104),
+                                        )),
+                                  ),
+                                ],
+                              );
                             }
                           }
                           return const SizedBox();
