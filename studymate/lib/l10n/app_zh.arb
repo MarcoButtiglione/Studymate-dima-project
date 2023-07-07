@@ -28,6 +28,11 @@
    "minSixCharPsw": "输入至少 6 个字符",
    "haveAlreadyAccount": "已有账号？",
 
+   "name": "姓名",
+   "validName": "输入有效姓名",
+   "surname": "姓氏",
+   "validSurname": "输入有效姓氏",
+
    "welcome": "欢迎",
    "suggestedTitle": "为您推荐",
    "suggestedSubTitle": "这是一份可能与之一起学习的社区导师列表。",

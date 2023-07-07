@@ -28,6 +28,11 @@
    "minSixCharPsw": "Inserisci almeno 6 caratteri",
    "haveAlreadyAccount": "Hai già un account?",
 
+   "name": "Nome",
+   "validName": "Inserisci un nome valido",
+   "surname": "Cognome",
+   "validSurname": "Inserisci un cognome valido",
+
    "welcome": "Benvenuto",
    "suggestedTitle": "Suggerimenti per te",
    "suggestedSubTitle": "Questa è una lista di possibili tutor della community con cui potresti studiare.",

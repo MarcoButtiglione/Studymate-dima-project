@@ -8,6 +8,7 @@ import 'package:path/path.dart' as p;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:studymate/service/storage_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/utils.dart';
 import '../../../models/user.dart';
@@ -32,7 +33,7 @@ class _SetUserState extends State<SetUser> {
       if (image == null) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('No image selected')));
+            .showSnackBar( SnackBar(content: Text(AppLocalizations.of(context)!.noImgSelected)));
         return;
       }
       File? img = File(image.path);
@@ -41,12 +42,12 @@ class _SetUserState extends State<SetUser> {
       if (img == null) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('No image cropped')));
+            .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.noImgCropped)));
         return;
       }
 
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Image loaded')));
+          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.imgLoaded)));
       setState(() {
         _image = img;
       });
@@ -100,7 +101,7 @@ class _SetUserState extends State<SetUser> {
                             : 0,
                   ),
                   Text(
-                    "Welcome",
+                    AppLocalizations.of(context)!.welcome,
                     style: TextStyle(
                       fontFamily: "Crimson Pro",
                       fontWeight: FontWeight.bold,
@@ -141,7 +142,7 @@ class _SetUserState extends State<SetUser> {
                                           _pickImage(ImageSource.gallery);
                                           return;
                                         }),
-                                        child: const Row(
+                                        child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
@@ -149,16 +150,16 @@ class _SetUserState extends State<SetUser> {
                                             SizedBox(
                                               width: 5,
                                             ),
-                                            Text('Browse Gallery'),
+                                            Text(AppLocalizations.of(context)!.browseGallery),
                                           ],
                                         )),
-                                    const Text('or'),
+                                    Text(AppLocalizations.of(context)!.or),
                                     ElevatedButton(
                                         onPressed: (() {
                                           _pickImage(ImageSource.camera);
                                           return;
                                         }),
-                                        child: const Row(
+                                        child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
@@ -166,7 +167,7 @@ class _SetUserState extends State<SetUser> {
                                             SizedBox(
                                               width: 5,
                                             ),
-                                            Text('Use a Camera'),
+                                            Text(AppLocalizations.of(context)!.useCamera),
                                           ],
                                         )),
                                   ],
@@ -205,7 +206,7 @@ class _SetUserState extends State<SetUser> {
                       controller: firstnameControler,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        labelText: "Name",
+                        labelText: AppLocalizations.of(context)!.name,
                         labelStyle:
                             TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
                         hintStyle:
@@ -215,7 +216,7 @@ class _SetUserState extends State<SetUser> {
                       ),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) => value != null && value.isEmpty
-                          ? 'Enter valid Name'
+                          ? AppLocalizations.of(context)!.validName
                           : null,
                       style:
                           TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
@@ -229,7 +230,7 @@ class _SetUserState extends State<SetUser> {
                       controller: lastnameControler,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        labelText: "Surname",
+                        labelText: AppLocalizations.of(context)!.surname,
                         labelStyle:
                             TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
                         hintStyle:
@@ -239,7 +240,7 @@ class _SetUserState extends State<SetUser> {
                       ),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (value) => value != null && value.isEmpty
-                          ? 'Enter valid Surname'
+                          ? AppLocalizations.of(context)!.surname
                           : null,
                       style:
                           TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
@@ -261,7 +262,7 @@ class _SetUserState extends State<SetUser> {
                           elevation: 0,
                         ),
                         child: Text(
-                          "Continue",
+                          AppLocalizations.of(context)!.continueText,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: (w > 490 && h > 720) ? 30 : 16,

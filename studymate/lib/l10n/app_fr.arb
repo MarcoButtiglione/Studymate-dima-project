@@ -28,6 +28,11 @@
    "minSixCharPsw": "Saisissez au moins 6 caractères",
    "haveAlreadyAccount": "Vous avez déjà un compte ?",
 
+   "name": "Nom",
+   "validName": "Entrez un nom valide",
+   "surname": "Nom de famille",
+   "validSurname": "Entrez un nom de famille valide",
+
    "welcome": "Bienvenue",
    "suggestedTitle": "Suggestions pour vous",
    "suggestedSubTitle": "Voici une liste de tuteurs communautaires possibles avec qui vous pourriez étudier.",

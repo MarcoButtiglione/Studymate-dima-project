@@ -106,6 +106,23 @@
         "description": "Already Have an Account?"
     },
 
+    "name":"Name",
+    "@name":{
+        "description": "Name"
+    },
+    "validName":"Enter valid Name",
+    "@validName":{
+        "description": "Enter valid Name"
+    },
+    "surname":"Surname",
+    "@urname":{
+        "description": "Surname"
+    },
+    "validSurname":"Enter valid Surname",
+    "@validSurname":{
+        "description": "Enter valid Surname"
+    },
+
     "welcome":"Welcome",
     "@welcome":{
         "description": "Welcome message homepage"
