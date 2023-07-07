@@ -21,6 +21,10 @@
    "orSignGoogle": "ou se connecter avec Google",
    "buttonSignUpGoogle": "S'inscrire avec Google",
 
+   "resetPswTitle": "Réinitialiser le mot de passe",
+   "resetPswSubTitle": "Recevez un e-mail pour réinitialiser votre mot de passe.",
+   "pswReceived": "Mot de passe reçu,",
+
    "welcome": "Bienvenue",
    "suggestedTitle": "Suggestions pour vous",
    "suggestedSubTitle": "Voici une liste de tuteurs communautaires possibles avec qui vous pourriez étudier.",

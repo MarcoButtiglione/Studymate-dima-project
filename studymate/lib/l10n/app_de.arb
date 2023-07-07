@@ -21,6 +21,10 @@
    "orSignGoogle": "oder mit Google anmelden",
    "buttonSignUpGoogle": "Mit Google anmelden",
 
+   "resetPswTitle": "Passwort zurücksetzen",
+   "resetPswSubTitle": "Erhalten Sie eine E-Mail, um Ihr Passwort zurückzusetzen.",
+   "pswReceived": "Passwort empfangen,",
+
 
    "welcome": "Willkommen",
    "suggestedTitle": "Vorschlag für dich",

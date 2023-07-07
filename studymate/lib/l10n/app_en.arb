@@ -81,6 +81,20 @@
         "description": "button text sign up google"
     },
 
+    "resetPswTitle":"Reset password",
+    "@resetPswTitle":{
+        "description": "resetPswTitle"
+    },
+    "resetPswSubTitle":"Receive an email to reset your password.",
+    "@resetPswSubTitle":{
+        "description": "resetPswSubTitle"
+    },
+    "pswReceived":"Password received,",
+    "@pswReceived":{
+        "description": "pswReceived"
+    },
+
+
     "welcome":"Welcome",
     "@welcome":{
         "description": "Welcome message homepage"

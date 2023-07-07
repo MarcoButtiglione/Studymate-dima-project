@@ -21,6 +21,10 @@
    "orSignGoogle": "或使用 Google 登录",
    "buttonSignUpGoogle": "使用 Google 注册",
 
+   "resetPswTitle": "重置密码",
+   "resetPswSubTitle": "接收电子邮件以重置密码。",
+   "pswReceived": "已收到密码，",
+
    "welcome": "欢迎",
    "suggestedTitle": "为您推荐",
    "suggestedSubTitle": "这是一份可能与之一起学习的社区导师列表。",

@@ -5,6 +5,8 @@ import 'package:studymate/component/utils.dart';
 import 'package:studymate/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:studymate/screens/Login/login.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class Reset extends StatefulWidget {
   const Reset({super.key});
@@ -41,7 +43,7 @@ class _ResetState extends State<Reset> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "Reset password",
+                      AppLocalizations.of(context)!.resetPswTitle,
                       style: TextStyle(
                         fontFamily: "Crimson Pro",
                         fontWeight: FontWeight.bold,
@@ -53,7 +55,7 @@ class _ResetState extends State<Reset> {
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: Text(
-                        "Recive an email to reset your password.",
+                        AppLocalizations.of(context)!.resetPswSubTitle,
                         style: TextStyle(
                           fontFamily: "Crimson Pro",
                           fontSize: (w > 490 && h > 720) ? 25 : 16,
@@ -69,7 +71,7 @@ class _ResetState extends State<Reset> {
                         controller: emailController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
-                          labelText: "Email",
+                          labelText: AppLocalizations.of(context)!.email,
                           labelStyle: TextStyle(
                               fontSize: (w > 490 && h > 720) ? 25 : 14),
                           hintStyle: TextStyle(
@@ -80,7 +82,7 @@ class _ResetState extends State<Reset> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (email) =>
                             email != null && !EmailValidator.validate(email)
-                                ? 'Enter a valid email'
+                                ? AppLocalizations.of(context)!.validEmail
                                 : null,
                         style:
                             TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
@@ -102,7 +104,7 @@ class _ResetState extends State<Reset> {
                             elevation: 0,
                           ),
                           child: Text(
-                            "Reset Password",
+                            AppLocalizations.of(context)!.resetPswTitle,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: (w > 490 && h > 720) ? 30 : 16,
@@ -117,7 +119,7 @@ class _ResetState extends State<Reset> {
                               style: TextStyle(
                                   fontSize: (w > 490 && h > 720) ? 20 : 12,
                                   color: Color.fromARGB(156, 65, 62, 88)),
-                              text: "Password received,",
+                              text: AppLocalizations.of(context)!.pswReceived,
                               children: [
                             TextSpan(
                               recognizer: TapGestureRecognizer()
@@ -125,7 +127,7 @@ class _ResetState extends State<Reset> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Login())),
-                              text: ' Login',
+                              text: ' '+AppLocalizations.of(context)!.login,
                               style: TextStyle(
                                   fontSize: (w > 490 && h > 720) ? 20 : 12,
                                   color: Color.fromARGB(255, 233, 64, 87)),
