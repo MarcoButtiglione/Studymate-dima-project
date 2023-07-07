@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:studymate/models/category.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/utils.dart';
 import '../../../models/user.dart';
@@ -36,14 +37,14 @@ class _IntrestState extends State<Intrest> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Your Course of interest",
+                    AppLocalizations.of(context)!.yourInterestsTitle,
                     style: TextStyle(
                       fontFamily: "Crimson Pro",
                       fontSize: (w > 490 && h > 720) ? 50 : 25,
                       color: Color.fromARGB(255, 233, 64, 87),
                     ),
                   ),
-                  Text("Select a few of your course of interests.",
+                  Text( AppLocalizations.of(context)!.yourInterestsSubTitle,
                       style: TextStyle(
                         fontFamily: "Crimson Pro",
                         fontSize: (w > 490 && h > 720) ? 25 : 16,
@@ -97,7 +98,7 @@ class _IntrestState extends State<Intrest> {
                         ),
                       ),
                       child: Text(
-                        "Continue",
+                        AppLocalizations.of(context)!.continueText,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: (w > 490 && h > 720) ? 30 : 16,
@@ -133,7 +134,7 @@ class _IntrestState extends State<Intrest> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Authenticated()));
       } else {
-        Utils.showSnackBar("select at least one course of interest");
+        Utils.showSnackBar( AppLocalizations.of(context)!.selectOneSubject,);
         Navigator.of(context).pop();
       }
     } on FirebaseAuthException catch (e) {

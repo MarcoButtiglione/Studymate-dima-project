@@ -123,6 +123,20 @@
         "description": "Enter valid Surname"
     },
 
+    "yourInterestsTitle":"Your interests",
+    "@yourInterests":{
+        "description": "Your interests"
+    },
+    "yourInterestsSubTitle":"Select a few of subjects that interest you.",
+    "@yourInterestsSubTitle":{
+        "description": "Select a few of your subjects that interest you."
+    },
+    "selectOneSubject":"Select at least one subject",
+    "@selectOneSubject":{
+        "description": "selectOneSubject"
+    },
+
+
     "welcome":"Welcome",
     "@welcome":{
         "description": "Welcome message homepage"

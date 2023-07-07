@@ -28,6 +28,9 @@
    "minSixCharPsw": "Mindestens 6 Zeichen eingeben",
    "haveAlreadyAccount": "Hast du bereits ein Konto?",
 
+   "yourInterestsTitle": "Deine Interessen",
+   "yourInterestsSubTitle": "Wähle einige Themen aus, die dich interessieren.",
+   "selectOneSubject": "Wähle mindestens ein Fach aus",
 
    "welcome": "Willkommen",
    "suggestedTitle": "Vorschlag für dich",

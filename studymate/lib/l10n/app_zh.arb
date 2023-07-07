@@ -32,7 +32,10 @@
    "validName": "输入有效姓名",
    "surname": "姓氏",
    "validSurname": "输入有效姓氏",
-
+   "yourInterestsTitle": "您的兴趣",
+   "yourInterestsSubTitle": "选择您感兴趣的一些主题。",
+   "selectOneSubject": "至少选择一个主题",
+   
    "welcome": "欢迎",
    "suggestedTitle": "为您推荐",
    "suggestedSubTitle": "这是一份可能与之一起学习的社区导师列表。",

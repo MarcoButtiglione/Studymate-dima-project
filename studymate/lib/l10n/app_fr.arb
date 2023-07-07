@@ -33,6 +33,10 @@
    "surname": "Nom de famille",
    "validSurname": "Entrez un nom de famille valide",
 
+   "yourInterestsTitle": "Vos intérêts",
+   "yourInterestsSubTitle": "Sélectionnez quelques sujets qui vous intéressent.",
+   "selectOneSubject": "Sélectionnez au moins un sujet",
+
    "welcome": "Bienvenue",
    "suggestedTitle": "Suggestions pour vous",
    "suggestedSubTitle": "Voici une liste de tuteurs communautaires possibles avec qui vous pourriez étudier.",
