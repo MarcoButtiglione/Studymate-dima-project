@@ -2,14 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:studymate/models/user.dart';
+import 'package:studymate/screens/Authenticated/Chat/share_position.dart';
 import 'dart:math';
 
 import 'custom_shape.dart';
 
 class ReciviedMessage extends StatelessWidget {
   final String? message;
+  final Users reciver;
   final Timestamp? addTime;
-  const ReciviedMessage({super.key, this.message, this.addTime});
+  const ReciviedMessage(
+      {super.key, this.message, this.addTime, required this.reciver});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +23,13 @@ class ReciviedMessage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           const SizedBox(height: 30),
-          messageTextGroup(),
+          messageTextGroup(context),
         ],
       ),
     );
   }
 
-  Widget messageTextGroup() => Flexible(
+  Widget messageTextGroup(BuildContext context) => Flexible(
           child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,9 +54,32 @@ class ReciviedMessage extends StatelessWidget {
               ),
               child:
                   Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                (message!.contains("lat:") && message!.contains("lon:"))
+                (message!.contains("l4t:") && message!.contains("l0n:"))
                     ? IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          String pos = message!;
+                          double latitude = 45.465665;
+                          double longitude = 9.1892020;
+                          try {
+                            latitude = double.parse(
+                                pos.substring(5, pos.indexOf(";")));
+
+                            longitude = double.parse(
+                                pos.substring(pos.indexOf(";") + 5));
+                          } catch (e) {
+                            // Handle parsing errors here
+                            print("Error parsing number: $e");
+                          }
+
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SharePosition(
+                                      latitute: latitude,
+                                      longitude: longitude,
+                                      reciver: reciver,
+                                      rue: "Posizione")));
+                        },
                         icon: Icon(
                           LineIcons.mapMarker,
                           color: Color.fromARGB(255, 233, 64, 87),

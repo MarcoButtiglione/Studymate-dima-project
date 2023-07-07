@@ -44,10 +44,10 @@ class SentMessage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    (message!.contains("lat:") && message!.contains("lon:"))
+                    (message!.contains("l4t:") && message!.contains("l0n:"))
                         ? Icon(
                             LineIcons.mapMarker,
-                            color: Color.fromARGB(255, 233, 64, 87),
+                            color: Colors.white,
                           )
                         : Text(
                             message!,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:studymate/models/user.dart';
 import 'package:studymate/screens/Authenticated/Chat/widget/recivied_message.dart';
@@ -170,8 +171,15 @@ class _MsgState extends State<ChatMsg> {
                                   builder: (context) => Container(
                                           child: Wrap(children: [
                                         ListTile(
-                                          onTap: () {
-                                            send("lat:;lon:");
+                                          onTap: () async {
+                                            Position position =
+                                                await getCurrentPosition();
+                                            double latitude = position.latitude;
+                                            double longitude =
+                                                position.longitude;
+
+                                            send(
+                                                "l4t:$latitude;l0n:$longitude");
                                           },
                                           //leading: ,
                                           leading: const Icon(
@@ -228,6 +236,42 @@ class _MsgState extends State<ChatMsg> {
             )
           ]),
     ));
+  }
+
+  Future<Position> getCurrentPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled
+      throw 'Location services are disabled.';
+    }
+
+    // Check location permission
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      // The user permanently denied location permission
+      throw 'Location permissions are permanently denied.';
+    }
+
+    if (permission == LocationPermission.denied) {
+      // Request location permission
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        // The user denied location permission
+        throw 'Location permissions are denied.';
+      }
+    }
+
+    // Get the current position
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    return position;
   }
 
   List<List<Msg>> groupByDate(List<Msg> msgs) {
@@ -324,6 +368,7 @@ class _MsgState extends State<ChatMsg> {
         }
       }
       return ReciviedMessage(
+        reciver: widget.reciver,
         message: message.content,
         addTime: message.addtime,
       );

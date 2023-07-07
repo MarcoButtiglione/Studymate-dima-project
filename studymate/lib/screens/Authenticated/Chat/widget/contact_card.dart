@@ -50,7 +50,6 @@ class ContactCard extends StatelessWidget {
                         return Card(
                           margin: EdgeInsets.zero,
                         );
-                        
                       }
                     }),
               ),
@@ -99,8 +98,11 @@ class ContactCard extends StatelessWidget {
                                 ))
                           : const SizedBox(),
                       Expanded(
-                          child: Text(
-                              " ${last_msg!.length < 70 ? last_msg : "${last_msg!.substring(0, 67)}..."}")),
+                          child: (last_msg!.contains("l4t:") &&
+                                  last_msg!.contains("l0n:"))
+                              ? const Text("Shared current position!")
+                              : Text(
+                                  " ${last_msg!.length < 70 ? last_msg : "${last_msg!.substring(0, 67)}..."}")),
                       (msg_num != null && msg_num! > 0)
                           ? SizedBox(
                               height: 25,
@@ -130,8 +132,6 @@ class ContactCard extends StatelessWidget {
             ),
           ],
         ),
-        
-        
       ],
     );
   }

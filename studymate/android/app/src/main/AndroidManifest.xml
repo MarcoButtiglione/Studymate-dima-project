@@ -2,6 +2,9 @@
     package="com.example.studymate">
    <uses-permission android:name="android.permission.INTERENT"/>
    <uses-permission android:name="android.permission.CAMERA"/>
+   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
    <application
         android:label="StudyMate"
         android:name="${applicationName}"

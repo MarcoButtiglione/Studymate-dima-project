@@ -97,7 +97,13 @@ class NotificationCard extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Expanded(child: Text(notification.content!)),
+                              Expanded(
+                                  child:
+                                      (notification.content!.contains("l4t:") &&
+                                              notification.content!
+                                                  .contains("l0n:"))
+                                          ? Text("Shared curred position!")
+                                          : Text(notification.content!)),
                             ],
                           ),
                         ],
@@ -252,8 +258,10 @@ class NotificationCard extends StatelessWidget {
                                               color: Colors.black),
                                           children: <TextSpan>[
                                             TextSpan(
-                                                text:
-                                                    AppLocalizations.of(context)!.leftReview+" ${notification.content}",
+                                                text: AppLocalizations.of(
+                                                            context)!
+                                                        .leftReview +
+                                                    " ${notification.content}",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.normal,
