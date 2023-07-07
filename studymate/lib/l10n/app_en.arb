@@ -539,6 +539,14 @@
     "@reject":{
         "description": "Reject"
     },
+
+   "leftReview":"has left a review on your lesson:",
+    "@leftReview":{
+        "description": "leftReview"
+    },
+
+
+
     "acceptedTutoring":"accepted your request for tutoring of lesson:",
     "@acceptedTutoring":{
         "description": "Accepted tutoring"

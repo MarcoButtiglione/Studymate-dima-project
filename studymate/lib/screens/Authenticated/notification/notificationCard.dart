@@ -253,7 +253,7 @@ class NotificationCard extends StatelessWidget {
                                           children: <TextSpan>[
                                             TextSpan(
                                                 text:
-                                                    "has left a review on your lesson: ${notification.content}",
+                                                    AppLocalizations.of(context)!.leftReview+" ${notification.content}",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.normal,
