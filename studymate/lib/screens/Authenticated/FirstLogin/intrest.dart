@@ -126,7 +126,7 @@ class _IntrestState extends State<Intrest> {
             lastname: widget.addUser.lastname,
             profileImageURL: widget.addUser.profileImageURL,
             userRating: "0",
-            hours: 20,
+            hours: widget.addUser.hours,
             categoriesOfInterest: selectedCatList);
         final json = toAdd.toJson();
         await docUser.set(json);
