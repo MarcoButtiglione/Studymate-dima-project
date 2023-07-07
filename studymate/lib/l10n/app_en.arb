@@ -345,6 +345,45 @@
         "description": "Edit at least one field"
     },
 
+    "scanQrCodeTitle":"Scan QrCode",
+    "@scanQrCode":{
+        "description": "Scan QrCode subtitle"
+    },
+    "scanQrCodeGenSubTitle":"Select the taught lesson timeslot and generate the qr code, make the student scan in to gain hours to spend on lessons in the app.",
+    "@scanQrCodeGenSubTitle":{
+        "description": "Scan QrCode subtitle"
+    },
+
+
+    "centerQrCode":"Center the Qr code.",
+    "@centerQrCode":{
+        "description": "Center the Qr code."
+    },
+    "scanQrCodeScanSubTitle":"Please scan the qrCode of the tutor.",
+    "@scanQrCodeScanSubTitle":{
+        "description": "Scan QrCode subtitle"
+    },
+    "review":"Review",
+    "@review":{
+        "description": "Review"
+    },
+    "leaveReview":"Hope you've enjoid your lesson feel free to leave a start review on the tutor.",
+    "@leaveReview":{
+        "description": "Leave review message"
+    },
+    "thanksReview":"Thanks for the review.",
+    "@thanksRewview":{
+        "description": "Thanks review"
+    },
+    "continueText":"Continue",
+    "@continue":{
+        "description": "Continue"
+    },
+    "scanValidQR":"Scan a valid Qr Code.",
+    "@scanValidQR":{
+        "description": "Scan a valid Qr Code."
+    },
+
 
     "student":"Student",
     "@student":{

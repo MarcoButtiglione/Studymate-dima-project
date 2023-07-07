@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:studymate/screens/Authenticated/qrCode/qrImage.dart';
 import '../../../models/scheduled.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class QrCodeGenerate extends StatefulWidget {
   final String? id;
@@ -49,8 +51,8 @@ class _QrCodeGenerateState extends State<QrCodeGenerate> {
                               Icons.arrow_back_ios,
                               size: 20,
                             )),
-                        const Expanded(
-                            child: Text("Scan QrCode",
+                        Expanded(
+                            child: Text(AppLocalizations.of(context)!.scanQrCodeTitle,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 233, 64, 87),
@@ -59,10 +61,10 @@ class _QrCodeGenerateState extends State<QrCodeGenerate> {
                                 ))),
                       ]),
                       const SizedBox(height: 10),
-                      const Padding(
+                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Text(
-                            "Select the taught lesson timeslot and generate the qr code, make the student scan in to gain hours to spend on lessons in the app.",
+                            AppLocalizations.of(context)!.scanQrCodeGenSubTitle,
                             style: TextStyle(
                               fontFamily: "Crimson Pro",
                               fontSize: 16,

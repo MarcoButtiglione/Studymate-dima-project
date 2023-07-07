@@ -87,6 +87,17 @@
    "editLessonTitle": "编辑课程",
    "editOneField": "请至少编辑一个字段",
 
+   "scanQrCodeTitle": "扫描二维码",
+   "scanQrCodeGenSubTitle": "选择教授课程的时间段并生成二维码，学生通过扫描二维码获得可以在应用中使用的课程时间。",
+
+   "centerQrCode": "居中显示二维码。",
+   "scanQrCodeScanSubTitle": "请扫描导师的二维码。",
+   "review": "评价",
+   "leaveReview": "希望您享受了课程，请随时在导师处留下星级评价。",
+   "thanksReview": "感谢您的评价。",
+   "continueText": "继续",
+   "scanValidQR": "扫描有效的二维码。",
+
    "student": "学生",
    "lessons": "课程",
    "tutor": "导师",

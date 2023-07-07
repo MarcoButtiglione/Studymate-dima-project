@@ -87,6 +87,17 @@
    "editLessonTitle": "Lektion bearbeiten",
    "editOneField": "Bearbeite mindestens ein Feld",
 
+   "scanQrCodeTitle": "QR-Code scannen",
+   "scanQrCodeGenSubTitle": "Wählen Sie den Unterrichtszeitraum aus und generieren Sie den QR-Code. Der Schüler scannt den Code ein, um Stunden zu sammeln, die er in der App für Lektionen verwenden kann.",
+
+   "centerQrCode": "Zentriere den QR-Code.",
+   "scanQrCodeScanSubTitle": "Bitte scannen Sie den QR-Code des Tutors.",
+   "review": "Bewertung",
+   "leaveReview": "Ich hoffe, Ihnen hat die Lektion gefallen. Sie können gerne eine Bewertung für den Tutor hinterlassen.",
+   "thanksReview": "Vielen Dank für die Bewertung.",
+   "continueText": "Weiter",
+   "scanValidQR": "Scannen Sie einen gültigen QR-Code.",
+
    "student": "Schüler",
    "lessons": "Lektionen",
    "tutor": "Tutor",

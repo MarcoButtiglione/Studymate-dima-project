@@ -9,6 +9,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../../models/scheduled.dart';
 import '../../../models/user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QrCodeScan extends StatefulWidget {
   final String? id;
@@ -27,12 +28,8 @@ class QrCodeScan extends StatefulWidget {
 class _QrCodeScanState extends State<QrCodeScan> {
   final user = FirebaseAuth.instance.currentUser!;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Widget message = const Text("Center the Qr code.",
-      style: TextStyle(
-        fontFamily: "Crimson Pro",
-        fontSize: 16,
-        color: Color.fromARGB(255, 104, 104, 104),
-      ));
+  bool isMessageValid = true;
+
   Barcode? result;
   bool review = false;
   bool reviewed = false;
@@ -83,8 +80,9 @@ class _QrCodeScanState extends State<QrCodeScan> {
                               Icons.arrow_back_ios,
                               size: 20,
                             )),
-                        const Expanded(
-                            child: Text("Scan QrCode",
+                        Expanded(
+                            child: Text(
+                                AppLocalizations.of(context)!.scanQrCodeTitle,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 233, 64, 87),
@@ -93,9 +91,9 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                 ))),
                       ]),
                       const SizedBox(height: 10),
-                      const Padding(
+                      Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text("Please scan the qrCode of the tutor.",
+                        child: Text(AppLocalizations.of(context)!.scanQrCodeScanSubTitle,
                             style: TextStyle(
                               fontFamily: "Crimson Pro",
                               fontSize: 16,
@@ -127,7 +125,7 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     children: [
-                                      const Text("Review:",
+                                      Text(AppLocalizations.of(context)!.review,
                                           style: TextStyle(
                                             fontFamily: "Crimson Pro",
                                             fontWeight: FontWeight.bold,
@@ -137,15 +135,15 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                         height: 10,
                                       ),
                                       (reviewed)
-                                          ? const Text(
-                                              "Hope you've enjoid your lesson feel free to leave a start review on the tutor.",
+                                          ? Text(
+                                              AppLocalizations.of(context)!.leaveReview,
                                               style: TextStyle(
                                                 fontFamily: "Crimson Pro",
                                                 fontSize: 16,
                                                 color: Color.fromARGB(
                                                     255, 104, 104, 104),
                                               ))
-                                          : const Text("Thanks for the review.",
+                                          : Text(AppLocalizations.of(context)!.thanksReview,
                                               style: TextStyle(
                                                 fontFamily: "Crimson Pro",
                                                 fontSize: 16,
@@ -234,8 +232,8 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                                               size.width * 0.2,
                                                           vertical: 25),
                                                 ),
-                                                child: const Text(
-                                                  "Continue",
+                                                child: Text(
+                                                  AppLocalizations.of(context)!.continueText,
                                                   style: TextStyle(
                                                     color: Color.fromARGB(
                                                         255, 255, 255, 255),
@@ -249,8 +247,21 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                 )
                               : Container(
                                   padding: EdgeInsets.all(20),
-                                  child: message,
-                                ),
+                                  child: (isMessageValid == true)
+                                      ? Text(AppLocalizations.of(context)!.centerQrCode,
+                                          style: TextStyle(
+                                            fontFamily: "Crimson Pro",
+                                            fontSize: 16,
+                                            color: Color.fromARGB(
+                                                255, 104, 104, 104),
+                                          ))
+                                      : Text(AppLocalizations.of(context)!.scanValidQR,
+                                          style: TextStyle(
+                                            fontFamily: "Crimson Pro",
+                                            fontSize: 16,
+                                            color: Color.fromARGB(
+                                                255, 233, 64, 87),
+                                          ))),
                         ],
                       )
                     ]))));
@@ -307,12 +318,7 @@ class _QrCodeScanState extends State<QrCodeScan> {
           } else {
             setState(
               () {
-                message = const Text("Scan a valid Qr Code.",
-                    style: TextStyle(
-                      fontFamily: "Crimson Pro",
-                      fontSize: 16,
-                      color: Color.fromARGB(255, 233, 64, 87),
-                    ));
+                isMessageValid = false; 
               },
             );
           }
