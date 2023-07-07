@@ -25,6 +25,9 @@
    "resetPswSubTitle": "Ricevi un'email per reimpostare la tua password.",
    "pswReceived": "Password ricevuta,",
 
+   "minSixCharPsw": "Inserisci almeno 6 caratteri",
+   "haveAlreadyAccount": "Hai già un account?",
+
    "welcome": "Benvenuto",
    "suggestedTitle": "Suggerimenti per te",
    "suggestedSubTitle": "Questa è una lista di possibili tutor della community con cui potresti studiare.",

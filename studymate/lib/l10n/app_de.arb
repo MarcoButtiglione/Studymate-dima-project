@@ -25,6 +25,9 @@
    "resetPswSubTitle": "Erhalten Sie eine E-Mail, um Ihr Passwort zurückzusetzen.",
    "pswReceived": "Passwort empfangen,",
 
+   "minSixCharPsw": "Mindestens 6 Zeichen eingeben",
+   "haveAlreadyAccount": "Hast du bereits ein Konto?",
+
 
    "welcome": "Willkommen",
    "suggestedTitle": "Vorschlag für dich",

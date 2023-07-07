@@ -95,6 +95,17 @@
     },
 
 
+
+    "minSixCharPsw":"Enter min. 6 characters",
+    "@minSixCharPsw":{
+        "description": "minSixCharPsw"
+    },
+
+    "haveAlreadyAccount":"Already Have an Account?",
+    "@haveAlreadyAccount":{
+        "description": "Already Have an Account?"
+    },
+
     "welcome":"Welcome",
     "@welcome":{
         "description": "Welcome message homepage"

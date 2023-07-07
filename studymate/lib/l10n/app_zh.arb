@@ -25,6 +25,9 @@
    "resetPswSubTitle": "接收电子邮件以重置密码。",
    "pswReceived": "已收到密码，",
 
+   "minSixCharPsw": "输入至少 6 个字符",
+   "haveAlreadyAccount": "已有账号？",
+
    "welcome": "欢迎",
    "suggestedTitle": "为您推荐",
    "suggestedSubTitle": "这是一份可能与之一起学习的社区导师列表。",

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:studymate/component/utils.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:studymate/screens/Login/login.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../Authenticated/FirstLogin/setUser.dart';
 
@@ -44,7 +45,7 @@ class _RegisterState extends State<Register> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "Register",
+                      AppLocalizations.of(context)!.signUp,
                       style: TextStyle(
                         fontFamily: "Crimson Pro",
                         fontWeight: FontWeight.bold,
@@ -60,7 +61,7 @@ class _RegisterState extends State<Register> {
                         controller: emailController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
-                          labelText: "Email",
+                          labelText: AppLocalizations.of(context)!.email,
                           labelStyle: TextStyle(
                               fontSize: (w > 490 && h > 720) ? 25 : 14),
                           hintStyle: TextStyle(
@@ -71,7 +72,7 @@ class _RegisterState extends State<Register> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (email) =>
                             email != null && !EmailValidator.validate(email)
-                                ? 'Enter a valid email'
+                                ? AppLocalizations.of(context)!.validEmail
                                 : null,
                         style:
                             TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
@@ -85,7 +86,7 @@ class _RegisterState extends State<Register> {
                         controller: passwordController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
-                          labelText: "Password",
+                          labelText: AppLocalizations.of(context)!.password,
                           labelStyle: TextStyle(
                               fontSize: (w > 490 && h > 720) ? 25 : 14),
                           hintStyle: TextStyle(
@@ -96,7 +97,7 @@ class _RegisterState extends State<Register> {
                         obscureText: true,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) => value != null && value.length < 6
-                            ? 'Enter min. 6 characters'
+                            ? AppLocalizations.of(context)!.minSixCharPsw
                             : null,
                         style:
                             TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
@@ -118,7 +119,7 @@ class _RegisterState extends State<Register> {
                             elevation: 0,
                           ),
                           child: Text(
-                            "SignUp",
+                            AppLocalizations.of(context)!.signUp,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: (w > 490 && h > 720) ? 30 : 16,
@@ -133,7 +134,7 @@ class _RegisterState extends State<Register> {
                               style: TextStyle(
                                   fontSize: (w > 490 && h > 720) ? 20 : 12,
                                   color: Color.fromARGB(156, 65, 62, 88)),
-                              text: "Already Have an Account?",
+                              text: AppLocalizations.of(context)!.haveAlreadyAccount,
                               children: [
                             TextSpan(
                               recognizer: TapGestureRecognizer()
@@ -141,7 +142,7 @@ class _RegisterState extends State<Register> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Login())),
-                              text: ' Login',
+                              text: ' '+AppLocalizations.of(context)!.login,
                               style: TextStyle(
                                   fontSize: (w > 490 && h > 720) ? 20 : 12,
                                   color: Color.fromARGB(255, 233, 64, 87)),
