@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:studymate/models/user.dart';
 import 'package:studymate/screens/Authenticated/Chat/widget/recivied_message.dart';
 import 'package:studymate/screens/Authenticated/Chat/widget/sent_message.dart';
-
+import 'package:line_icons/line_icons.dart';
 import '../../../component/utils.dart';
 import '../../../models/chat.dart';
 import '../../../models/msg.dart';
@@ -134,22 +134,69 @@ class _MsgState extends State<ChatMsg> {
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 10, left: 10),
-                    child: TextField(
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      controller: contentController,
-                      onTap: _scrollToEnd,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color.fromARGB(255, 255, 255, 255),
-                        hintStyle: const TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: const BorderSide(
-                                width: 3,
-                                color: Color.fromARGB(255, 255, 255, 255))),
-                      ),
+                    height: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Color.fromARGB(255, 255, 255, 255)),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            controller: contentController,
+                            onTap: _scrollToEnd,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor:
+                                  const Color.fromARGB(255, 255, 255, 255),
+                              hintStyle: const TextStyle(
+                                  color: Color.fromARGB(255, 0, 0, 0)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: const BorderSide(
+                                      width: 3,
+                                      color:
+                                          Color.fromARGB(255, 255, 255, 255))),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  showDragHandle: true,
+                                  context: context,
+                                  isScrollControlled: true,
+                                  builder: (context) => Container(
+                                          child: Wrap(children: [
+                                        ListTile(
+                                          onTap: () {
+                                            //send("l4t:;l0n:");
+                                          },
+                                          //leading: ,
+                                          leading: const Icon(
+                                              LineIcons.mapMarker,
+                                              color: Color.fromARGB(
+                                                  255, 233, 64, 87)),
+                                          title: const Text(
+                                              'Share current position'),
+                                        ),
+                                      ])));
+                            },
+                            icon: Container(
+                              decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 255, 255, 255),
+                                  borderRadius: BorderRadius.circular(30)),
+                              margin:
+                                  const EdgeInsets.only(bottom: 10, right: 10),
+                              child: const Icon(
+                                Icons.attach_file,
+                                color: Color.fromARGB(255, 233, 64, 87),
+                                size: 30,
+                              ),
+                            )),
+                      ],
                     ),
                   ),
                 ),

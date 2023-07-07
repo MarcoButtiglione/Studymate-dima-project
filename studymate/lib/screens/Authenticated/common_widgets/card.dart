@@ -191,6 +191,8 @@ class ClassCard extends StatelessWidget {
                                   builder: (context) => QrCodeScan(
                                         id: id,
                                         tutor: tutor,
+                                        student: student.id,
+                                        title: title,
                                       )));
                         }
                       },

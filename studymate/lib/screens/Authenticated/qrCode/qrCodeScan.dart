@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 //import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import '../../../models/notification.dart';
 import '../../../models/scheduled.dart';
 import '../../../models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,12 +15,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class QrCodeScan extends StatefulWidget {
   final String? id;
   final Users? tutor;
+  final String? student;
+  final String? title;
 
-  const QrCodeScan({
-    super.key,
-    required this.id,
-    required this.tutor,
-  });
+  const QrCodeScan(
+      {super.key,
+      required this.id,
+      required this.tutor,
+      required this.student,
+      required this.title});
 
   @override
   _QrCodeScanState createState() => _QrCodeScanState();
@@ -53,13 +57,6 @@ class _QrCodeScanState extends State<QrCodeScan> {
     super.initState();
   }
 
-  Stream<List<Scheduled>> readScheduled() => FirebaseFirestore.instance
-      .collection('scheduled')
-      .where('id', isEqualTo: widget.id)
-      .snapshots()
-      .map(((snapshot) => snapshot.docs
-          .map((doc) => Scheduled.fromFirestore(doc.data()))
-          .toList()));
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -93,7 +90,9 @@ class _QrCodeScanState extends State<QrCodeScan> {
                       const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text(AppLocalizations.of(context)!.scanQrCodeScanSubTitle,
+                        child: Text(
+                            AppLocalizations.of(context)!
+                                .scanQrCodeScanSubTitle,
                             style: TextStyle(
                               fontFamily: "Crimson Pro",
                               fontSize: 16,
@@ -136,14 +135,17 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                       ),
                                       (!reviewed)
                                           ? Text(
-                                              AppLocalizations.of(context)!.leaveReview,
+                                              AppLocalizations.of(context)!
+                                                  .leaveReview,
                                               style: TextStyle(
                                                 fontFamily: "Crimson Pro",
                                                 fontSize: 16,
                                                 color: Color.fromARGB(
                                                     255, 104, 104, 104),
                                               ))
-                                          : Text(AppLocalizations.of(context)!.thanksReview,
+                                          : Text(
+                                              AppLocalizations.of(context)!
+                                                  .thanksReview,
                                               style: TextStyle(
                                                 fontFamily: "Crimson Pro",
                                                 fontSize: 16,
@@ -204,10 +206,33 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                                       .collection("users")
                                                       .doc(widget.tutor!.id)
                                                       .update({
-                                                    'userRating': updateRating.toString(),
+                                                    'userRating':
+                                                        updateRating.toString(),
                                                     'numRating': widget
                                                             .tutor!.numRating +
                                                         1
+                                                  });
+                                                  final docNot =
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              'notification');
+                                                  await docNot.add({}).then(
+                                                      (DocumentReference doc) {
+                                                    var notif = Notifications(
+                                                      id: doc.id,
+                                                      from_id: widget.student,
+                                                      to_id: widget.tutor!.id,
+                                                      type: "review",
+                                                      content: widget.title,
+                                                      view: false,
+                                                      eventId: widget.id,
+                                                      time: Timestamp.now(),
+                                                    );
+                                                    final json =
+                                                        notif.toFirestore();
+                                                    docNot
+                                                        .doc(doc.id)
+                                                        .update(json);
                                                   });
                                                   setState(() {
                                                     reviewed = true;
@@ -233,7 +258,8 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                                           vertical: 25),
                                                 ),
                                                 child: Text(
-                                                  AppLocalizations.of(context)!.continueText,
+                                                  AppLocalizations.of(context)!
+                                                      .continueText,
                                                   style: TextStyle(
                                                     color: Color.fromARGB(
                                                         255, 255, 255, 255),
@@ -248,14 +274,18 @@ class _QrCodeScanState extends State<QrCodeScan> {
                               : Container(
                                   padding: EdgeInsets.all(20),
                                   child: (isMessageValid == true)
-                                      ? Text(AppLocalizations.of(context)!.centerQrCode,
+                                      ? Text(
+                                          AppLocalizations.of(context)!
+                                              .centerQrCode,
                                           style: TextStyle(
                                             fontFamily: "Crimson Pro",
                                             fontSize: 16,
                                             color: Color.fromARGB(
                                                 255, 104, 104, 104),
                                           ))
-                                      : Text(AppLocalizations.of(context)!.scanValidQR,
+                                      : Text(
+                                          AppLocalizations.of(context)!
+                                              .scanValidQR,
                                           style: TextStyle(
                                             fontFamily: "Crimson Pro",
                                             fontSize: 16,
@@ -318,7 +348,7 @@ class _QrCodeScanState extends State<QrCodeScan> {
           } else {
             setState(
               () {
-                isMessageValid = false; 
+                isMessageValid = false;
               },
             );
           }

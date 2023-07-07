@@ -9,7 +9,6 @@ import '../../../models/notification.dart';
 import '../../../models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class NotificationCard extends StatelessWidget {
   final Notifications notification;
   final Users user;
@@ -67,9 +66,8 @@ class NotificationCard extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   AppLocalizations.of(context)!.newMessage,
-                                  style: TextStyle(
-                                      color: const Color.fromARGB(
-                                          255, 233, 64, 87),
+                                  style: const TextStyle(
+                                      color: Color.fromARGB(255, 233, 64, 87),
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -92,7 +90,8 @@ class NotificationCard extends StatelessWidget {
                               Expanded(
                                   child: Text(
                                 '${user.firstname} ${user.lastname}',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               )),
                             ],
                           ),
@@ -115,15 +114,15 @@ class NotificationCard extends StatelessWidget {
                                     child: RichText(
                                   text: TextSpan(
                                     text: '${user.firstname} ${user.lastname} ',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                     children: <TextSpan>[
                                       TextSpan(
                                         text:
-                                            AppLocalizations.of(context)!.notifRequestTutoring+' ${notification.content}',
+                                            '${AppLocalizations.of(context)!.notifRequestTutoring} ${notification.content}',
                                         /*QUI*/
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.normal),
                                       ),
@@ -147,7 +146,7 @@ class NotificationCard extends StatelessWidget {
                                             Color.fromARGB(255, 47, 47, 47))),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             Row(
@@ -185,8 +184,9 @@ class NotificationCard extends StatelessWidget {
                                         .doc(notification.id)
                                         .delete();
                                   },
-                                  child: Text(AppLocalizations.of(context)!.accept,
-                                      style: TextStyle(
+                                  child: Text(
+                                      AppLocalizations.of(context)!.accept,
+                                      style: const TextStyle(
                                         color:
                                             Color.fromARGB(255, 255, 255, 255),
                                       )),
@@ -195,9 +195,8 @@ class NotificationCard extends StatelessWidget {
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color.fromARGB(
                                           255, 255, 255, 255),
-                                      side: BorderSide(
-                                        color: const Color.fromARGB(
-                                            255, 233, 64, 87),
+                                      side: const BorderSide(
+                                        color: Color.fromARGB(255, 233, 64, 87),
                                       )),
                                   onPressed: () async {
                                     final docChat = FirebaseFirestore.instance
@@ -226,60 +225,113 @@ class NotificationCard extends StatelessWidget {
                                         .doc(notification.id)
                                         .delete();
                                   },
-                                  child: Text(AppLocalizations.of(context)!.reject,
-                                      style: TextStyle(
-                                        color: const Color.fromARGB(
-                                            255, 233, 64, 87),
+                                  child: Text(
+                                      AppLocalizations.of(context)!.reject,
+                                      style: const TextStyle(
+                                        color: Color.fromARGB(255, 233, 64, 87),
                                       )),
                                 )
                               ],
                             ),
                           ],
                         )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: RichText(
-                                    text: TextSpan(
-                                      text:
-                                          '${user.firstname} ${user.lastname} ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                            text: (notification.type ==
-                                                    "accept")
-                                                ? AppLocalizations.of(context)!.acceptedTutoring+" ${notification.content}"
-                                                : AppLocalizations.of(context)!.rejectedTutoring+" ${notification.content}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black)),
-                                      ],
-                                    ),
-                                  )),
-                                  Text(
-                                      notification.time!.toDate().month <
-                                                  Timestamp.now()
-                                                      .toDate()
-                                                      .month ||
-                                              notification.time!.toDate().day <
-                                                  Timestamp.now().toDate().day
-                                          ? DateFormat.yMd().format(
-                                              notification.time!.toDate())
-                                          : DateFormat.Hm().format(
-                                              notification.time!.toDate()),
-                                      textAlign: TextAlign.right,
-                                      style: const TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 47, 47, 47))),
-                                ],
-                              ),
-                            ])),
+                      : ((notification.type == "review")
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: RichText(
+                                        text: TextSpan(
+                                          text:
+                                              '${user.firstname} ${user.lastname} ',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text:
+                                                    "has left a review on your lesson: ${notification.content}",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    color: Colors.black)),
+                                          ],
+                                        ),
+                                      )),
+                                      Text(
+                                          notification.time!.toDate().month <
+                                                      Timestamp.now()
+                                                          .toDate()
+                                                          .month ||
+                                                  notification.time!
+                                                          .toDate()
+                                                          .day <
+                                                      Timestamp.now()
+                                                          .toDate()
+                                                          .day
+                                              ? DateFormat.yMd().format(
+                                                  notification.time!.toDate())
+                                              : DateFormat.Hm().format(
+                                                  notification.time!.toDate()),
+                                          textAlign: TextAlign.right,
+                                          style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 47, 47, 47))),
+                                    ],
+                                  ),
+                                ])
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: RichText(
+                                        text: TextSpan(
+                                          text:
+                                              '${user.firstname} ${user.lastname} ',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                                text: (notification.type ==
+                                                        "accept")
+                                                    ? "${AppLocalizations.of(context)!.acceptedTutoring} ${notification.content}"
+                                                    : "${AppLocalizations.of(context)!.rejectedTutoring} ${notification.content}",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    color: Colors.black)),
+                                          ],
+                                        ),
+                                      )),
+                                      Text(
+                                          notification.time!.toDate().month <
+                                                      Timestamp.now()
+                                                          .toDate()
+                                                          .month ||
+                                                  notification.time!
+                                                          .toDate()
+                                                          .day <
+                                                      Timestamp.now()
+                                                          .toDate()
+                                                          .day
+                                              ? DateFormat.yMd().format(
+                                                  notification.time!.toDate())
+                                              : DateFormat.Hm().format(
+                                                  notification.time!.toDate()),
+                                          textAlign: TextAlign.right,
+                                          style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 47, 47, 47))),
+                                    ],
+                                  ),
+                                ]))),
             ),
           ],
         ),
