@@ -12,7 +12,6 @@ import '../../../models/notification.dart';
 import '../../../models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class BookLessonModal extends StatefulWidget {
   final Lesson lesson;
   final Users user;
@@ -173,7 +172,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
           to_id: sched.tutorId,
           type: "request",
           content:
-              "${scheduled.title} on ${DateFormat.yMd().format(scheduled.date!.toDate())}",
+              "${scheduled.title} - ${DateFormat.yMd().format(scheduled.date!.toDate())}",
           view: false,
           eventId: sched.id,
           time: Timestamp.now(),
@@ -191,7 +190,8 @@ class _BookLessonModalState extends State<BookLessonModal> {
       });
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(content: Text(AppLocalizations.of(context)!.lessonBookedConfirm)),
+        SnackBar(
+            content: Text(AppLocalizations.of(context)!.lessonBookedConfirm)),
       );
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -352,7 +352,9 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                                       );
                                                     } else {
                                                       return Text(
-                                                          AppLocalizations.of(context)!.noLessonsInDay);
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .noLessonsInDay);
                                                     }
                                                   }()));
                                             });
@@ -372,7 +374,8 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                 children: [
                                   Row(
                                     children: [
-                                      Text("${AppLocalizations.of(context)!.creditAvailable}:",
+                                      Text(
+                                          "${AppLocalizations.of(context)!.creditAvailable}:",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                           )),
@@ -380,7 +383,9 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                   ),
                                   Row(
                                     children: [
-                                      Text(AppLocalizations.of(context)!.oneCreditHour,
+                                      Text(
+                                          AppLocalizations.of(context)!
+                                              .oneCreditHour,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                           )),
@@ -432,7 +437,8 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                 primary:
                                     Theme.of(context).colorScheme.secondary,
                               ),
-                              child: Text(AppLocalizations.of(context)!.closeCaps),
+                              child:
+                                  Text(AppLocalizations.of(context)!.closeCaps),
                             ),
                             StreamBuilder(
                                 stream: readUsers(),
@@ -468,7 +474,8 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                             Navigator.pop(context);
 
                                             Utils.showSnackBar(
-                                                AppLocalizations.of(context)!.noCredits);
+                                                AppLocalizations.of(context)!
+                                                    .noCredits);
                                           }
                                         }
                                       },
@@ -477,7 +484,8 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                             .colorScheme
                                             .primary,
                                       ),
-                                      child: Text(AppLocalizations.of(context)!.bookLessonCaps),
+                                      child: Text(AppLocalizations.of(context)!
+                                          .bookLessonCaps),
                                     );
                                   } else {
                                     return Center(
@@ -497,7 +505,7 @@ class _BookLessonModalState extends State<BookLessonModal> {
                   );
                 }
               }
-              return  Text(AppLocalizations.of(context)!.noTimestamp);
+              return Text(AppLocalizations.of(context)!.noTimestamp);
             } else {
               return const Center(
                 child: CircularProgressIndicator(),
