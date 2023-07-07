@@ -23,7 +23,7 @@ class ClassCard extends StatelessWidget {
   //final String? userImageURL;
   final Timestamp? date;
   final List<dynamic>? timeslot;
-  final bool? isTutor;
+  final bool isTutor;
   final bool? lessonPage;
   const ClassCard(
       {super.key,
@@ -135,7 +135,9 @@ class ClassCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(35),
                 child: FutureBuilder(
-                    future: storage.downloadURL(student.profileImageURL!),
+                    future: (isTutor)
+                        ? storage.downloadURL(student.profileImageURL)
+                        : storage.downloadURL(tutor.profileImageURL),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return const Text("Something went wrong!");
@@ -202,7 +204,9 @@ class ClassCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    (isTutor!) ? "${AppLocalizations.of(context)!.student}:  " : "${AppLocalizations.of(context)!.tutor}:  ",
+                    (isTutor!)
+                        ? "${AppLocalizations.of(context)!.student}:  "
+                        : "${AppLocalizations.of(context)!.tutor}:  ",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Expanded(
