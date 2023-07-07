@@ -171,7 +171,7 @@ class _MsgState extends State<ChatMsg> {
                                           child: Wrap(children: [
                                         ListTile(
                                           onTap: () {
-                                            //send("l4t:;l0n:");
+                                            send("lat:;lon:");
                                           },
                                           //leading: ,
                                           leading: const Icon(
@@ -203,7 +203,7 @@ class _MsgState extends State<ChatMsg> {
                 IconButton(
                     onPressed: () {
                       if (contentController.text != "") {
-                        send();
+                        send("null");
                         if (_scrollController.hasClients) {
                           _scrollController.animateTo(
                               _scrollController.position.maxScrollExtent,
@@ -330,8 +330,11 @@ class _MsgState extends State<ChatMsg> {
     }
   }
 
-  Future send() async {
+  Future send(String content) async {
     try {
+      if (content == "null") {
+        content = contentController.text;
+      }
       String docId = "";
       final docUser = FirebaseFirestore.instance.collection('msg');
       final addMsg = Msg(
@@ -340,7 +343,7 @@ class _MsgState extends State<ChatMsg> {
           addtime: Timestamp.now(),
           from_uid: user.uid,
           //to_uid: widget.reciver.id,
-          content: contentController.text);
+          content: content);
       final json = addMsg.toFirestore();
       await docUser.add(json).then((DocumentReference doc) {
         docId = doc.id;

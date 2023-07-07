@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 //import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import '../../../component/utils.dart';
 import '../../../models/notification.dart';
 import '../../../models/scheduled.dart';
 import '../../../models/user.dart';
@@ -212,28 +213,7 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                                             .tutor!.numRating +
                                                         1
                                                   });
-                                                  final docNot =
-                                                      FirebaseFirestore.instance
-                                                          .collection(
-                                                              'notification');
-                                                  await docNot.add({}).then(
-                                                      (DocumentReference doc) {
-                                                    var notif = Notifications(
-                                                      id: doc.id,
-                                                      from_id: widget.student,
-                                                      to_id: widget.tutor!.id,
-                                                      type: "review",
-                                                      content: widget.title,
-                                                      view: false,
-                                                      eventId: widget.id,
-                                                      time: Timestamp.now(),
-                                                    );
-                                                    final json =
-                                                        notif.toFirestore();
-                                                    docNot
-                                                        .doc(doc.id)
-                                                        .update(json);
-                                                  });
+                                                  sendNot();
                                                   setState(() {
                                                     reviewed = true;
                                                   });
@@ -295,6 +275,29 @@ class _QrCodeScanState extends State<QrCodeScan> {
                         ],
                       )
                     ]))));
+  }
+
+  Future sendNot() async {
+    try {
+      final docNot = FirebaseFirestore.instance.collection('notification');
+      await docNot.add({}).then((DocumentReference doc) {
+        var notif = Notifications(
+          id: doc.id,
+          from_id: widget.student,
+          to_id: widget.tutor!.id,
+          type: "review",
+          content: widget.title,
+          view: false,
+          eventId: widget.id,
+          time: Timestamp.now(),
+        );
+        final json = notif.toFirestore();
+        docNot.doc(doc.id).update(json);
+      });
+    } on FirebaseAuthException catch (e) {
+      Utils.showSnackBar(e.message);
+      Navigator.of(context).pop();
+    }
   }
 
   void _onQRViewCreated(QRViewController controller) {

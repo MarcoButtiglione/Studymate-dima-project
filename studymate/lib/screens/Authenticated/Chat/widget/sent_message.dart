@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:line_icons/line_icons.dart';
 
 import 'custom_shape.dart';
 
@@ -43,10 +44,16 @@ class SentMessage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
-                      message!,
-                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                    ),
+                    (message!.contains("lat:") && message!.contains("lon:"))
+                        ? Icon(
+                            LineIcons.mapMarker,
+                            color: Color.fromARGB(255, 233, 64, 87),
+                          )
+                        : Text(
+                            message!,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 14),
+                          ),
                     Text.rich(TextSpan(children: [
                       TextSpan(
                           text: DateFormat.Hm().format(addTime!.toDate()),
