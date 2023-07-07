@@ -98,6 +98,14 @@
    "continueText": "Continuar",
    "scanValidQR": "Escanea un código QR válido.",
 
+   "notifications": "Notificaciones",
+   "newMessage": "¡Nuevo mensaje!",
+   "notifRequestTutoring": "ha enviado una solicitud de tutoría para:",
+   "accept": "Aceptar",
+   "reject": "Rechazar",
+   "acceptedTutoring": "ha aceptado tu solicitud de tutoría para la lección:",
+   "rejectedTutoring": "ha rechazado tu solicitud de tutoría para la lección:",
+
    "student": "Estudiante",
    "lessons": "Lecciones",
    "tutor": "Tutor",

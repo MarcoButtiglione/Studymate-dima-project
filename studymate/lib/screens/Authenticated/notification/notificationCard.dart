@@ -7,6 +7,8 @@ import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 import '../../../../service/storage_service.dart';
 import '../../../models/notification.dart';
 import '../../../models/user.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class NotificationCard extends StatelessWidget {
   final Notifications notification;
@@ -62,9 +64,9 @@ class NotificationCard extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const Expanded(
+                              Expanded(
                                 child: Text(
-                                  'New message!',
+                                  AppLocalizations.of(context)!.newMessage,
                                   style: TextStyle(
                                       color: const Color.fromARGB(
                                           255, 233, 64, 87),
@@ -119,7 +121,7 @@ class NotificationCard extends StatelessWidget {
                                     children: <TextSpan>[
                                       TextSpan(
                                         text:
-                                            'sent a request for tutoring for : ${notification.content}',
+                                            AppLocalizations.of(context)!.notifRequestTutoring+' ${notification.content}',
                                         /*QUI*/
                                         style: TextStyle(
                                             color: Colors.black,
@@ -183,7 +185,7 @@ class NotificationCard extends StatelessWidget {
                                         .doc(notification.id)
                                         .delete();
                                   },
-                                  child: const Text('Accept',
+                                  child: Text(AppLocalizations.of(context)!.accept,
                                       style: TextStyle(
                                         color:
                                             Color.fromARGB(255, 255, 255, 255),
@@ -224,7 +226,7 @@ class NotificationCard extends StatelessWidget {
                                         .doc(notification.id)
                                         .delete();
                                   },
-                                  child: const Text('Reject',
+                                  child: Text(AppLocalizations.of(context)!.reject,
                                       style: TextStyle(
                                         color: const Color.fromARGB(
                                             255, 233, 64, 87),
@@ -252,8 +254,8 @@ class NotificationCard extends StatelessWidget {
                                         TextSpan(
                                             text: (notification.type ==
                                                     "accept")
-                                                ? "accepted you're request for tutoring of lesson:${notification.content}"
-                                                : "rejected you're request for tutoring of lesson:${notification.content}",
+                                                ? AppLocalizations.of(context)!.acceptedTutoring+" ${notification.content}"
+                                                : AppLocalizations.of(context)!.rejectedTutoring+" ${notification.content}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.normal,
                                                 color: Colors.black)),

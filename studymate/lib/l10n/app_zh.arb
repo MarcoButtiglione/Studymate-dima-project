@@ -98,6 +98,15 @@
    "continueText": "继续",
    "scanValidQR": "扫描有效的二维码。",
 
+   "notifications": "通知",
+   "newMessage": "新消息！",
+   "notifRequestTutoring": "发出了辅导请求：",
+   "accept": "接受",
+   "reject": "拒绝",
+   "acceptedTutoring": "接受了你对课程的辅导请求：",
+   "rejectedTutoring": "拒绝了你对课程的辅导请求：",
+
+
    "student": "学生",
    "lessons": "课程",
    "tutor": "导师",

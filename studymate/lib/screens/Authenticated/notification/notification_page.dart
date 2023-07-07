@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:studymate/models/notification.dart';
 import 'package:studymate/screens/Authenticated/notification/notificationCard.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../models/user.dart';
 
@@ -52,8 +53,8 @@ class _NotificationState extends State<NotificationPage> {
                       Icons.arrow_back_ios,
                       size: 20,
                     )),
-                const Expanded(
-                    child: Text("Notifications",
+                Expanded(
+                    child: Text(AppLocalizations.of(context)!.notifications,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 25,

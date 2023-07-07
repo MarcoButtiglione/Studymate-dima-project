@@ -385,6 +385,37 @@
     },
 
 
+    "notifications":"Notifications",
+    "@notifications":{
+        "description": "Notifications"
+    },
+
+    "newMessage":"New message!",
+    "@newMessage":{
+        "description": "New message!"
+    },
+    "notifRequestTutoring":"sent a request for tutoring for:",
+    "@notifRequestTutoring":{
+        "description": "request for tutoring"
+    },
+    "accept":"Accept",
+    "@accept":{
+        "description": "Accept"
+    },
+    "reject":"Reject",
+    "@reject":{
+        "description": "Reject"
+    },
+    "acceptedTutoring":"accepted your request for tutoring of lesson:",
+    "@acceptedTutoring":{
+        "description": "Accepted tutoring"
+    },
+    "rejectedTutoring":"rejected your request for tutoring of lesson:",
+    "@rejectedTutoring":{
+        "description": "Rejected tutoring"
+    },
+
+
     "student":"Student",
     "@student":{
         "description": "Student"
