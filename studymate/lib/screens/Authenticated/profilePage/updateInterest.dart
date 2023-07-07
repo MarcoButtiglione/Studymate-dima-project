@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../../component/utils.dart';
 import '../../../models/category.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class updateInterest extends StatefulWidget {
   final List<String> interest;
@@ -44,7 +46,7 @@ class _IntrestState extends State<updateInterest> {
                           size: 20,
                         )),
                     Text(
-                      "Your Course of interest",
+                      AppLocalizations.of(context)!.yourInterestsTitle,
                       style: TextStyle(
                         fontFamily: "Crimson Pro",
                         fontSize: (w > 490 && h > 720) ? 50 : 25,
@@ -52,7 +54,7 @@ class _IntrestState extends State<updateInterest> {
                       ),
                     ),
                   ]),
-                  Text("Select a few of your course of interests.",
+                  Text( AppLocalizations.of(context)!.yourInterestsSubTitle,
                       style: TextStyle(
                         fontFamily: "Crimson Pro",
                         fontSize: (w > 490 && h > 720) ? 25 : 16,
@@ -107,7 +109,7 @@ class _IntrestState extends State<updateInterest> {
                         ),
                       ),
                       child: Text(
-                        "Continue",
+                         AppLocalizations.of(context)!.continueText,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: (w > 490 && h > 720) ? 30 : 16,
@@ -134,7 +136,7 @@ class _IntrestState extends State<updateInterest> {
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
       } else {
-        Utils.showSnackBar("select at least one course of interest");
+        Utils.showSnackBar( AppLocalizations.of(context)!.selectOneSubject);
         Navigator.of(context).pop();
       }
     } on FirebaseAuthException catch (e) {
