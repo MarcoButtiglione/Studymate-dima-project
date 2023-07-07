@@ -8,6 +8,8 @@ import '../../../../functions/routingAnimation.dart';
 import '../../../../models/category.dart';
 import '../../../../models/lesson.dart';
 import '../../../../service/storage_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class OwnLessonsProfilePage extends StatefulWidget {
   @override
@@ -67,7 +69,7 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Lesson successfully deleted.'),
+          content: Text(AppLocalizations.of(context)!.lessonDeleted),
         ),
       );
       setState(() {
@@ -146,24 +148,24 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                               showDialog<String>(
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
-                                  title: const Text(
-                                      'Do you want to delete the lesson?'),
-                                  content: const Text(
-                                      'Are you sure you want to delete the lesson? This operation is irreversible.'),
+                                  title: Text(
+                                      AppLocalizations.of(context)!.deleteLessontitle),
+                                  content:  Text(
+                                      AppLocalizations.of(context)!.deleteLessonSubTitle),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () =>
                                           Navigator.pop(context, 'Cancel'),
-                                      child: const Text('Cancel'),
+                                      child: Text(AppLocalizations.of(context)!.cancel),
                                     ),
                                     TextButton(
                                       onPressed: () {
                                         if (!isBusy) {
                                           deleteLessons(lessonId: lesson.id!);
-                                          Navigator.pop(context, 'Cancel');
+                                          Navigator.pop(context, 'Ok');
                                         }
                                       },
-                                      child: const Text('OK'),
+                                      child: Text(AppLocalizations.of(context)!.ok),
                                     ),
                                   ],
                                 ),
@@ -172,23 +174,23 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                           },
                           itemBuilder: (BuildContext context) =>
                               <PopupMenuEntry<String>>[
-                            const PopupMenuItem<String>(
+                            PopupMenuItem<String>(
                               value: 'edit',
                               child: Row(
                                 children: [
                                   Icon(Icons.edit),
                                   SizedBox(width: 16),
-                                  Text('Edit lesson'),
+                                  Text(AppLocalizations.of(context)!.editLesson),
                                 ],
                               ),
                             ),
-                            const PopupMenuItem<String>(
+                            PopupMenuItem<String>(
                               value: 'delete',
                               child: Row(
                                 children: [
                                   Icon(Icons.delete),
                                   SizedBox(width: 16),
-                                  Text('Delete lesson'),
+                                  Text(AppLocalizations.of(context)!.deleteLesson),
                                 ],
                               ),
                             ),
@@ -199,7 +201,7 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                     .toList(),
               );
             } else {
-              return const Text("No own lessons.");
+              return Text(AppLocalizations.of(context)!.noOwnLesson);
             }
           } else {
             return const Center(

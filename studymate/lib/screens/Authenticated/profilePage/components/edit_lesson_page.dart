@@ -9,6 +9,7 @@ import '../../../../component/utils.dart';
 import '../../../../functions/routingAnimation.dart';
 import '../../../../models/category.dart';
 import '../../createLesson/components/dropdownCategory.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Stream<List<Category>> readCategory() => FirebaseFirestore.instance
     .collection('categories')
@@ -77,7 +78,7 @@ class _EditLessonPageState extends State<EditLessonPage> {
         isBusy = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lesson edited!')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.lessonEdited)),
       );
       
     } on FirebaseAuthException catch (e) {
@@ -131,8 +132,8 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                         Icons.arrow_back_ios,
                                         size: 20,
                                       )),
-                                  const Expanded(
-                                      child: Text("Edit the lesson",
+                                  Expanded(
+                                      child: Text(AppLocalizations.of(context)!.editLessonTitle,
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             fontSize: 25,
@@ -145,15 +146,15 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                   controller: titleController,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter some text';
+                                      return AppLocalizations.of(context)!.pleaseEnterText;
                                     }
                                     return null;
                                   },
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   decoration: InputDecoration(
-                                    labelText: "Title",
-                                    hintText: "Type the title of your lesson",
+                                    labelText: AppLocalizations.of(context)!.title,
+                                    hintText: AppLocalizations.of(context)!.titleFieldHint,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
                                       borderSide:
@@ -183,7 +184,7 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                 TextFormField(
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter some text';
+                                      return AppLocalizations.of(context)!.pleaseEnterText;
                                     }
                                     return null;
                                   },
@@ -196,7 +197,7 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                   decoration: InputDecoration(
                                     //labelText: "Description",
                                     hintText:
-                                        "Type the description of your lesson",
+                                        AppLocalizations.of(context)!.descriptionFieldHint,
       
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
@@ -254,11 +255,11 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                               });
                                             } else {
                                               Utils.showSnackBar(
-                                                  "Edit at least one field");
+                                                  AppLocalizations.of(context)!.editOneField);
                                             }
                                           }
                                         },
-                                        child: const Text('Submit',
+                                        child: Text(AppLocalizations.of(context)!.submit,
                                             style: TextStyle(
                                               color: Color.fromARGB(
                                                   255, 255, 255, 255),

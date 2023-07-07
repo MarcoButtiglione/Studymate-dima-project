@@ -229,8 +229,121 @@
     },
 
 
+    "helperHoursAvailable":"You have {numberOfHours} hours available to spend on other lessons. Finish some lessons or create new ones to get more.",
+    "@helperHoursAvailable":{
+        "description": "Text modal hours available",
+        "placeholders": {
+            "numberOfHours": {
+                "type": "int"
+            }
+        }
+    },   
+    "noImgSelected":"No image selected",
+    "@noImgSelected":{
+        "description": "No image selected"
+    },   
+    "noImgCropped":"No image cropped",
+    "@noImgCropped":{
+        "description": "No image cropped"
+    },  
+    "imgLoaded":"Image loaded",
+    "@imgLoaded":{
+        "description": "Image loaded"
+    },     
+    "close":"Close",
+    "@close":{
+        "description": "Close"
+    },
+    "editPreferences":"Edit preferences",
+    "@editPreferences":{
+        "description": "Edit preferences"
+    },
+    "insertTimeslots":"Insert timeslots",
+    "@insertTimeslots":{
+        "description": "Insert timeslots"
+    },
+    "editTimeslots":"Edit timeslots",
+    "@editTimeslots":{
+        "description": "Edit timeslots"
+    },
+    "logout":"Logout",
+    "@logout":{
+        "description": "Logout"
+    },
+    "browseGallery":"Browse Gallery",
+    "@browseGallery":{
+        "description": "Browse Gallery"
+    },
+    "or":"or",
+    "@or":{
+        "description": "or"
+    },
+    "useCamera":"Use a Camera",
+    "@useCamera":{
+        "description": "Use a Camera"
+    },
+    "reviews":"reviews",
+    "@reviews":{
+        "description": "reviews"
+    },
+    "rating":"rating",
+    "@rating":{
+        "description": "rating"
+    },
+    "ownLesson":"Own lessons",
+    "@ownLesson":{
+        "description": "Own lessons"
+    },
+    "saved":"Saved",
+    "@saved":{
+        "description": "Saved"
+    },
+    "noLessonsSaved":"No lessons saved.",
+    "@noLessonsSaved":{
+        "description": "No lessons saved."
+    },
 
+    "lessonDeleted":"Lesson successfully deleted.",
+    "@lessonDeleted":{
+        "description": "Lesson successfully deleted."
+    },
+    "deleteLessontitle":"Do you want to delete the lesson?",
+    "@deleteLessonTitle":{
+        "description": "Delete Lesson Title"
+    },
+    "deleteLessonSubTitle":"Are you sure you want to delete the lesson? This operation is irreversible.",
+    "@deleteLessonTitle":{
+        "description": "Delete Lesson SubTitle"
+    },
+    "ok":"Ok",
+    "@ok":{
+        "description": "Ok"
+    },
+    "editLesson":"Edit lesson",
+    "@editLesson":{
+        "description": "Edit lesson"
+    },
+    "deleteLesson":"Delete lesson",
+    "@deleteLesson":{
+        "description": "Delete lesson"
+    },
+    "noOwnLesson":"No own lessons.",
+    "@noOwnLesson":{
+        "description": "No own lessons."
+    },
 
+    "lessonEdited":"Lesson edited!",
+    "@lessonEdited":{
+        "description": "Lesson edited!"
+    },
+    "editLessonTitle":"Edit the lesson",
+    "@editLessonTitle":{
+        "description": "Edit the lesson"
+    },
+    "editOneField":"Edit at least one field",
+    "@editOneField":{
+        "description": "Edit at least one field"
+    },
 
 
     "student":"Student",

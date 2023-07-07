@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studymate/screens/Authenticated/profilePage/components/own_lessons_profile_page.dart';
 import 'package:studymate/screens/Authenticated/profilePage/components/saved_lessons_profile_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum ProfilePageSection { onwlesson, saved }
 
@@ -24,14 +25,14 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
     return Column(
       children: [
         SegmentedButton<ProfilePageSection>(
-          segments: const <ButtonSegment<ProfilePageSection>>[
+          segments: <ButtonSegment<ProfilePageSection>>[
             ButtonSegment<ProfilePageSection>(
                 value: ProfilePageSection.onwlesson,
-                label: Text('Own lessons'),
+                label: Text(AppLocalizations.of(context)!.ownLesson),
                 icon: Icon(Icons.calendar_view_day)),
             ButtonSegment<ProfilePageSection>(
                 value: ProfilePageSection.saved,
-                label: Text('Saved'),
+                label: Text(AppLocalizations.of(context)!.saved),
                 icon: Icon(Icons.favorite)),
           ],
           selected: <ProfilePageSection>{selectedView},

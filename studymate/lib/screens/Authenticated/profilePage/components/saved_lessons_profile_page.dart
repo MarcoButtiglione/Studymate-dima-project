@@ -6,6 +6,8 @@ import 'package:studymate/models/savedLesson.dart';
 import '../../../../models/lesson.dart';
 import '../../../../service/storage_service.dart';
 import '../../common_widgets/lesson_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SavedLessonsProfilePage extends StatefulWidget {
   @override
@@ -66,7 +68,7 @@ class _SavedLessonsProfilePageState extends State<SavedLessonsProfilePage> {
                     .toList(),
               );
             } else {
-              return const Text('No lessons saved.');
+              return Text(AppLocalizations.of(context)!.noLessonsSaved);
             }
           } else {
             return const Center(

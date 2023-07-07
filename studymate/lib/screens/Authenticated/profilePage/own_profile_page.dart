@@ -19,6 +19,8 @@ import '../../../functions/routingAnimation.dart';
 import '../../../models/category.dart';
 import '../../../models/timeslot.dart';
 import 'components/hoursselection_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class OwnProfilePage extends StatefulWidget {
   @override
@@ -47,7 +49,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
       if (image == null) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('No image selected')));
+            .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.noImgSelected)));
         return;
       }
       File? img = File(image.path);
@@ -56,7 +58,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
       if (img == null) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('No image cropped')));
+            .showSnackBar( SnackBar(content: Text(AppLocalizations.of(context)!.noImgCropped)));
         return;
       }
 
@@ -72,7 +74,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
               .doc(user.uid)
               .update({'profileImage': 'profilePictures/$fileName'}));
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Image loaded')));
+          .showSnackBar( SnackBar(content: Text(AppLocalizations.of(context)!.imgLoaded)));
       setState(() {
         _image = img;
       });
@@ -249,13 +251,12 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                   ),
                                 ],
                               ),
-                              content: Text(
-                                  'You have ${us.hours} hours available to spend on other lessons. Finish some lessons or create new ones to get more.'),
+                              content: Text(AppLocalizations.of(context)!.helperHoursAvailable(us.hours)),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, 'Close'),
-                                  child: const Text('Close'),
+                                  child: Text(AppLocalizations.of(context)!.close),
                                 ),
                               ],
                             ),
@@ -327,7 +328,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                                   )));
                                     },
                                     leading: const Icon(Icons.favorite),
-                                    title: const Text('Edit preferences'),
+                                    title: Text(AppLocalizations.of(context)!.editPreferences),
                                   ),
                                   (() {
                                     if (ts.isEmpty) {
@@ -341,7 +342,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                           return;
                                         },
                                         leading: const Icon(Icons.schedule),
-                                        title: const Text('Insert timeslots'),
+                                        title: Text(AppLocalizations.of(context)!.insertTimeslots),
                                       );
                                     } else {
                                       return ListTile(
@@ -355,7 +356,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                           return;
                                         },
                                         leading: const Icon(Icons.schedule),
-                                        title: const Text('Edit timeslots'),
+                                        title:  Text(AppLocalizations.of(context)!.editTimeslots),
                                       );
                                     }
                                   }()),
@@ -377,7 +378,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                             });
                                           },
                                           leading: const Icon(Icons.logout),
-                                          title: const Text('Logout'),
+                                          title: Text(AppLocalizations.of(context)!.logout),
                                         ),
                                 ],
                               ),
@@ -490,7 +491,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                             _pickImage(ImageSource.gallery);
                                             return;
                                           }),
-                                          child: const Row(
+                                          child:  Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
@@ -498,16 +499,16 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                               SizedBox(
                                                 width: 5,
                                               ),
-                                              Text('Browse Gallery'),
+                                              Text(AppLocalizations.of(context)!.browseGallery),
                                             ],
                                           )),
-                                      const Text('or'),
+                                      Text(AppLocalizations.of(context)!.or),
                                       ElevatedButton(
                                           onPressed: (() {
                                             _pickImage(ImageSource.camera);
                                             return;
                                           }),
-                                          child: const Row(
+                                          child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
@@ -515,7 +516,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                               SizedBox(
                                                 width: 5,
                                               ),
-                                              Text('Use a Camera'),
+                                              Text(AppLocalizations.of(context)!.useCamera),
                                             ],
                                           )),
                                     ],
@@ -574,7 +575,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                 children: [
                   Card(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                       child: SizedBox(
                         child: Column(
                           children: [
@@ -585,7 +586,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                 fontSize: 15,
                               ),
                             ),
-                            const Text('reviews'),
+                            Text(AppLocalizations.of(context)!.reviews),
                           ],
                         ),
                       ),
@@ -593,7 +594,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                   ),
                   Card(
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                       child: SizedBox(
                         child: Column(
                           children: [
@@ -604,7 +605,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                 fontSize: 15,
                               ),
                             ),
-                            Text('rating'),
+                            Text(AppLocalizations.of(context)!.rating),
                           ],
                         ),
                       ),
