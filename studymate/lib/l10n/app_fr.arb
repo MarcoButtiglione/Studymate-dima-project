@@ -9,6 +9,18 @@
    "skipCaps": "PASSER",
    "nextCaps": "SUIVANT",
 
+   "login": "Connexion",
+   "email": "Email",
+   "validEmail": "Veuillez saisir une adresse email valide",
+   "password": "Mot de passe",
+   "enterPassword": "Entrez le mot de passe",
+   "forgotPassword": "Mot de passe oublié ?",
+   "loginCaps": "CONNEXION",
+   "noAccountQustion": "Vous n'avez pas de compte ?",
+   "signUp": "S'inscrire",
+   "orSignGoogle": "ou se connecter avec Google",
+   "buttonSignUpGoogle": "S'inscrire avec Google",
+
    "welcome": "Bienvenue",
    "suggestedTitle": "Suggestions pour vous",
    "suggestedSubTitle": "Voici une liste de tuteurs communautaires possibles avec qui vous pourriez étudier.",

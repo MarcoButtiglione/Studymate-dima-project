@@ -36,6 +36,51 @@
         "description": "NEXT"
     },
 
+    "login":"Login",
+    "@login":{
+        "description": "Login"
+    },
+    "email":"Email",
+    "@email":{
+        "description": "Email"
+    },
+    "validEmail":"Enter a valid email",
+    "@validEmail":{
+        "description": "Enter a valid email"
+    },
+    "password":"Password",
+    "@password":{
+        "description": "Password"
+    },
+    "enterPassword":"Enter password",
+    "@enterPassword":{
+        "description": "Enter password"
+    },
+    "forgotPassword":"Forgot your password?",
+    "@forgotPassword":{
+        "description": "Forgot your password?"
+    },
+    "loginCaps":"LOGIN",
+    "@loginCaps":{
+        "description": "LOGIN"
+    },
+    "noAccountQustion":"Don't Have an Account?",
+    "@noAccountQustion":{
+        "description": "Don't Have an Account?"
+    },
+    "signUp":"Sign Up",
+    "@signUp":{
+        "description": "Sign Up"
+    },
+    "orSignGoogle":"or sign in with google",
+    "@orSignGoogle":{
+        "description": "orSignGoogle message"
+    },
+    "buttonSignUpGoogle":"Sign Up with Google",
+    "@buttonSignUpGoogle":{
+        "description": "button text sign up google"
+    },
+
     "welcome":"Welcome",
     "@welcome":{
         "description": "Welcome message homepage"

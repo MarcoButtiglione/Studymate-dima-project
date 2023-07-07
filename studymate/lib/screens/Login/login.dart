@@ -9,6 +9,8 @@ import 'package:studymate/screens/Login/reset.dart';
 
 import '../../provider/authentication.dart';
 import '../Authenticated/authenticated.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class Login extends StatefulWidget {
   @override
@@ -49,7 +51,7 @@ class _LoginState extends State<Login> {
                   ),
                   Column(mainAxisAlignment: MainAxisAlignment.end, children: [
                     Text(
-                      "Login",
+                      AppLocalizations.of(context)!.login,
                       style: TextStyle(
                         fontFamily: "Crimson Pro",
                         fontWeight: FontWeight.bold,
@@ -64,7 +66,7 @@ class _LoginState extends State<Login> {
                         controller: emailController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
-                          labelText: "Email",
+                          labelText: AppLocalizations.of(context)!.email,
                           labelStyle: TextStyle(
                               fontSize: (w > 490 && h > 720) ? 25 : 14),
                           hintStyle: TextStyle(
@@ -75,7 +77,7 @@ class _LoginState extends State<Login> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (email) =>
                             email != null && !EmailValidator.validate(email)
-                                ? 'Enter a valid email'
+                                ? AppLocalizations.of(context)!.validEmail
                                 : null,
                         style:
                             TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
@@ -89,7 +91,7 @@ class _LoginState extends State<Login> {
                         controller: passwordController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
-                          labelText: "Password",
+                          labelText: AppLocalizations.of(context)!.password,
                           labelStyle: TextStyle(
                               fontSize: (w > 490 && h > 720) ? 25 : 14),
                           hintStyle: TextStyle(
@@ -100,7 +102,7 @@ class _LoginState extends State<Login> {
                         obscureText: true,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) => value != null && value.isEmpty
-                            ? 'Enter password'
+                            ? AppLocalizations.of(context)!.enterPassword
                             : null,
                         style:
                             TextStyle(fontSize: (w > 490 && h > 720) ? 25 : 14),
@@ -116,7 +118,7 @@ class _LoginState extends State<Login> {
                               MaterialPageRoute(builder: (context) => Reset())),
                         },
                         child: Text(
-                          "Forgot your password?",
+                          AppLocalizations.of(context)!.forgotPassword,
                           style: TextStyle(
                               fontSize: (w > 490 && h > 720) ? 20 : 12,
                               color: Color.fromARGB(156, 65, 62, 88)),
@@ -139,7 +141,7 @@ class _LoginState extends State<Login> {
                             elevation: 0,
                           ),
                           child: Text(
-                            "LOGIN",
+                            AppLocalizations.of(context)!.loginCaps,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: (w > 490 && h > 720) ? 30 : 16,
@@ -156,7 +158,7 @@ class _LoginState extends State<Login> {
                               style: TextStyle(
                                   fontSize: (w > 490 && h > 720) ? 20 : 12,
                                   color: Color.fromARGB(156, 65, 62, 88)),
-                              text: "Don't Have an Account?",
+                              text: AppLocalizations.of(context)!.noAccountQustion,
                               children: [
                             TextSpan(
                               recognizer: TapGestureRecognizer()
@@ -164,7 +166,7 @@ class _LoginState extends State<Login> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Register())),
-                              text: ' SignUp',
+                              text: ' '+AppLocalizations.of(context)!.signUp,
                               style: TextStyle(
                                   fontSize: (w > 490 && h > 720) ? 20 : 12,
                                   color: Color.fromARGB(255, 233, 64, 87)),
@@ -189,7 +191,7 @@ class _LoginState extends State<Login> {
                               ),
                             ),
                             Text(
-                              "or sign in with google",
+                              AppLocalizations.of(context)!.orSignGoogle,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -251,7 +253,7 @@ class _LoginState extends State<Login> {
                                         width: 10,
                                       ),
                                       Text(
-                                        "Sign Up with Google",
+                                        AppLocalizations.of(context)!.buttonSignUpGoogle,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,

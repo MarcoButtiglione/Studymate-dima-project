@@ -9,6 +9,18 @@
    "skipCaps": "OMITIR",
    "nextCaps": "SIGUIENTE",
 
+   "login": "Iniciar sesión",
+   "email": "Correo electrónico",
+   "validEmail": "Ingrese un correo electrónico válido",
+   "password": "Contraseña",
+   "enterPassword": "Ingrese la contraseña",
+   "forgotPassword": "¿Olvidaste tu contraseña?",
+   "loginCaps": "INICIAR SESIÓN",
+   "noAccountQustion": "¿No tienes una cuenta?",
+   "signUp": "Registrarse",
+   "orSignGoogle": "o iniciar sesión con Google",
+   "buttonSignUpGoogle": "Registrarse con Google",
+
    "welcome": "Bienvenido",
    "suggestedTitle": "Sugerido para ti",
    "suggestedSubTitle": "Esta es una lista de posibles tutores comunitarios con los que podrías estudiar.",

@@ -9,6 +9,18 @@
    "skipCaps": "SALTA",
    "nextCaps": "AVANTI",
 
+   "login": "Accedi",
+   "email": "Email",
+   "validEmail": "Inserisci un'email valida",
+   "password": "Password",
+   "enterPassword": "Inserisci la password",
+   "forgotPassword": "Password dimenticata?",
+   "loginCaps": "ACCEDI",
+   "noAccountQustion": "Non hai un account?",
+   "signUp": "Registrati",
+   "orSignGoogle": "oppure accedi con Google",
+   "buttonSignUpGoogle": "Accedi con Google",
+
    "welcome": "Benvenuto",
    "suggestedTitle": "Suggerimenti per te",
    "suggestedSubTitle": "Questa è una lista di possibili tutor della community con cui potresti studiare.",

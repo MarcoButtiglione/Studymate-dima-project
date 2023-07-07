@@ -117,7 +117,7 @@ class _ResetState extends State<Reset> {
                               style: TextStyle(
                                   fontSize: (w > 490 && h > 720) ? 20 : 12,
                                   color: Color.fromARGB(156, 65, 62, 88)),
-                              text: "Password recieved,",
+                              text: "Password received,",
                               children: [
                             TextSpan(
                               recognizer: TapGestureRecognizer()

@@ -9,7 +9,19 @@
    "skipCaps": "ÜBERSPRINGEN",
    "nextCaps": "WEITER",
 
-   
+   "login": "Anmelden",
+   "email": "E-Mail",
+   "validEmail": "Geben Sie eine gültige E-Mail-Adresse ein",
+   "password": "Passwort",
+   "enterPassword": "Passwort eingeben",
+   "forgotPassword": "Passwort vergessen?",
+   "loginCaps": "ANMELDEN",
+   "noAccountQustion": "Sie haben noch kein Konto?",
+   "signUp": "Registrieren",
+   "orSignGoogle": "oder mit Google anmelden",
+   "buttonSignUpGoogle": "Mit Google anmelden",
+
+
    "welcome": "Willkommen",
    "suggestedTitle": "Vorschlag für dich",
    "suggestedSubTitle": "Dies ist eine Liste möglicher Community-Tutoren, mit denen du studieren könntest.",

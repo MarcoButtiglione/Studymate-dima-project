@@ -9,6 +9,18 @@
    "skipCaps": "跳过",
    "nextCaps": "下一步",
 
+   "login": "登录",
+   "email": "电子邮件",
+   "validEmail": "请输入有效的电子邮件",
+   "password": "密码",
+   "enterPassword": "输入密码",
+   "forgotPassword": "忘记密码？",
+   "loginCaps": "登录",
+   "noAccountQustion": "还没有账号？",
+   "signUp": "注册",
+   "orSignGoogle": "或使用 Google 登录",
+   "buttonSignUpGoogle": "使用 Google 注册",
+
    "welcome": "欢迎",
    "suggestedTitle": "为您推荐",
    "suggestedSubTitle": "这是一份可能与之一起学习的社区导师列表。",
