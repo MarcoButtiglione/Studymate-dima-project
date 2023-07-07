@@ -134,7 +134,7 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      (reviewed)
+                                      (!reviewed)
                                           ? Text(
                                               AppLocalizations.of(context)!.leaveReview,
                                               style: TextStyle(
@@ -204,7 +204,7 @@ class _QrCodeScanState extends State<QrCodeScan> {
                                                       .collection("users")
                                                       .doc(widget.tutor!.id)
                                                       .update({
-                                                    'userRating': updateRating,
+                                                    'userRating': updateRating.toString(),
                                                     'numRating': widget
                                                             .tutor!.numRating +
                                                         1
