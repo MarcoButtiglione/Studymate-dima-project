@@ -384,6 +384,15 @@
         "description": "Scan a valid Qr Code."
     },
 
+    "lessonDone":"Lesson done!",
+    "@lessonDone":{
+        "description": "lesson done"
+    },
+    "thanksLessonDone":"Thank for sharing your knowledge, we've added hours to your time credit!",
+    "@thanksLessonDone":{
+        "description": "thanks lesson done"
+    },
+
 
     "notifications":"Notifications",
     "@notifications":{

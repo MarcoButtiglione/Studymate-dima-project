@@ -98,6 +98,9 @@
    "continueText": "继续",
    "scanValidQR": "扫描有效的二维码。",
 
+   "lessonDone": "课程完成！",
+   "thanksLessonDone": "感谢您分享知识，我们已将小时数添加到您的时间积分中！",
+
    "notifications": "通知",
    "newMessage": "新消息！",
    "notifRequestTutoring": "发出了辅导请求：",

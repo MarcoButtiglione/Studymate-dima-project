@@ -128,11 +128,11 @@ class _QrCodeGenerateState extends State<QrCodeGenerate> {
                                           Icons.arrow_back_ios,
                                           size: 20,
                                         )),
-                                    const Expanded(
+                                    Expanded(
                                         child: Text(
                                             /*AppLocalizations.of(context)!
                                                 .scanQrCodeTitle,*/
-                                            "Lesson done!",
+                                            AppLocalizations.of(context)!.lessonDone,
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: Color.fromARGB(
@@ -142,12 +142,12 @@ class _QrCodeGenerateState extends State<QrCodeGenerate> {
                                             ))),
                                   ]),
                                   const SizedBox(height: 10),
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.all(10.0),
                                     child: Text(
                                         /*AppLocalizations.of(context)!
                                             .scanQrCodeGenSubTitle,*/
-                                        "Thank for sharing your knowledge, we've added hours to your time credit!",
+                                        AppLocalizations.of(context)!.thanksLessonDone,
                                         style: TextStyle(
                                           fontFamily: "Crimson Pro",
                                           fontSize: 16,

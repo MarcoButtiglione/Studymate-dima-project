@@ -98,6 +98,10 @@
    "continueText": "Continuer",
    "scanValidQR": "Scannez un code QR valide.",
 
+   "lessonDone": "Leçon terminée !",
+   "thanksLessonDone": "Merci d'avoir partagé vos connaissances. Nous avons ajouté des heures à votre crédit de temps !",
+   
+
    "notifications": "Notifications",
    "newMessage": "Nouveau message !",
    "notifRequestTutoring": "a envoyé une demande de tutorat pour :",
