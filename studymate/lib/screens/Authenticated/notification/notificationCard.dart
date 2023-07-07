@@ -120,6 +120,7 @@ class NotificationCard extends StatelessWidget {
                                       TextSpan(
                                         text:
                                             'sent a request for tutoring for : ${notification.content}',
+                                        /*QUI*/
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.normal),
@@ -164,9 +165,8 @@ class NotificationCard extends StatelessWidget {
                                         id: doc.id,
                                         from_id: currUser.uid,
                                         to_id: user.id,
-                                        type: "response",
-                                        content:
-                                            "accepted your request of tutoring for : ${notification.content}",
+                                        type: "accept",
+                                        content: notification.content,
                                         view: false,
                                         time: Timestamp.now(),
                                       );
@@ -206,9 +206,8 @@ class NotificationCard extends StatelessWidget {
                                         id: doc.id,
                                         from_id: currUser.uid,
                                         to_id: user.id,
-                                        type: "response",
-                                        content:
-                                            "rejected your request of tutoring for : ${notification.content}",
+                                        type: "reject",
+                                        content: notification.content,
                                         view: false,
                                         time: Timestamp.now(),
                                       );
@@ -251,7 +250,10 @@ class NotificationCard extends StatelessWidget {
                                           color: Colors.black),
                                       children: <TextSpan>[
                                         TextSpan(
-                                            text: notification.content,
+                                            text: (notification.type ==
+                                                    "accept")
+                                                ? "accepted you're request for tutoring of lesson:${notification.content}"
+                                                : "rejected you're request for tutoring of lesson:${notification.content}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.normal,
                                                 color: Colors.black)),
