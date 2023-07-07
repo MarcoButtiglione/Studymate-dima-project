@@ -166,7 +166,7 @@ class _NextScheduledState extends State<NextScheduled> {
                           schedules = snapshot.data!;
                           if (schedules.isNotEmpty) {
                             if (selectedCategory == "" ||
-                                selectedCategory == "Category") {
+                                selectedCategory == "--") {
                               if (selectedLession != "") {
                                 schedules.removeWhere((element) =>
                                     element.title != selectedLession);
@@ -192,7 +192,7 @@ class _NextScheduledState extends State<NextScheduled> {
                         return Column(
                           children: [
                             TableCalendar(
-                              locale: "en_US",
+                              locale: Localizations.localeOf(context).languageCode,
                               rowHeight: 40,
                               headerStyle: const HeaderStyle(
                                   formatButtonVisible: false,

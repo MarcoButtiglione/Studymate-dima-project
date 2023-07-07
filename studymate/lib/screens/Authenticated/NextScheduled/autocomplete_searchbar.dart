@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:substring_highlight/substring_highlight.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AutocompleteSearchbar extends StatefulWidget {
   final Function(String) onSelected;
@@ -128,7 +129,7 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
                 ),
-                hintText: "Search",
+                hintText: AppLocalizations.of(context)!.search,
                 prefixIcon: IconButton(
                     onPressed: () {
                       controller.clear();

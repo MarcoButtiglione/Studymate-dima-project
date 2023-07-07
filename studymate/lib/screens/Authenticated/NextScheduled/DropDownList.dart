@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 
 class DropdownCategory extends StatefulWidget {
@@ -27,7 +29,7 @@ class _DropdownCategoryState extends State<DropdownCategory> {
 
   Future<void> getData() async {
     List<String> c = [];
-    c.add("Category");
+    c.add("--");
     QuerySnapshot querySnapshot = await _catRef.get();
     //var allData = 
     querySnapshot.docs.map((doc) {
@@ -47,8 +49,8 @@ class _DropdownCategoryState extends State<DropdownCategory> {
       child: DropdownButtonFormField<String>(
         value: dropdownValue,
         decoration: InputDecoration(
-          labelText: "Category",
-          hintText: "Select the category of your lesson",
+          labelText:AppLocalizations.of(context)!.category,
+          hintText: AppLocalizations.of(context)!.categoryFieldHint,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: Colors.grey[300]!),
