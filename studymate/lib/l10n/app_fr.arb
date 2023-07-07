@@ -1,4 +1,14 @@
 {
+   "onBoardTitle1": "Besoin d'aide ?",
+   "onBoardSubTitle1": "Utilisez StudyMate pour trouver un tuteur qui vous soutiendra",
+   "onBoardTitle2": "Apporter de l'aide",
+   "onBoardSubTitle2": "Aidez quelqu'un à réussir les examens que vous avez réussis avec succès !",
+   "onBoardTitle3": "Recevoir de l'aide",
+   "onBoardSubTitle3": "En échange, recevez de l'aide pour réussir les vôtres !",
+   "startCaps": "DÉMARRER",
+   "skipCaps": "PASSER",
+   "nextCaps": "SUIVANT",
+
    "welcome": "Bienvenue",
    "suggestedTitle": "Suggestions pour vous",
    "suggestedSubTitle": "Voici une liste de tuteurs communautaires possibles avec qui vous pourriez étudier.",
@@ -100,7 +110,7 @@
 
    "lessonDone": "Leçon terminée !",
    "thanksLessonDone": "Merci d'avoir partagé vos connaissances. Nous avons ajouté des heures à votre crédit de temps !",
-   
+
 
    "notifications": "Notifications",
    "newMessage": "Nouveau message !",

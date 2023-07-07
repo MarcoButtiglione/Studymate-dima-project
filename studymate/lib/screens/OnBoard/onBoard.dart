@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studymate/screens/Login/login.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardModel {
   String img;
@@ -17,23 +18,6 @@ class OnBoard extends StatefulWidget {
 class _OnBoardState extends State<OnBoard> {
   int _currentPage = 0;
   late PageController _pageController;
-  List<OnboardModel> content = <OnboardModel>[
-    OnboardModel(
-      img: 'assets/boarding/img-1.png',
-      text: "Need help?",
-      desc: "Use MutualTutor to find a tutor to support you",
-    ),
-    OnboardModel(
-      img: 'assets/boarding/img-2.png',
-      text: "Give Help",
-      desc: "Help someone pass exams that you've succesfully pass!",
-    ),
-    OnboardModel(
-      img: 'assets/boarding/img-3.png',
-      text: "Recive Help",
-      desc: "In exchange, recive help passing yours!",
-    ),
-  ];
 
   @override
   void initState() {
@@ -66,17 +50,34 @@ class _OnBoardState extends State<OnBoard> {
 
   @override
   Widget build(BuildContext context) {
+    List<OnboardModel> content = <OnboardModel>[
+      OnboardModel(
+        img: 'assets/boarding/img-1.png',
+        text: AppLocalizations.of(context)!.onBoardTitle1,
+        desc: AppLocalizations.of(context)!.onBoardSubTitle1,
+      ),
+      OnboardModel(
+        img: 'assets/boarding/img-2.png',
+        text: AppLocalizations.of(context)!.onBoardTitle2,
+        desc: AppLocalizations.of(context)!.onBoardSubTitle2,
+      ),
+      OnboardModel(
+        img: 'assets/boarding/img-3.png',
+        text: AppLocalizations.of(context)!.onBoardTitle3,
+        desc: AppLocalizations.of(context)!.onBoardSubTitle3,
+      ),
+    ];
     Size size = MediaQuery.of(context).size;
     double width = size.width;
     double height = size.height;
     if (width >= height) {
-      return horizontalView(width, height);
+      return horizontalView(width, height,content);
     } else {
-      return verticalView(width, height);
+      return verticalView(width, height,content);
     }
   }
 
-  Widget verticalView(double width, double height) {
+  Widget verticalView(double width, double height,List<OnboardModel> content) {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: SafeArea(
@@ -171,7 +172,7 @@ class _OnBoardState extends State<OnBoard> {
                                       horizontal: width * 0.2, vertical: 25),
                             ),
                             child: Text(
-                              "START",
+                              AppLocalizations.of(context)!.startCaps,
                               style: TextStyle(
                                 fontSize:
                                     (width > 490 && height > 720) ? 30 : 16,
@@ -197,7 +198,7 @@ class _OnBoardState extends State<OnBoard> {
                                   ),
                                 ),
                                 child: Text(
-                                  "SKIP",
+                                  AppLocalizations.of(context)!.skipCaps,
                                   style: TextStyle(
                                       fontSize: (width > 490 && height > 720)
                                           ? 30
@@ -226,7 +227,7 @@ class _OnBoardState extends State<OnBoard> {
                                           horizontal: 30, vertical: 25),
                                 ),
                                 child: Text(
-                                  "NEXT",
+                                  AppLocalizations.of(context)!.nextCaps,
                                   style: TextStyle(
                                     fontSize:
                                         (width > 490 && height > 720) ? 30 : 16,
@@ -262,7 +263,7 @@ class _OnBoardState extends State<OnBoard> {
     );
   }
 
-  Widget horizontalView(double width, double height) {
+  Widget horizontalView(double width, double height,List<OnboardModel> content) {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: SafeArea(
@@ -344,7 +345,7 @@ class _OnBoardState extends State<OnBoard> {
                               EdgeInsets.symmetric(horizontal: 0.2 * width),
                         ),
                         child: Text(
-                          "START",
+                          AppLocalizations.of(context)!.startCaps,
                           style: TextStyle(
                             fontSize: (width > 490 && height > 720) ? 30 : 16,
                             color: const Color.fromARGB(255, 255, 255, 255),
@@ -371,7 +372,7 @@ class _OnBoardState extends State<OnBoard> {
                                   EdgeInsets.symmetric(horizontal: 0.1 * width),
                             ),
                             child: Text(
-                              "SKIP",
+                              AppLocalizations.of(context)!.skipCaps,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize:
@@ -408,7 +409,7 @@ class _OnBoardState extends State<OnBoard> {
                                   EdgeInsets.symmetric(horizontal: 0.1 * width),
                             ),
                             child: Text(
-                              "NEXT",
+                              AppLocalizations.of(context)!.nextCaps,
                               style: TextStyle(
                                 fontSize:
                                     (width > 490 && height > 720) ? 30 : 16,

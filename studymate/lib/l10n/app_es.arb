@@ -1,4 +1,14 @@
 {
+   "onBoardTitle1": "¿Necesitas ayuda?",
+   "onBoardSubTitle1": "Utiliza StudyMate para encontrar un tutor que te apoye",
+   "onBoardTitle2": "Brinda ayuda",
+   "onBoardSubTitle2": "¡Ayuda a alguien a aprobar exámenes que has aprobado con éxito!",
+   "onBoardTitle3": "Recibe ayuda",
+   "onBoardSubTitle3": "¡A cambio, recibe ayuda para aprobar los tuyos!",
+   "startCaps": "COMENZAR",
+   "skipCaps": "OMITIR",
+   "nextCaps": "SIGUIENTE",
+
    "welcome": "Bienvenido",
    "suggestedTitle": "Sugerido para ti",
    "suggestedSubTitle": "Esta es una lista de posibles tutores comunitarios con los que podrías estudiar.",

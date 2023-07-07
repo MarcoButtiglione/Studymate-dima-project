@@ -1,4 +1,14 @@
 {
+   "onBoardTitle1": "需要帮助吗？",
+   "onBoardSubTitle1": "使用 StudyMate 找到一个能够支持你的导师",
+   "onBoardTitle2": "提供帮助",
+   "onBoardSubTitle2": "帮助别人通过你成功通过的考试！",
+   "onBoardTitle3": "接受帮助",
+   "onBoardSubTitle3": "作为回报，接受帮助通过你的考试！",
+   "startCaps": "开始",
+   "skipCaps": "跳过",
+   "nextCaps": "下一步",
+
    "welcome": "欢迎",
    "suggestedTitle": "为您推荐",
    "suggestedSubTitle": "这是一份可能与之一起学习的社区导师列表。",

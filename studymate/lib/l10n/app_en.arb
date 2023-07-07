@@ -1,4 +1,41 @@
 {
+    "onBoardTitle1":"Need help?",
+    "@onBoardTitle1":{
+        "description": "On board title 1"
+    },
+    "onBoardSubTitle1":"Use StudyMate to find a tutor to support you",
+    "@onBoardSubTitle1":{
+        "description": "On board subtitle 1"
+    },
+    "onBoardTitle2":"Give Help",
+    "@onBoardTitle2":{
+        "description": "On board title 2"
+    },
+    "onBoardSubTitle2":"Help someone pass exams that you've succesfully pass!",
+    "@onBoardSubTitle2":{
+        "description": "On board subtitle 2"
+    },
+    "onBoardTitle3":"Receive Help",
+    "@onBoardTitle3":{
+        "description": "On board title 3"
+    },
+    "onBoardSubTitle3":"In exchange, recive help passing yours!",
+    "@onBoardSubTitle3":{
+        "description": "On board subtitle 3"
+    },
+    "startCaps":"START",
+    "@startCaps":{
+        "description": "START"
+    },
+    "skipCaps":"SKIP",
+    "@skipCaps":{
+        "description": "SKIP"
+    },
+    "nextCaps":"NEXT",
+    "@nextCaps":{
+        "description": "NEXT"
+    },
+
     "welcome":"Welcome",
     "@welcome":{
         "description": "Welcome message homepage"
