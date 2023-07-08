@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:studymate/models/user.dart';
+import 'package:studymate/screens/Authenticated/Chat/search_position.dart';
 import 'package:studymate/screens/Authenticated/Chat/widget/recivied_message.dart';
 import 'package:studymate/screens/Authenticated/Chat/widget/sent_message.dart';
 import 'package:line_icons/line_icons.dart';
@@ -17,7 +18,11 @@ class ChatMsg extends StatefulWidget {
   final Chat? chat;
   final Users reciver;
   final bool isNewWindows;
-  const ChatMsg({super.key, this.chat, required this.reciver,required this.isNewWindows});
+  const ChatMsg(
+      {super.key,
+      this.chat,
+      required this.reciver,
+      required this.isNewWindows});
   @override
   _MsgState createState() => _MsgState();
 }
@@ -73,7 +78,9 @@ class _MsgState extends State<ChatMsg> {
                             Navigator.pop(context);
                           },
                           icon: const Icon(Icons.arrow_back_ios))
-                      : SizedBox(width: 40,),
+                      : SizedBox(
+                          width: 40,
+                        ),
                   SizedBox(
                     height: 50,
                     width: 50,
@@ -178,11 +185,34 @@ class _MsgState extends State<ChatMsg> {
                                           child: Wrap(children: [
                                         ListTile(
                                           onTap: () async {
-                                            sendPosition();
+                                            Navigator.pop(context);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SearchPosition(
+                                                          num: num,
+                                                          chatId:
+                                                              widget.chat!.id,
+                                                          reciver:
+                                                              widget.reciver,
+                                                          fromId: user.uid,
+                                                        )));
                                           },
                                           //leading: ,
                                           leading: const Icon(
                                               LineIcons.mapMarker,
+                                              color: Color.fromARGB(
+                                                  255, 233, 64, 87)),
+                                          title: const Text('Share position'),
+                                        ),
+                                        ListTile(
+                                          onTap: () async {
+                                            sendPosition();
+                                          },
+                                          //leading: ,
+                                          leading: const Icon(
+                                              Icons.my_location_outlined,
                                               color: Color.fromARGB(
                                                   255, 233, 64, 87)),
                                           title: const Text(

@@ -67,49 +67,25 @@ class SentMessage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     (message!.contains("l4t:") && message!.contains("l0n:"))
-                        ? Stack(
-                            children: [
-                              Container(
-                                height: 150,
-                                width: 200,
-                                child: GoogleMap(
-                                    myLocationButtonEnabled: false,
-                                    myLocationEnabled: false,
-                                    zoomControlsEnabled: false,
-                                    zoomGesturesEnabled: false,
-                                    scrollGesturesEnabled: false,
-                                    compassEnabled: false,
-                                    rotateGesturesEnabled: false,
-                                    mapToolbarEnabled: false,
-                                    tiltGesturesEnabled: false,
-                                    //onMapCreated: _onMapCreated,
-                                    initialCameraPosition: CameraPosition(
-                                        target: LatLng(latitude, longitude),
-                                        zoom: 30),
-                                    markers: {
-                                      Marker(
-                                        markerId: MarkerId("destination"),
-                                        position: LatLng(latitude, longitude),
-                                        icon: BitmapDescriptor.defaultMarker,
-                                      ),
-                                    }),
-                              ),
-                              InkWell(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SharePosition(
-                                              latitude: latitude,
-                                              longitude: longitude,
-                                              reciver: reciver,
-                                            ))),
-                                child: SizedBox(
-                                  height: 150,
-                                  width: 100,
-                                ),
-                              )
-                            ],
-                          )
+                        ? InkWell(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SharePosition(
+                                          latitude: latitude,
+                                          longitude: longitude,
+                                          reciver: reciver,
+                                        ))),
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color.fromARGB(255, 255, 255, 255)),
+                              child: Icon(Icons.map_rounded,
+                                  color: Color.fromARGB(255, 233, 64, 87),
+                                  size: 30),
+                            ))
                         : Text(
                             message!,
                             style: const TextStyle(

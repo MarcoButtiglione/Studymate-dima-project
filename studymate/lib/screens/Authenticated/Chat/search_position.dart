@@ -1,0 +1,416 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:search_map_location/search_map_location.dart';
+import 'package:search_map_location/utils/google_search/place.dart';
+import 'package:search_map_location/utils/google_search/latlng.dart' as latlng;
+import '../../../models/msg.dart';
+import '../../../models/notification.dart';
+import '../../../models/user.dart';
+import '../../../service/storage_service.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoding/geocoding.dart';
+
+class SearchPosition extends StatefulWidget {
+  final String? chatId;
+  final Users? reciver;
+  final String? fromId;
+  final int? num;
+  const SearchPosition({
+    super.key,
+    required this.chatId,
+    required this.fromId,
+    required this.reciver,
+    required this.num,
+  });
+  @override
+  _SearchPositionState createState() => _SearchPositionState();
+}
+
+const kGoogleApiKey = "AIzaSyC3otkGlIdVywPmB7VQS9CYEBEphXSZtko";
+
+class _SearchPositionState extends State<SearchPosition> {
+  late Position _currentPosition = Position(
+      longitude: 0,
+      latitude: 0,
+      timestamp: DateTime(0),
+      accuracy: 0,
+      altitude: 0,
+      heading: 0,
+      speed: 0,
+      speedAccuracy: 0);
+  late GoogleMapController _controller;
+  late Set<Marker> _markers = {};
+  final LatLng _initialCameraPosition = const LatLng(45.475714, 9.1365314);
+  late String title = "Share Position";
+
+  late LatLng _destination = LatLng(0, 0);
+  Future<String> _getAddressFromLatLng(
+      double latitude, double longitude) async {
+    await placemarkFromCoordinates(latitude, longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      if (placemarks.isNotEmpty) {
+        return "${place.street},  ${place.subAdministrativeArea}";
+      }
+    }).catchError((e) {
+      debugPrint(e);
+    });
+
+    return "${latitude} ${longitude}";
+  }
+
+  //this method is used for settings the map during the creation phase
+  void _onMapCreated(GoogleMapController controller) {
+    _controller = controller;
+    _markers = {};
+    _getCurrentLocation();
+  }
+
+  //this method is used for create the markers on the map
+  _createMarker(String? desc) async {
+    final Set<Marker> markers = {};
+
+    Marker m = Marker(
+      markerId: MarkerId("destination"),
+      position: LatLng(_destination.latitude, _destination.longitude),
+      icon: BitmapDescriptor.defaultMarker,
+      infoWindow: InfoWindow(
+        title: desc,
+      ),
+    );
+    markers.add(m);
+
+    if (mounted) {
+      // mounted returns true only if the widget is in the tree
+      setState(() {
+        _markers = markers;
+      });
+    }
+  }
+
+  Future<bool> checkPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled
+      throw 'Location services are disabled.';
+    }
+
+    // Check location permission
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      // The user permanently denied location permission
+      throw 'Location permissions are permanently denied.';
+    }
+
+    if (permission == LocationPermission.denied) {
+      // Request location permission
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        // The user denied location permission
+        throw 'Location permissions are denied.';
+      }
+    }
+    return true;
+  }
+
+  //this method is used to show a alert with just one button
+  showAlertDialog(BuildContext context, String? title, String? msg) {
+    Widget okButton = TextButton(
+      child: const Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(title!),
+      content: Text(msg!),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  //this method is used to get the current locations
+  _getCurrentLocation() async {
+    if (await checkPermission() == true) {
+      _currentPosition = await Geolocator.getCurrentPosition();
+      _controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          bearing: 0,
+          target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+          zoom: 12.0,
+        ),
+      ));
+    } else {
+      showAlertDialog(
+          context, "Attention!", "You must enabled localization services!");
+    }
+  }
+
+  //this method is used to get the current locations
+  _getDestinationLocation() async {
+    if (await checkPermission() == true) {
+      _controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          bearing: 0,
+          target: _destination,
+          zoom: 12.0,
+        ),
+      ));
+    } else {
+      showAlertDialog(
+          context, "Attention!", "You must enabled localization services!");
+    }
+  }
+
+  //this return the map frame
+  Stack _mapFrame(double w) {
+    return Stack(
+      children: <Widget>[
+        Center(
+          child: ClipRRect(
+            child: GoogleMap(
+              myLocationButtonEnabled: false,
+              myLocationEnabled: true,
+              //zoomControlsEnabled: false,
+              zoomGesturesEnabled: true,
+              scrollGesturesEnabled: true,
+              compassEnabled: true,
+              rotateGesturesEnabled: true,
+              //mapToolbarEnabled: false,
+              tiltGesturesEnabled: true,
+              onMapCreated: _onMapCreated,
+              initialCameraPosition:
+                  CameraPosition(target: _initialCameraPosition, zoom: 11),
+              markers: _markers,
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Container(
+            decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 255, 255, 255),
+                borderRadius: BorderRadius.circular(10)),
+            margin: const EdgeInsets.all(10),
+            child: IconButton(
+                onPressed: () => _getCurrentLocation(),
+                icon: const Icon(Icons.my_location_outlined)),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Container(
+            decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 255, 255, 255),
+                borderRadius: BorderRadius.circular(10)),
+            margin: const EdgeInsets.all(10),
+            child: IconButton(
+                onPressed: () {
+                  if (_destination != LatLng(0, 0)) {
+                    _getDestinationLocation();
+                  }
+                },
+                icon: const Icon(LineIcons.map)),
+          ),
+        ),
+        Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 50),
+              child: IconButton(
+                  onPressed: () {
+                    send();
+                    Navigator.of(context).pop();
+                  },
+                  icon: Container(
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        borderRadius: BorderRadius.circular(30)),
+                    padding: const EdgeInsets.all(10),
+                    margin:
+                        const EdgeInsets.only(bottom: 10, right: 10, top: 5),
+                    child: const Icon(
+                      Icons.send,
+                      color: Color.fromARGB(255, 95, 176, 246),
+                      size: 30,
+                    ),
+                  )),
+            )),
+        Align(
+            alignment: Alignment.topLeft,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                      margin: const EdgeInsets.only(
+                          bottom: 10, top: 10, left: 10, right: 125),
+                      //width: 0.3 * w,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Color.fromARGB(255, 255, 255, 255)),
+                      child: SearchLocation(
+                        apiKey: kGoogleApiKey,
+                        // The language of the autocompletion
+                        language: 'en',
+                        // location is the center of a place and the radius provided here are between this radius of this place search result
+                        //will be provided,you can set this LatLng dynamically by getting user lat and long in double value
+                        location: latlng.LatLng(
+                            latitude: _currentPosition.latitude,
+                            longitude: _currentPosition.longitude),
+                        radius: 1100,
+                        onSelected: (Place place) async {
+                          final geolocation = await place.geolocation;
+                          latlng.LatLng tmp = geolocation!.coordinates;
+
+                          _destination = LatLng(tmp.latitude, tmp.longitude);
+                          _createMarker(place.description);
+                          _getDestinationLocation();
+                        },
+                      )),
+                ),
+              ],
+            ))
+      ],
+    );
+  }
+
+  Future send() async {
+    try {
+      if (_destination != LatLng(0, 0)) {
+        String docId = "";
+        final docUser = FirebaseFirestore.instance.collection('msg');
+        final addMsg = Msg(
+            view: false,
+            chatId: widget.chatId,
+            addtime: Timestamp.now(),
+            from_uid: widget.fromId,
+            //to_uid: widget.reciver.id,
+            content:
+                "l4t:${_destination.latitude},l0n:${_destination.longitude}");
+        final json = addMsg.toFirestore();
+        await docUser.add(json).then((DocumentReference doc) {
+          docId = doc.id;
+        });
+        docUser.doc(docId).update({'id': docId});
+        int num = widget.num! + 1;
+        FirebaseFirestore.instance
+            .collection('chat')
+            .doc(widget.chatId)
+            .update({
+          'num_msg': num,
+          'last_msg': addMsg.content,
+          'last_time': addMsg.addtime,
+          'from_uid': addMsg.from_uid,
+          'view': false
+        });
+        final docChat = FirebaseFirestore.instance.collection('notification');
+        await docChat.add({}).then((DocumentReference doc) {
+          var notif = Notifications(
+            id: doc.id,
+            from_id: addMsg.from_uid,
+            to_id: widget.reciver!.id,
+            eventId: addMsg.id,
+            type: "message",
+            content: "${addMsg.content}",
+            view: false,
+            time: Timestamp.now(),
+          );
+          final json = notif.toFirestore();
+          docChat.doc(doc.id).update(json);
+        });
+      }
+    } on FirebaseAuthException catch (e) {
+      showAlertDialog(context, "error", e.message!);
+      Navigator.of(context).pop();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    double w = size.width;
+    final Storage storage = Storage();
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          color: const Color.fromARGB(18, 233, 64, 87),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                  ),
+                  padding: const EdgeInsets.only(top: 60.0, bottom: 10),
+                  child: Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.arrow_back_ios)),
+                      SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(35),
+                          child: FutureBuilder(
+                              future: storage
+                                  .downloadURL(widget.reciver!.profileImageURL),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text("Something went wrong!");
+                                } else if (snapshot.hasData) {
+                                  return Image(
+                                    image: NetworkImage(snapshot.data!),
+                                  );
+                                } else {
+                                  return const Card(
+                                    margin: EdgeInsets.zero,
+                                  );
+                                }
+                              }),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(child: _mapFrame(w))
+              ]),
+        ));
+  }
+}
