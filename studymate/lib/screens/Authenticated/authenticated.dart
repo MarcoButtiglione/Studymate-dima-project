@@ -18,11 +18,29 @@ class Authenticated extends StatefulWidget {
 }
 
 class _AuthenticatedState extends State<Authenticated> {
+  /*
+  Widget page=HomePage(
+          isSearching: false,
+        );
+*/
   var _selectedIndex = 0;
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  void _onItemTapped(int index, bool isMobile, bool isPortrait) {
+    if (index == 2 && !isMobile) {
+      showModalBottomSheet(
+        showDragHandle: true,
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Container(
+          child: NewLessonPage(
+            isModal: true,
+          ),
+        ),
+      );
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   final user = FirebaseAuth.instance.currentUser!;
@@ -56,7 +74,10 @@ class _AuthenticatedState extends State<Authenticated> {
         }
         break;
       case 2:
-        page = NewLessonPage();
+        page = NewLessonPage(
+          isModal: false,
+        );
+
         break;
       case 3:
         page = ChatsPage();
@@ -82,9 +103,11 @@ class _AuthenticatedState extends State<Authenticated> {
                         selectedIndex: _selectedIndex,
                         groupAlignment: -1.0,
                         onDestinationSelected: (int index) {
-                          _onItemTapped(index);
+                          _onItemTapped(index, isMobile, isPortrait);
                         },
-                        labelType: NavigationRailLabelType.none,
+                        labelType: (!isMobile)
+                            ? NavigationRailLabelType.all
+                            : NavigationRailLabelType.none,
                         leading: const SizedBox(),
                         trailing: const SizedBox(),
                         destinations: <NavigationRailDestination>[
@@ -138,7 +161,7 @@ class _AuthenticatedState extends State<Authenticated> {
                                     ),
                                   );
                                 })),
-                            label: Text('Message'),
+                            label: Text('Messages'),
                           ),
                           const NavigationRailDestination(
                             icon: Icon(Icons.account_circle),
@@ -194,7 +217,7 @@ class _AuthenticatedState extends State<Authenticated> {
                             Icons.add_circle_outline,
                             size: 35,
                           ),
-                          label: 'Search',
+                          label: 'Add',
                         ),
                         BottomNavigationBarItem(
                           icon: StreamBuilder(
@@ -231,7 +254,7 @@ class _AuthenticatedState extends State<Authenticated> {
                                   ),
                                 );
                               })),
-                          label: 'Pro',
+                          label: 'Chat',
                         ),
                         const BottomNavigationBarItem(
                           icon: Icon(Icons.account_circle),
@@ -242,7 +265,9 @@ class _AuthenticatedState extends State<Authenticated> {
                       selectedItemColor: Theme.of(context).colorScheme.primary,
                       unselectedItemColor:
                           Theme.of(context).colorScheme.onBackground,
-                      onTap: _onItemTapped,
+                      onTap: (int index) {
+                        _onItemTapped(index, isMobile, isPortrait);
+                      },
                     ),
                   ),
                 )

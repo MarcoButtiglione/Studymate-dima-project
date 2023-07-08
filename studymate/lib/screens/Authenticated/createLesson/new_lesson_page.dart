@@ -11,7 +11,6 @@ import '../../../models/category.dart';
 import 'components/dropdownCategory.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 Stream<List<Category>> readCategory() => FirebaseFirestore.instance
     .collection('categories')
     .snapshots()
@@ -19,6 +18,9 @@ Stream<List<Category>> readCategory() => FirebaseFirestore.instance
         snapshot.docs.map((doc) => Category.fromJson(doc.data())).toList());
 
 class NewLessonPage extends StatefulWidget {
+  final bool isModal;
+  const NewLessonPage({super.key, required this.isModal});
+
   @override
   State<NewLessonPage> createState() => _NewLessonPageState();
 }
@@ -83,8 +85,11 @@ class _NewLessonPageState extends State<NewLessonPage> {
         isBusy = false;
         duration = 1;
       });
+      if (widget.isModal) {
+        Navigator.pop(context);
+      }
       ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(content: Text(AppLocalizations.of(context)!.lessonAdded)),
+        SnackBar(content: Text(AppLocalizations.of(context)!.lessonAdded)),
       );
       titleController.clear();
       desciptionController.clear();
@@ -95,169 +100,183 @@ class _NewLessonPageState extends State<NewLessonPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: isBusy
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : Form(
-                key: _formKey,
-                child: StreamBuilder<List<Category>>(
-                    stream: readCategory(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return const Text("Something went wrong!");
-                      } else if (snapshot.hasData) {
-                        final categories = snapshot.data!;
-                        return Column(
-                          children: [
-                            const SizedBox(height: 60),
-                            Row(children: <Widget>[
-                              Text(AppLocalizations.of(context)!.createLessonTitle,
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                            ]),
-                            Text(
-                                AppLocalizations.of(context)!.createLessonSubtitle,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(fontSize: 13)),
-                            const SizedBox(height: 30),
-                            TextFormField(
-                              controller: titleController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return AppLocalizations.of(context)!.pleaseEnterText;
-                                }
-                                return null;
-                              },
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(context)!.title,
-                                hintText: AppLocalizations.of(context)!.titleFieldHint,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey[300]!),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey[300]!),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey[300]!),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            DropdownCategory(callback: callbackCategory,categories: categories, initCategory: ""),
-                            const SizedBox(height: 10),
-                            TextFormField(
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return AppLocalizations.of(context)!.pleaseEnterText;
-                                }
-                                return null;
-                              },
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              controller: desciptionController,
-                              keyboardType: TextInputType.multiline,
-                              minLines: 7,
-                              maxLines: 7,
-                              decoration: InputDecoration(
-                                //labelText: "Description",
-                                hintText: AppLocalizations.of(context)!.descriptionFieldHint,
-
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey[300]!),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey[300]!),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey[300]!),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: isBusy
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Form(
+              key: _formKey,
+              child: StreamBuilder<List<Category>>(
+                  stream: readCategory(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Text("Something went wrong!");
+                    } else if (snapshot.hasData) {
+                      final categories = snapshot.data!;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          widget.isModal ? SizedBox() : SizedBox(height: 20),
+                          Text(AppLocalizations.of(context)!.createLessonTitle,
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              )),
+                          Text(
+                              AppLocalizations.of(context)!
+                                  .createLessonSubtitle,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 13)),
+                          Expanded(
+                            child: ListView(
                               children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 233, 64, 87),
+                                const SizedBox(height: 30),
+                                TextFormField(
+                                  controller: titleController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterText;
+                                    }
+                                    return null;
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  decoration: InputDecoration(
+                                    labelText:
+                                        AppLocalizations.of(context)!.title,
+                                    hintText: AppLocalizations.of(context)!
+                                        .titleFieldHint,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey[300]!),
                                     ),
-                                    onPressed: () {
-                                      if(isBusy){
-                                        return;
-                                      }
-                                      // Validate returns true if the form is valid, or false otherwise.
-                                      if (_formKey.currentState!.validate()) {
-                                        FirebaseFirestore.instance
-                                            .collection('timeslots')
-                                            .where('userId',
-                                                isEqualTo: user.uid)
-                                            .get()
-                                            .then((querySnapshot) {
-                                          if (querySnapshot.docs.isNotEmpty) {
-                                            // Do something if the document exists
-                                            final lesson = Lesson(
-                                              title: titleController.text,
-                                              location: "Milan",
-                                              description:
-                                                  desciptionController.text,
-                                              userTutor: user.uid,
-                                              category: category,
-                                            );
-                                            send(lesson: lesson);
-                                          } else {
-                                            // Do something if the document does not exist
-                                            Navigator.of(context).push(
-                                                createRoute(
-                                                    const HoursSelectionPage()));
-                                                    
-                                          }
-                                        });
-                                      } else {
-                                        //Navigator.of(context).push(createRoute(
-                                        //  const HoursSelectionPage()));
-                                      }
-                                    },
-                                    child: Text(AppLocalizations.of(context)!.submit,
-                                        style: TextStyle(
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255),
-                                        )),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey[300]!),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey[300]!),
+                                    ),
                                   ),
+                                ),
+                                const SizedBox(height: 10),
+                                DropdownCategory(
+                                    callback: callbackCategory,
+                                    categories: categories,
+                                    initCategory: ""),
+                                const SizedBox(height: 10),
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterText;
+                                    }
+                                    return null;
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  controller: desciptionController,
+                                  keyboardType: TextInputType.multiline,
+                                  minLines: 7,
+                                  maxLines: 7,
+                                  decoration: InputDecoration(
+                                    //labelText: "Description",
+                                    hintText: AppLocalizations.of(context)!
+                                        .descriptionFieldHint,
+
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey[300]!),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey[300]!),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey[300]!),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 233, 64, 87),
+                                        ),
+                                        onPressed: () {
+                                          if (isBusy) {
+                                            return;
+                                          }
+                                          // Validate returns true if the form is valid, or false otherwise.
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            FirebaseFirestore.instance
+                                                .collection('timeslots')
+                                                .where('userId',
+                                                    isEqualTo: user.uid)
+                                                .get()
+                                                .then((querySnapshot) {
+                                              if (querySnapshot
+                                                  .docs.isNotEmpty) {
+                                                // Do something if the document exists
+                                                final lesson = Lesson(
+                                                  title: titleController.text,
+                                                  location: "Milan",
+                                                  description:
+                                                      desciptionController.text,
+                                                  userTutor: user.uid,
+                                                  category: category,
+                                                );
+                                                send(lesson: lesson);
+                                              } else {
+                                                // Do something if the document does not exist
+                                                Navigator.of(context).push(
+                                                    createRoute(
+                                                        const HoursSelectionPage()));
+                                              }
+                                            });
+                                          } else {
+                                            //Navigator.of(context).push(createRoute(
+                                            //  const HoursSelectionPage()));
+                                          }
+                                        },
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .submit,
+                                            style: TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 255, 255, 255),
+                                            )),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }),
-              ),
-      ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  }),
+            ),
     );
   }
 }
