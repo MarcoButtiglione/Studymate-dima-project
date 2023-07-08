@@ -103,198 +103,184 @@ class ClassCard extends StatelessWidget {
     double h = size.height;
     double w = size.width;
 
-    return Container(
-      width: lessonPage == false
-          ? (w > 490 ? w * 0.45 : w * 0.9)
-          : (w > 1000 ? w * 0.45 : w * 0.9),
-      height: 225,
-      margin: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 3,
-            offset: const Offset(0, 3), // changes position of shadow
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          Row(children: [
-            SizedBox(
-              height: 70,
-              width: 70,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(35),
-                child: FutureBuilder(
-                    future: (isTutor)
-                        ? storage.downloadURL(student.profileImageURL)
-                        : storage.downloadURL(tutor.profileImageURL),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return const Text("Something went wrong!");
-                      } else if (snapshot.hasData) {
-                        return Image(
-                          image: NetworkImage(snapshot.data!),
-                        );
-                      } else {
-                        return Card(
-                          margin: EdgeInsets.zero,
-                        );
-                      }
-                    }),
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-                child: Column(children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      title!,
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 233, 64, 87),
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                    ),
+    return Card(
+      
+      surfaceTintColor: Colors.white,
+      child: Container(
+        height: 200,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(children: [
+                SizedBox(
+                  height: 70,
+                  width: 70,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(35),
+                    child: FutureBuilder(
+                        future: (isTutor)
+                            ? storage.downloadURL(student.profileImageURL)
+                            : storage.downloadURL(tutor.profileImageURL),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Text("Something went wrong!");
+                          } else if (snapshot.hasData) {
+                            return Image(
+                              image: NetworkImage(snapshot.data!),
+                            );
+                          } else {
+                            return Card(
+                              margin: EdgeInsets.zero,
+                            );
+                          }
+                        }),
                   ),
-                  IconButton(
-                      onPressed: () {
-                        _showMyDialog(context);
-                      },
-                      icon: const Icon(Icons.delete,
-                          color: Color.fromARGB(255, 233, 64, 87), size: 20)),
-                  IconButton(
-                      onPressed: () {
-                        if (isTutor!) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => QrCodeGenerate(
-                                        id: id,
-                                        studentId: student.id,
-                                      )));
-                        } else {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => QrCodeScan(
-                                        id: id,
-                                        tutor: tutor,
-                                        student: student.id,
-                                        title: title,
-                                      )));
-                        }
-                      },
-                      icon: const Icon(Icons.qr_code,
-                          color: Color.fromARGB(255, 233, 64, 87), size: 20)),
-                ],
-              ),
-              const SizedBox(
-                height: 3,
-              ),
-              Row(
-                children: [
-                  Text(
-                    (isTutor!)
-                        ? "${AppLocalizations.of(context)!.student}:  "
-                        : "${AppLocalizations.of(context)!.tutor}:  ",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Expanded(
-                    child: (isTutor!)
-                        ? Text("${student.firstname} ${student.lastname}")
-                        : Text("${tutor.firstname} ${tutor.lastname}"),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    "${AppLocalizations.of(context)!.date}:   ",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Expanded(
-                    child: Text(DateFormat.yMd().format(date!.toDate())),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 3,
-              ),
-              Container(
-                margin: EdgeInsets.only(right: 10),
-                height: 40,
-                child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 1,
-                            childAspectRatio: 0.3,
-                            mainAxisSpacing: 2),
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: timeslot!.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 255, 255, 255),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 233, 64, 87),
-                                width: 1)),
-                        child: Center(
-                          child: Text(
-                            timeslot![index],
-                            style: const TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-              )
-            ]))
-          ]),
-          (lessonPage != null && lessonPage == false)
-              ? Container(
-                  height: 35,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                        onPressed: () {
-                          isTutor! == false
-                              ? Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const NextScheduled(
-                                            isTutoring: false,
-                                          )))
-                              : Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const NextScheduled(
-                                            isTutoring: true,
-                                          )));
-                        },
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                    child: Column(children: [
+                  Row(
+                    children: [
+                      Expanded(
                         child: Text(
-                          AppLocalizations.of(context)!.seeNext,
-                          textAlign: TextAlign.right,
-                        )),
+                          title!,
+                          textAlign: TextAlign.left,
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 233, 64, 87),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            _showMyDialog(context);
+                          },
+                          icon: const Icon(Icons.delete,
+                              color: Color.fromARGB(255, 233, 64, 87), size: 20)),
+                      IconButton(
+                          onPressed: () {
+                            if (isTutor!) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => QrCodeGenerate(
+                                            id: id,
+                                            studentId: student.id,
+                                          )));
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => QrCodeScan(
+                                            id: id,
+                                            tutor: tutor,
+                                            student: student.id,
+                                            title: title,
+                                          )));
+                            }
+                          },
+                          icon: const Icon(Icons.qr_code,
+                              color: Color.fromARGB(255, 233, 64, 87), size: 20)),
+                    ],
                   ),
-                )
-              : SizedBox(),
-        ],
+                  const SizedBox(
+                    height: 3,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        (isTutor!)
+                            ? "${AppLocalizations.of(context)!.student}:  "
+                            : "${AppLocalizations.of(context)!.tutor}:  ",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Expanded(
+                        child: (isTutor!)
+                            ? Text("${student.firstname} ${student.lastname}")
+                            : Text("${tutor.firstname} ${tutor.lastname}"),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "${AppLocalizations.of(context)!.date}:   ",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Expanded(
+                        child: Text(DateFormat.yMd().format(date!.toDate())),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 3,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(right: 10),
+                    height: 40,
+                    child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 1,
+                                childAspectRatio: 0.3,
+                                mainAxisSpacing: 2),
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: timeslot!.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                    color: const Color.fromARGB(255, 233, 64, 87),
+                                    width: 1)),
+                            child: Center(
+                              child: Text(
+                                timeslot![index],
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  )
+                ]))
+              ]),
+              (lessonPage != null && lessonPage == false)
+                  ? Container(
+                      height: 35,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                            onPressed: () {
+                              isTutor! == false
+                                  ? Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const NextScheduled(
+                                                isTutoring: false,
+                                              )))
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const NextScheduled(
+                                                isTutoring: true,
+                                              )));
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.seeNext,
+                              textAlign: TextAlign.right,
+                            )),
+                      ),
+                    )
+                  : SizedBox(),
+            ],
+          ),
+        ),
       ),
     );
   }
