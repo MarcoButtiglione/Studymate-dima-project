@@ -68,7 +68,8 @@
    "editTimeslotTitle": "Modifica gli slot temporali",
 
    "messages": "Messaggi",
-
+   "selectChat": "Seleziona una chat.",
+   
    "monday": "Lunedì",
    "tuesday": "Martedì",
    "wednesday": "Mercoledì",

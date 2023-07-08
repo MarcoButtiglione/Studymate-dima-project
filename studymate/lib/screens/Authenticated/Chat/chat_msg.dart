@@ -16,7 +16,8 @@ import '../../../service/storage_service.dart';
 class ChatMsg extends StatefulWidget {
   final Chat? chat;
   final Users reciver;
-  const ChatMsg({super.key, this.chat, required this.reciver});
+  final bool isNewWindows;
+  const ChatMsg({super.key, this.chat, required this.reciver,required this.isNewWindows});
   @override
   _MsgState createState() => _MsgState();
 }
@@ -58,16 +59,21 @@ class _MsgState extends State<ChatMsg> {
           children: <Widget>[
             Container(
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(20)),
+                color: const Color.fromARGB(255, 255, 255, 255),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
+              ),
               padding: const EdgeInsets.only(top: 60.0, bottom: 10),
               child: Row(
                 children: [
-                  IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.arrow_back_ios)),
+                  widget.isNewWindows
+                      ? IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.arrow_back_ios))
+                      : SizedBox(width: 40,),
                   SizedBox(
                     height: 50,
                     width: 50,

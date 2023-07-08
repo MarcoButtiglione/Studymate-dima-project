@@ -16,6 +16,8 @@ class ChatsPage extends StatefulWidget {
 class _ChatState extends State<ChatsPage> {
   final user = FirebaseAuth.instance.currentUser!;
   late String selected = "";
+  Chat? chatOpened;
+  Users? reciverOpened;
 
   @override
   void initState() {
@@ -59,52 +61,86 @@ class _ChatState extends State<ChatsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            //mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(AppLocalizations.of(context)!.messages,
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    )),
-              ),
-              AutocompleteSearchbar(onSelected: (selectedUser) {
-                setState(() {
-                  selected = selectedUser;
-                  print(selectedUser);
-                });
-              }),
-              StreamBuilder<List<Chat>>(
-                  stream: readChat(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return const Text('Something went wrong!');
-                    } else if (snapshot.hasData) {
-                      final chat = snapshot.data!;
-                      if (chat.isNotEmpty) {
-                        return ListView(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            children: chat.map(buildChat).toList());
-                      } else {
-                        return SizedBox();
-                      }
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
+    final isMobile = MediaQuery.of(context).size.shortestSide < 600;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+    final isTabletLandscape = !isMobile && !isPortrait;
+
+    return Row(
+      children: [
+        Expanded(
+          flex: isTabletLandscape ? 3 : 10,
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                //mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Text(AppLocalizations.of(context)!.messages,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      )),
+                  AutocompleteSearchbar(onSelected: (selectedUser) {
+                    setState(() {
+                      selected = selectedUser;
+                      print(selectedUser);
+                    });
                   }),
-            ],
-          )),
+                  Expanded(
+                    child: StreamBuilder<List<Chat>>(
+                        stream: readChat(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Text('Something went wrong!');
+                          } else if (snapshot.hasData) {
+                            var chat = snapshot.data!;
+
+                            if (chat.isNotEmpty) {
+                              return ListView(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  children: chat.map(buildChat).toList());
+                            } else {
+                              return SizedBox();
+                            }
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        }),
+                  ),
+                ],
+              )),
+        ),
+        isTabletLandscape
+            ? const VerticalDivider(thickness: 1, width: 1)
+            : SizedBox(),
+        isTabletLandscape
+            ? Expanded(
+                flex: (isPortrait ? 6 : 7),
+                child: Container(
+                  child: (chatOpened != null && reciverOpened != null)
+                      ? ChatMsg(
+                          reciver: reciverOpened!,
+                          chat: chatOpened,
+                          isNewWindows: false,
+                        )
+                      : Container(child: Center(child: Text(AppLocalizations.of(context)!.selectChat)),),
+                ),
+              )
+            : SizedBox(),
+      ],
     );
   }
 
   Widget buildChat(Chat chat) {
+    final isMobile = MediaQuery.of(context).size.shortestSide < 600;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+    final isTabletLandscape = !isMobile && !isPortrait;
+
     String userId = "";
     chat.member!.forEach((element) {
       if (element != user.uid) userId = element;
@@ -127,7 +163,16 @@ class _ChatState extends State<ChatsPage> {
                         height: 5,
                       ),
                       InkWell(
-                          onTap: () => openChat(chat, users.first),
+                          onTap: () {
+                            if (isTabletLandscape) {
+                              setState(() {
+                                chatOpened = chat;
+                                reciverOpened = users.first;
+                              });
+                            } else {
+                              openChat(chat, users.first);
+                            }
+                          },
                           child: user.uid == chat.from_uid
                               ? ContactCard(
                                   id: chat.id,
@@ -162,7 +207,16 @@ class _ChatState extends State<ChatsPage> {
                       height: 5,
                     ),
                     InkWell(
-                        onTap: () => openChat(chat, users.first),
+                        onTap: () {
+                          if (isTabletLandscape) {
+                            setState(() {
+                              chatOpened = chat;
+                              reciverOpened = users.first;
+                            });
+                          } else {
+                            openChat(chat, users.first);
+                          }
+                        },
                         child: user.uid == chat.from_uid
                             ? ContactCard(
                                 id: chat.id,
@@ -206,6 +260,7 @@ class _ChatState extends State<ChatsPage> {
               builder: (context) => ChatMsg(
                     chat: chat,
                     reciver: reciver,
+                    isNewWindows: true,
                   )));
     } on Exception catch (e) {
       print(e);

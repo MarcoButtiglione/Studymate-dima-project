@@ -1201,6 +1201,7 @@ class _LessonState extends State<LessonPage> {
               builder: (context) => ChatMsg(
                     chat: chat,
                     reciver: reciver,
+                    isNewWindows: true,
                   )));
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);

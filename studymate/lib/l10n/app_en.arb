@@ -257,7 +257,10 @@
     "@messages":{
         "description": "Messages"
     },
-
+    "selectChat":"Select a chat.",
+    "@selectChat":{
+        "description": "select chat"
+    },
 
 
     "monday":"Monday",
