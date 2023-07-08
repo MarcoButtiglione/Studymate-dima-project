@@ -7,7 +7,6 @@ import '../../../models/user.dart';
 import '../../../service/storage_service.dart';
 import '../Lesson/lesson_page.dart';
 
-
 class LessonCard extends StatefulWidget {
   final Lesson lesson;
 
@@ -34,96 +33,89 @@ class _LessonCardState extends State<LessonCard> {
   Widget build(BuildContext context) {
     final Storage storage = Storage();
 
-    return Column(
-      children: [
-        const SizedBox(height: 15),
-        StreamBuilder<List<Users>>(
-          stream: readUser(),
-          builder: ((context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text("Something went wrong!");
-            } else if (snapshot.hasData) {
-              final user = snapshot.data!.first;
-              return InkWell(
-                onTap: () {
-                  Navigator.of(context).push(_createRoute(LessonPage(
-                    lesson: widget.lesson,
-                    user: user,
-                  )));
-                },
-                child: Row(
-                  children: [
-                    SizedBox(
-                      height: 70,
-                      width: 70,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(35),
-                        child: FutureBuilder(
-                            future: storage.downloadURL(user.profileImageURL),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return const Text("Something went wrong!");
-                              } else if (snapshot.hasData) {
-                                return Image(
-                                  image: NetworkImage(snapshot.data!),
-                                );
-                              } else {
-                                return const Card(
-                                  shadowColor: Colors.transparent,
-                                  margin: EdgeInsets.zero,
-                                );
-                              }
-                            }),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                widget.lesson.title,
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(user.firstname + " " + user.lastname),
-                            ],
-                          ),
-                          RatingBar.builder(
-                            ignoreGestures: true,
-                            initialRating: double.parse(user.userRating),
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemSize: 13,
-                            itemPadding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
-                            itemBuilder: (context, _) => const Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            ),
-                            onRatingUpdate: (double value) {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+    return StreamBuilder<List<Users>>(
+      stream: readUser(),
+      builder: ((context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text("Something went wrong!");
+        } else if (snapshot.hasData) {
+          final user = snapshot.data!.first;
+          return InkWell(
+            onTap: () {
+              Navigator.of(context).push(_createRoute(LessonPage(
+                lesson: widget.lesson,
+                user: user,
+              )));
+            },
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 70,
+                  width: 70,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(35),
+                    child: FutureBuilder(
+                        future: storage.downloadURL(user.profileImageURL),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Text("Something went wrong!");
+                          } else if (snapshot.hasData) {
+                            return Image(
+                              image: NetworkImage(snapshot.data!),
+                            );
+                          } else {
+                            return const Card(
+                              shadowColor: Colors.transparent,
+                              margin: EdgeInsets.zero,
+                            );
+                          }
+                        }),
+                  ),
                 ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.lesson.title,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        user.firstname + " " + user.lastname,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      RatingBar.builder(
+                        ignoreGestures: true,
+                        initialRating: double.parse(user.userRating),
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemSize: 13,
+                        itemPadding: const EdgeInsets.symmetric(
+                            horizontal: 1.0, vertical: 5),
+                        itemBuilder: (context, _) => const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (double value) {},
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return const Center(
+              //child: CircularProgressIndicator(),
               );
-            } else {
-              return const Center(
-                  //child: CircularProgressIndicator(),
-                  );
-            }
-          }),
-        ),
-      ],
+        }
+      }),
     );
   }
 }

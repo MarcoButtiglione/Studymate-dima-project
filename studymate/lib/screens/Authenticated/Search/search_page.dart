@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +11,6 @@ import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart'
 import '../../../models/category.dart';
 import '../../../models/lesson.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class SearchPage extends StatefulWidget {
   @override
@@ -88,318 +85,438 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: StreamBuilder<List<Lesson>>(
-            stream: selectedCategory == null
-                ? readAllLessons()
-                : readLessonsByCategory(selectedCategory!),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return const Text("Something went wrong!");
-              } else if (snapshot.hasData) {
-                var lessons = snapshot.data!;
-                List<String> lessonsTitle = [];
-                for (var element in lessons) {
-                  lessonsTitle.add(element.title);
-                }
-                return Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(AppLocalizations.of(context)!.search,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: StreamBuilder<List<Lesson>>(
+          stream: selectedCategory == null
+              ? readAllLessons()
+              : readLessonsByCategory(selectedCategory!),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Text("Something went wrong!");
+            } else if (snapshot.hasData) {
+              var lessons = snapshot.data!;
+              List<String> lessonsTitle = [];
+              for (var element in lessons) {
+                lessonsTitle.add(element.title);
+              }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(AppLocalizations.of(context)!.search,
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                           )),
-                    ),
-                    AutocompleteSearchbarSearchPage(
-                      lessonsTitle: lessonsTitle,
-                      onSelectedCallback: ((p0) {
-                        setState(() {
-                          selectedLesson = p0;
-                        });
-                      }),
-                      onCleanCallback: () {
-                        setState(() {
-                          selectedLesson=null;
-                        });
-                      },
-                    ),
-                    //Categories
-                    Row(children: <Widget>[
-                      Text(AppLocalizations.of(context)!.categories,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
-                    ]),
-
-                    SizedBox(
-                      height: 180.0,
-                      child: StreamBuilder<List<Category>>(
-                        stream: readCategory(),
-                        builder: ((context, snapshot) {
-                          if (snapshot.hasError) {
-                            return const Text("Something went wrong!");
-                          } else if (snapshot.hasData) {
-                            final categories = snapshot.data!;
-                            return ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: categories
-                                  .map((category) => InkWell(
-                                        onTap: (() {
-                                          if (selectedCategory ==
-                                              category.name) {
-                                            setState(() {
-                                              selectedCategory = null;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              selectedCategory = category.name;
-                                            });
-                                            ;
+                      AutocompleteSearchbarSearchPage(
+                        lessonsTitle: lessonsTitle,
+                        onSelectedCallback: ((p0) {
+                          setState(() {
+                            selectedLesson = p0;
+                          });
+                        }),
+                        onCleanCallback: () {
+                          setState(() {
+                            selectedLesson = null;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        const SizedBox(height: 10),
+                        //Title category
+                        Text(AppLocalizations.of(context)!.categories,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        //Category filter
+                        SizedBox(
+                          height: 180.0,
+                          child: StreamBuilder<List<Category>>(
+                            stream: readCategory(),
+                            builder: ((context, snapshot) {
+                              if (snapshot.hasError) {
+                                return const Text("Something went wrong!");
+                              } else if (snapshot.hasData) {
+                                final categories = snapshot.data!;
+                                return ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  children: categories
+                                      .map((category) => InkWell(
+                                            onTap: (() {
+                                              if (selectedCategory ==
+                                                  category.name) {
+                                                setState(() {
+                                                  selectedCategory = null;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  selectedCategory =
+                                                      category.name;
+                                                });
+                                                ;
+                                              }
+                                            }),
+                                            child: CategoryCard(
+                                              name: category.name,
+                                              url: category.imageURL,
+                                              selected: selectedCategory ==
+                                                  category.name,
+                                            ),
+                                          ))
+                                      .toList(),
+                                );
+                              } else {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            }),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Divider(
+                          color: Colors.grey,
+                        ),
+                        const SizedBox(height: 20),
+                        (() {
+                          //RECENT LESSONS
+                          if (selectedCategory == null &&
+                              selectedLesson == null) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //Recent
+                                Text(AppLocalizations.of(context)!.recent,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 10),
+                                StreamBuilder<List<RecordLessonView>>(
+                                    stream: readRecordLesson(),
+                                    builder: ((context, snapshot) {
+                                      if (snapshot.hasError) {
+                                        return const Text(
+                                            "Something went wrong!");
+                                      } else if (snapshot.hasData) {
+                                        final recordLesson = snapshot.data!;
+                                        //Controllo se ci sono due record con lo stesso lesson id e li rimuovo
+                                        List<RecordLessonView> elementToRemove =
+                                            [];
+                                        int index = 0;
+                                        for (var element in recordLesson) {
+                                          int i = 0;
+                                          bool toRemove = false;
+                                          while (i < index && !toRemove) {
+                                            if (recordLesson
+                                                    .elementAt(i)
+                                                    .lessonId ==
+                                                element.lessonId) {
+                                              toRemove = true;
+                                            }
+                                            i++;
                                           }
-                                        }),
-                                        child: CategoryCard(
-                                          name: category.name,
-                                          url: category.imageURL,
-                                          selected:
-                                              selectedCategory == category.name,
-                                        ),
-                                      ))
-                                  .toList(),
-                            );
-                          } else {
-                            return const Center(
-                              child: CircularProgressIndicator(),
+                                          if (toRemove) {
+                                            elementToRemove.add(element);
+                                          }
+                                          index++;
+                                        }
+                                        for (var element in elementToRemove) {
+                                          recordLesson.remove(element);
+                                        }
+                                        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                        if (recordLesson.length >= 1) {
+                                          return StreamBuilder<List<Lesson>>(
+                                              stream: readAllLessons(),
+                                              builder: ((context, snapshot) {
+                                                if (snapshot.hasError) {
+                                                  return const Text(
+                                                      "Something went wrong!");
+                                                } else if (snapshot.hasData) {
+                                                  List<Lesson> lessons =
+                                                      snapshot.data!;
+
+                                                  // Estrae solo gli ID dalla listaId
+                                                  final listaIdString =
+                                                      recordLesson
+                                                          .map((oggetto) =>
+                                                              oggetto.lessonId)
+                                                          .toList();
+
+                                                  // Filtra gli oggetti con ID presenti nella listaId
+                                                  lessons.retainWhere(
+                                                      (oggetto) => listaIdString
+                                                          .contains(
+                                                              oggetto.id));
+
+                                                  // Ordina la lista degli oggetti in base all'ordine della listaId
+                                                  lessons.sort((a, b) {
+                                                    int indexA = listaIdString
+                                                        .indexOf(a.id);
+                                                    int indexB = listaIdString
+                                                        .indexOf(b.id);
+                                                    return indexA
+                                                        .compareTo(indexB);
+                                                  });
+
+                                                  if (lessons.length >= 1) {
+                                                    return GridView.builder(
+                                                      physics:
+                                                          const NeverScrollableScrollPhysics(),
+                                                      shrinkWrap: true,
+                                                      gridDelegate:
+                                                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                                                        maxCrossAxisExtent: 400,
+                                                        childAspectRatio:
+                                                            35 / 9,
+                                                        mainAxisSpacing: 10.0,
+                                                        crossAxisSpacing: 10.0,
+                                                      ),
+                                                      itemCount: lessons.length,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        return LessonCard(
+                                                          lesson:
+                                                              lessons[index],
+                                                        );
+                                                      },
+                                                    );
+                                                  } else {
+                                                    return Container();
+                                                  }
+                                                } else {
+                                                  return const Center(
+                                                      //child: CircularProgressIndicator(),
+                                                      );
+                                                }
+                                              }));
+                                        } else {
+                                          return Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Center(
+                                                child: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .noLessons),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      } else {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                    }))
+                              ],
                             );
                           }
-                        }),
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-                    const Divider(
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(height: 10),
-                    const SizedBox(height: 10),
-                    (() {
-                      if (selectedCategory == null && selectedLesson == null) {
-                        return Column(
-                          children: [
-                            //Recent
-                            Row(children: <Widget>[
-                              Text(AppLocalizations.of(context)!.recent,
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold)),
-                            ]),
-                            const SizedBox(height: 10),
-                            StreamBuilder<List<RecordLessonView>>(
-                                stream: readRecordLesson(),
-                                builder: ((context, snapshot) {
-                                  if (snapshot.hasError) {
-                                    return const Text("Something went wrong!");
-                                  } else if (snapshot.hasData) {
-                                    final recordLesson = snapshot.data!;
-                                    //Controllo se ci sono due record con lo stesso lesson id e li rimuovo
-                                    List<RecordLessonView> elementToRemove = [];
-                                    int index = 0;
-                                    for (var element in recordLesson) {
-                                      int i = 0;
-                                      bool toRemove = false;
-                                      while (i < index && !toRemove) {
-                                        if (recordLesson
-                                                .elementAt(i)
-                                                .lessonId ==
-                                            element.lessonId) {
-                                          toRemove = true;
+                          //CATEGORY SELECTED
+                          else if (selectedCategory != null &&
+                              selectedLesson == null) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(selectedCategory!,
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                                StreamBuilder<List<Lesson>>(
+                                    stream: readLessonsByCategory(
+                                        selectedCategory!),
+                                    builder: ((context, snapshot) {
+                                      if (snapshot.hasError) {
+                                        return const Text(
+                                            "Something went wrong!");
+                                      } else if (snapshot.hasData) {
+                                        if (snapshot.data!.length >= 1) {
+                                          final lessons = snapshot.data!;
+                                          return GridView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                              maxCrossAxisExtent: 400,
+                                              childAspectRatio: 35 / 9,
+                                              mainAxisSpacing: 10.0,
+                                              crossAxisSpacing: 10.0,
+                                            ),
+                                            itemCount: lessons.length,
+                                            itemBuilder: (context, index) {
+                                              return LessonCard(
+                                                lesson: lessons[index],
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          return Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Center(
+                                                child: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .noLessons),
+                                              ),
+                                            ],
+                                          );
                                         }
-                                        i++;
+                                      } else {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
                                       }
-                                      if (toRemove) {
-                                        elementToRemove.add(element);
+                                    })),
+                              ],
+                            );
+                          }
+                          //LESSON NAME SELECTED
+                          else if (selectedCategory == null &&
+                              selectedLesson != null) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(selectedLesson!,
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                                StreamBuilder<List<Lesson>>(
+                                    stream: readLessonsByTitle(selectedLesson!),
+                                    builder: ((context, snapshot) {
+                                      if (snapshot.hasError) {
+                                        return const Text(
+                                            "Something went wrong!");
+                                      } else if (snapshot.hasData) {
+                                        if (snapshot.data!.length >= 1) {
+                                          final lessons = snapshot.data!;
+                                          return GridView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                              maxCrossAxisExtent: 400,
+                                              childAspectRatio: 35 / 9,
+                                              mainAxisSpacing: 10.0,
+                                              crossAxisSpacing: 10.0,
+                                            ),
+                                            itemCount: lessons.length,
+                                            itemBuilder: (context, index) {
+                                              return LessonCard(
+                                                lesson: lessons[index],
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          return Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Center(
+                                                child: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .noLessons),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      } else {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
                                       }
-                                      index++;
-                                    }
-                                    for (var element in elementToRemove) {
-                                      recordLesson.remove(element);
-                                    }
-                                    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                    return Column(
-                                      children: recordLesson
-                                          .map(
-                                            (record) => StreamBuilder<
-                                                    List<Lesson>>(
-                                                stream: readLessonsById(
-                                                    record.lessonId!),
-                                                builder: ((context, snapshot) {
-                                                  if (snapshot.hasError) {
-                                                    return const Text(
-                                                        "Something went wrong!");
-                                                  } else if (snapshot.hasData) {
-                                                    if (snapshot.data!.length >=
-                                                        1) {
-                                                      final lesson =
-                                                          snapshot.data!.first;
-                                                      return LessonCard(
-                                                        lesson: lesson,
-                                                      );
-                                                    } else {
-                                                      return Container();
-                                                    }
-                                                  } else {
-                                                    return const Center(
-                                                        //child: CircularProgressIndicator(),
-                                                        );
-                                                  }
-                                                })),
-                                          )
-                                          .toList(),
-                                    );
-                                  } else {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-                                }))
-                          ],
-                        );
-                      } else if (selectedCategory != null &&
-                          selectedLesson == null) {
-                        return Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(selectedCategory!,
-                                  textAlign: TextAlign.left,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                            StreamBuilder<List<Lesson>>(
-                                stream:
-                                    readLessonsByCategory(selectedCategory!),
-                                builder: ((context, snapshot) {
-                                  if (snapshot.hasError) {
-                                    return const Text("Something went wrong!");
-                                  } else if (snapshot.hasData) {
-                                    if (snapshot.data!.length >= 1) {
-                                      final lesson = snapshot.data!.first;
-                                      return LessonCard(
-                                        lesson: lesson,
-                                      );
-                                    } else {
-                                      return Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 30,
-                                          ),
-                                          Text(AppLocalizations.of(context)!.noLessons),
-                                        ],
-                                      );
-                                    }
-                                  } else {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-                                })),
-                          ],
-                        );
-                      } else if (selectedCategory == null &&
-                          selectedLesson != null) {
-                        return Column(children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(selectedLesson!,
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold)),
-                          ),
-                          StreamBuilder<List<Lesson>>(
-                              stream: readLessonsByTitle(selectedLesson!),
-                              builder: ((context, snapshot) {
-                                if (snapshot.hasError) {
-                                  return const Text("Something went wrong!");
-                                } else if (snapshot.hasData) {
-                                  if (snapshot.data!.length >= 1) {
-                                    final lesson = snapshot.data!.first;
-                                    return LessonCard(
-                                      lesson: lesson,
-                                    );
-                                  } else {
-                                    return Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 30,
-                                        ),
-                                        Text(AppLocalizations.of(context)!.noLessons),
-                                      ],
-                                    );
-                                  }
-                                } else {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                              })),
-                        ]);
-                      } else if (selectedCategory != null &&
-                          selectedLesson != null) {
-                        return Column(children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(selectedLesson!,
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold)),
-                          ),
-                          StreamBuilder<List<Lesson>>(
-                              stream: readLessonsByCategoryTitle(
-                                  selectedCategory!, selectedLesson!),
-                              builder: ((context, snapshot) {
-                                if (snapshot.hasError) {
-                                  return const Text("Something went wrong!");
-                                } else if (snapshot.hasData) {
-                                  if (snapshot.data!.length >= 1) {
-                                    final lesson = snapshot.data!.first;
-                                    return LessonCard(
-                                      lesson: lesson,
-                                    );
-                                  } else {
-                                    return Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 30,
-                                        ),
-                                        Text(AppLocalizations.of(context)!.noLessons),
-                                      ],
-                                    );
-                                  }
-                                } else {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                              })),
-                        ]);
-                      }
-                      return Container();
-                    }()),
-                  ],
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
-      ),
+                                    })),
+                              ],
+                            );
+                          }
+                          //LESSON NAME AND CATEGORY SELECTED
+                          else if (selectedCategory != null &&
+                              selectedLesson != null) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(selectedLesson!,
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold)),
+                                StreamBuilder<List<Lesson>>(
+                                    stream: readLessonsByCategoryTitle(
+                                        selectedCategory!, selectedLesson!),
+                                    builder: ((context, snapshot) {
+                                      if (snapshot.hasError) {
+                                        return const Text(
+                                            "Something went wrong!");
+                                      } else if (snapshot.hasData) {
+                                        if (snapshot.data!.length >= 1) {
+                                          final lessons = snapshot.data!;
+                                          return GridView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                              maxCrossAxisExtent: 400,
+                                              childAspectRatio: 35 / 9,
+                                              mainAxisSpacing: 10.0,
+                                              crossAxisSpacing: 10.0,
+                                            ),
+                                            itemCount: lessons.length,
+                                            itemBuilder: (context, index) {
+                                              return LessonCard(
+                                                lesson: lessons[index],
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          return Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Center(
+                                                child: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .noLessons),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      } else {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                    })),
+                              ],
+                            );
+                          }
+                          return Container();
+                        }()),
+                      ],
+                    ),
+                  ),
+                  //Categories
+                ],
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
     );
   }
 }

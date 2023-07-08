@@ -34,7 +34,7 @@ class _AutocompleteSearchbarSearchPageState
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(6.0),
       child: Column(
         children: [
           Autocomplete(

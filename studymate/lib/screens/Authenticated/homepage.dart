@@ -12,7 +12,6 @@ import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart'
 import 'package:studymate/screens/Authenticated/notification/notification_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -21,14 +20,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  Stream<List<Lesson>> readLessons(String userId, String category) =>
-      FirebaseFirestore.instance
-          .collection('lessons')
-          .where('userTutor', isNotEqualTo: userId)
-          .where('category', isEqualTo: category)
-          .snapshots()
-          .map((snapshot) =>
-              snapshot.docs.map((doc) => Lesson.fromJson(doc.data())).toList());
+  Stream<List<Lesson>> readLessons(String userId) => FirebaseFirestore.instance
+      .collection('lessons')
+      .where('userTutor', isNotEqualTo: userId)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Lesson.fromJson(doc.data())).toList());
 
   Stream<List<Users>> readUser(String userId) => FirebaseFirestore.instance
       .collection('users')
@@ -55,18 +52,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.shortestSide < 600;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     Size size = MediaQuery.of(context).size;
     double w = size.width;
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 20),
-            //Header
-            Row(children: <Widget>[
-               Expanded(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const SizedBox(height: 20),
+          //Header
+          Container(
+            child: Row(children: <Widget>[
+              Expanded(
                 flex: 9,
                 child: Text(AppLocalizations.of(context)!.welcome,
                     textAlign: TextAlign.left,
@@ -114,154 +115,121 @@ class _HomePageState extends State<HomePage> {
                       },
                     );
                   })),
-              /*
-              const SizedBox(width: 10),
-              StreamBuilder(
-                  stream: readMessages(),
+            ]),
+          ),
+          Expanded(
+            child: ListView(
+              children: [
+                (w < 490)
+                    ? Column(
+                        children: [
+                          //--------------------
+                          //Your next lesson
+                          HomeCard(
+                            user: user,
+                            isTutoring: false,
+                          ),
+                          //--------------------
+                          //Your next tutoring
+                          HomeCard(
+                            user: user,
+                            isTutoring: true,
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          //--------------------
+                          //Your next lesson
+                          HomeCard(
+                            user: user,
+                            isTutoring: false,
+                          ),
+
+                          //--------------------
+                          //Your next tutoring
+
+                          HomeCard(
+                            user: user,
+                            isTutoring: true,
+                          ),
+                        ],
+                      ),
+
+                //--------------------\
+                //Suggested for you
+                const SizedBox(height: 20),
+                Text(AppLocalizations.of(context)!.suggestedTitle,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    )),
+                const SizedBox(height: 10),
+                Text(AppLocalizations.of(context)!.suggestedSubTitle,
+                    style: const TextStyle(
+                      fontSize: 13,
+                    )),
+                const SizedBox(height: 30),
+                StreamBuilder<List<Users>>(
+                  stream: readUser(user.uid),
                   builder: ((context, snapshot) {
-                    if (snapshot.hasData) {
-                      List<Chat> messages = snapshot.data!;
-                      if (messages.isNotEmpty) {
-                        int num = 0;
-                        messages.forEach((element) {
-                          if (element.num_msg! > 0 &&
-                              element.from_uid != user.uid) {
-                            num += 1;
-                          }
-                        });
-                        if (num > 0) {
-                          return IconButton(
-                            icon: badges.Badge(
-                              position: BadgePosition.topEnd(top: 0, end: 0),
-                              showBadge: true,
-                              child: const Icon(
-                                Icons.message,
-                                color: Colors.grey,
-                                size: 25.0,
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .push(createRoute(ChatsPage()));
-                            },
-                          );
-                        }
-                      }
-                    }
-                    return IconButton(
-                      icon: badges.Badge(
-                        position: BadgePosition.topEnd(top: 0, end: 0),
-                        showBadge: false,
-                        child: const Icon(
-                          Icons.message,
-                          color: Colors.grey,
-                          size: 25.0,
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).push(createRoute(ChatsPage()));
-                      },
-                    );
-                  })),
-                  */
-            ]),
-            (w < 490)
-                ? Column(
-                    children: [
-                      //--------------------
-                      //Your next lesson
-                      HomeCard(
-                        user: user,
-                        isTutoring: false,
-                      ),
-                      //--------------------
-                      //Your next tutoring
-                      HomeCard(
-                        user: user,
-                        isTutoring: true,
-                      ),
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      //--------------------
-                      //Your next lesson
-                      HomeCard(
-                        user: user,
-                        isTutoring: false,
-                      ),
+                    if (snapshot.hasError) {
+                      return const Text("Something went wrong!");
+                    } else if (snapshot.hasData) {
+                      final categories =
+                          snapshot.data!.first.categoriesOfInterest;
 
-                      //--------------------
-                      //Your next tutoring
+                      return StreamBuilder<List<Lesson>>(
+                          stream: readLessons(user.uid),
+                          builder: ((context, snapshot) {
+                            if (snapshot.hasError) {
+                              return const Text("Something went wrong!");
+                            } else if (snapshot.hasData) {
+                              List<Lesson> lessons = snapshot.data!;
+                              lessons.removeWhere((item) =>
+                                  !categories!.contains(item.category));
 
-                      HomeCard(
-                        user: user,
-                        isTutoring: true,
-                      ),
-                    ],
-                  ),
-
-            //--------------------
-            //Suggested for you
-            const SizedBox(height: 20),
-            Row(children: <Widget>[
-              Text(AppLocalizations.of(context)!.suggestedTitle,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-            ]),
-            const SizedBox(height: 10),
-             Text(
-                AppLocalizations.of(context)!.suggestedSubTitle,
-                textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 13)),
-            const SizedBox(height: 30),
-            StreamBuilder<List<Users>>(
-                stream: readUser(user.uid),
-                builder: ((context, snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text("Something went wrong!");
-                  } else if (snapshot.hasData) {
-                    final categories =
-                        snapshot.data!.first.categoriesOfInterest;
-                    return Column(
-                      children: categories!
-                          .map(
-                            (category) => StreamBuilder<List<Lesson>>(
-                                stream: readLessons(user.uid, category),
-                                builder: ((context, snapshot) {
-                                  if (snapshot.hasError) {
-                                    return const Text("Something went wrong!");
-                                  } else if (snapshot.hasData) {
-                                    final lessons = snapshot.data!;
-                                    return Column(
-                                      children: lessons
-                                          .map(
-                                            (lesson) => LessonCard(
-                                              lesson: lesson,
-                                            ),
-                                          )
-                                          .toList(),
+                              if (lessons.length == 0) {
+                                return Text(AppLocalizations.of(context)!.noLessons);
+                              } else {
+                                return GridView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 400,
+                                    childAspectRatio: 35 / 9,
+                                    mainAxisSpacing: 10.0,
+                                    crossAxisSpacing: 10.0,
+                                  ),
+                                  itemCount: lessons.length,
+                                  itemBuilder: (context, index) {
+                                    return LessonCard(
+                                      lesson: lessons[index],
                                     );
-                                  } else {
-                                    return const Center(
-                                        //child: CircularProgressIndicator(),
-                                        );
-                                  }
-                                })),
-                          )
-                          .toList(),
-                    );
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                }))
+                                  },
+                                );
+                              }
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          }));
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  }),
+                ),
 
-            //--------------------
-          ],
-        ),
+                //-------------------
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
