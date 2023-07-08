@@ -38,13 +38,22 @@ class _AuthenticatedState extends State<Authenticated> {
   Widget build(BuildContext context) {
     Widget page;
     final isMobile = MediaQuery.of(context).size.shortestSide < 600;
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     switch (_selectedIndex) {
       case 0:
-        page = HomePage();
+        page = HomePage(
+          isSearching: false,
+        );
         break;
       case 1:
-        page = SearchPage();
+        if (!isPortrait && !isMobile) {
+          page = HomePage(
+            isSearching: true,
+          );
+        } else {
+          page = SearchPage();
+        }
         break;
       case 2:
         page = NewLessonPage();
@@ -63,7 +72,7 @@ class _AuthenticatedState extends State<Authenticated> {
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
           body: SafeArea(
-            child: isPortrait
+            child: (isPortrait)
                 ? Container(
                     child: page,
                   )
@@ -73,12 +82,10 @@ class _AuthenticatedState extends State<Authenticated> {
                         selectedIndex: _selectedIndex,
                         groupAlignment: -1.0,
                         onDestinationSelected: (int index) {
-                          setState(() {
-                            _selectedIndex = index;
-                          });
+                          _onItemTapped(index);
                         },
                         labelType: NavigationRailLabelType.none,
-                        leading:  const SizedBox(),
+                        leading: const SizedBox(),
                         trailing: const SizedBox(),
                         destinations: <NavigationRailDestination>[
                           const NavigationRailDestination(
@@ -149,7 +156,7 @@ class _AuthenticatedState extends State<Authenticated> {
                     ],
                   ),
           ),
-          bottomNavigationBar: isPortrait
+          bottomNavigationBar: (isPortrait)
               ? Container(
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -239,7 +246,7 @@ class _AuthenticatedState extends State<Authenticated> {
                     ),
                   ),
                 )
-              : SizedBox());
+              : const SizedBox());
     });
   }
 }
