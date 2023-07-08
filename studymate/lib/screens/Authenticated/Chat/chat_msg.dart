@@ -172,14 +172,7 @@ class _MsgState extends State<ChatMsg> {
                                           child: Wrap(children: [
                                         ListTile(
                                           onTap: () async {
-                                            Position position =
-                                                await getCurrentPosition();
-                                            double latitude = position.latitude;
-                                            double longitude =
-                                                position.longitude;
-
-                                            send(
-                                                "l4t:$latitude;l0n:$longitude");
+                                            sendPosition();
                                           },
                                           //leading: ,
                                           leading: const Icon(
@@ -238,40 +231,47 @@ class _MsgState extends State<ChatMsg> {
     ));
   }
 
-  Future<Position> getCurrentPosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+  Future sendPosition() async {
+    try {
+      bool serviceEnabled;
+      LocationPermission permission;
 
-    // Check if location services are enabled
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled
-      throw 'Location services are disabled.';
-    }
-
-    // Check location permission
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.deniedForever) {
-      // The user permanently denied location permission
-      throw 'Location permissions are permanently denied.';
-    }
-
-    if (permission == LocationPermission.denied) {
-      // Request location permission
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        // The user denied location permission
-        throw 'Location permissions are denied.';
+      // Check if location services are enabled
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Location services are not enabled
+        throw 'Location services are disabled.';
       }
+
+      // Check location permission
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.deniedForever) {
+        // The user permanently denied location permission
+        throw 'Location permissions are permanently denied.';
+      }
+
+      if (permission == LocationPermission.denied) {
+        // Request location permission
+        permission = await Geolocator.requestPermission();
+        if (permission != LocationPermission.whileInUse &&
+            permission != LocationPermission.always) {
+          // The user denied location permission
+          throw 'Location permissions are denied.';
+        }
+      }
+
+      // Get the current position
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      double latitude = position.latitude;
+      double longitude = position.longitude;
+
+      send("l4t:$latitude;l0n:$longitude");
+      Navigator.of(context).pop();
+      _scrollToEnd();
+    } catch (e) {
+      print(e);
     }
-
-    // Get the current position
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    return position;
   }
 
   List<List<Msg>> groupByDate(List<Msg> msgs) {
@@ -347,6 +347,7 @@ class _MsgState extends State<ChatMsg> {
   Widget displayMessage(Msg message) {
     if (message.from_uid == user.uid) {
       return SentMessage(
+        reciver: widget.reciver,
         message: message.content,
         addTime: message.addtime,
         view: message.view,

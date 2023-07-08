@@ -6,35 +6,63 @@ import 'package:line_icons/line_icons.dart';
 import 'package:studymate/models/user.dart';
 import '../../../service/storage_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoding/geocoding.dart';
 
-class ShareCurrPosition extends StatefulWidget {
+class SharePosition extends StatefulWidget {
   final double latitude;
   final double longitude;
   final Users reciver;
-  const ShareCurrPosition({
+  const SharePosition({
     super.key,
     required this.reciver,
     required this.latitude,
     required this.longitude,
   });
   @override
-  _ShareCurrPositionState createState() => _ShareCurrPositionState();
+  _SharePositionState createState() => _SharePositionState();
 }
 
-class _ShareCurrPositionState extends State<ShareCurrPosition> {
+class _SharePositionState extends State<SharePosition> {
   late Position _currentPosition;
   late GoogleMapController _controller;
   //final Utilities _utilities = Utilities();
   late Set<Marker> _markers = {};
   final LatLng _initialCameraPosition = const LatLng(45.475714, 9.1365314);
-  final String rue = "Position";
+  late String title = "Shared Position";
+
+  @override
+  void initState() {
+    super.initState();
+    _getAddressFromLatLng(); // Call your initialization function here
+  }
+
+  Future<void> _getAddressFromLatLng() async {
+    try {
+      await placemarkFromCoordinates(widget.latitude, widget.longitude)
+          .then((List<Placemark> placemarks) {
+        Placemark place = placemarks[0];
+        if (placemarks.isEmpty) {
+          title = "Shared Position";
+        } else {
+          setState(() {
+            title = "${place.street},  ${place.subAdministrativeArea}";
+          });
+        }
+      }).catchError((e) {
+        debugPrint(e);
+      });
+    } catch (e) {
+      title = "Shared Position";
+    }
+  }
+
   //this method is used for settings the map during the creation phase
   void _onMapCreated(GoogleMapController controller) {
     _controller = controller;
     _markers = {};
     //_getCurrentLocation();
-    _createMarker(widget.latitude, widget.longitude, "destination",
-        "${widget.reciver.firstname} ${widget.reciver.lastname}");
+    _getAddressFromLatLng();
+    _createMarker(widget.latitude, widget.longitude, "destination", title);
     _getDestinationLocation();
   }
 
@@ -199,7 +227,6 @@ class _ShareCurrPositionState extends State<ShareCurrPosition> {
   @override
   Widget build(BuildContext context) {
     final Storage storage = Storage();
-    //final LatLng destination = LatLng(widget.latitude, widget.longitude);
     return Scaffold(
         body: Container(
       color: const Color.fromARGB(18, 233, 64, 87),
@@ -244,7 +271,7 @@ class _ShareCurrPositionState extends State<ShareCurrPosition> {
                   const SizedBox(width: 20),
                   Expanded(
                     child: Text(
-                      rue,
+                      title,
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         fontSize: 16,

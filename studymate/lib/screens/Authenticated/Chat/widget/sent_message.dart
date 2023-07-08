@@ -4,13 +4,21 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 
+import '../../../../models/user.dart';
+import '../share_position.dart';
 import 'custom_shape.dart';
 
 class SentMessage extends StatelessWidget {
+  final Users reciver;
   final String? message;
   final Timestamp? addTime;
   final bool? view;
-  const SentMessage({super.key, this.message, this.addTime, this.view});
+  const SentMessage(
+      {super.key,
+      this.message,
+      this.addTime,
+      this.view,
+      required this.reciver});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +26,7 @@ class SentMessage extends StatelessWidget {
     double latitude = 45.465665;
     double longitude = 9.1892020;
     try {
-      latitude = double.parse(pos.substring(5, pos.indexOf(";")));
+      latitude = double.parse(pos.substring(4, pos.indexOf(";")));
 
       longitude = double.parse(pos.substring(pos.indexOf(";") + 5));
     } catch (e) {
@@ -31,13 +39,15 @@ class SentMessage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           const SizedBox(height: 30),
-          messageTextGroup(latitude, longitude),
+          messageTextGroup(context, latitude, longitude),
         ],
       ),
     );
   }
 
-  Widget messageTextGroup(double latitude, double longitude) => Flexible(
+  Widget messageTextGroup(
+          BuildContext context, double latitude, double longitude) =>
+      Flexible(
           child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,10 +94,20 @@ class SentMessage extends StatelessWidget {
                                       ),
                                     }),
                               ),
-                              SizedBox(
-                                height: 150,
-                                width: 100,
-                              ),
+                              InkWell(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SharePosition(
+                                              latitude: latitude,
+                                              longitude: longitude,
+                                              reciver: reciver,
+                                            ))),
+                                child: SizedBox(
+                                  height: 150,
+                                  width: 100,
+                                ),
+                              )
                             ],
                           )
                         : Text(

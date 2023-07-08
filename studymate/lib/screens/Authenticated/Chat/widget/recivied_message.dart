@@ -4,7 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:studymate/models/user.dart';
-import 'package:studymate/screens/Authenticated/Chat/share_curr_position.dart';
+import 'package:studymate/screens/Authenticated/Chat/share_position.dart';
 import 'dart:math';
 
 import 'custom_shape.dart';
@@ -22,7 +22,7 @@ class ReciviedMessage extends StatelessWidget {
     double latitude = 45.465665;
     double longitude = 9.1892020;
     try {
-      latitude = double.parse(pos.substring(5, pos.indexOf(";")));
+      latitude = double.parse(pos.substring(4, pos.indexOf(";")));
 
       longitude = double.parse(pos.substring(pos.indexOf(";") + 5));
     } catch (e) {
@@ -100,7 +100,7 @@ class ReciviedMessage extends StatelessWidget {
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ShareCurrPosition(
+                                    builder: (context) => SharePosition(
                                           latitude: latitude,
                                           longitude: longitude,
                                           reciver: reciver,
