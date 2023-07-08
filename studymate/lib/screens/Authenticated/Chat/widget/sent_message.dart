@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 
@@ -13,19 +14,30 @@ class SentMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String pos = message!;
+    double latitude = 45.465665;
+    double longitude = 9.1892020;
+    try {
+      latitude = double.parse(pos.substring(5, pos.indexOf(";")));
+
+      longitude = double.parse(pos.substring(pos.indexOf(";") + 5));
+    } catch (e) {
+      // Handle parsing errors here
+      print("Error parsing number: $e");
+    }
     return Padding(
       padding: const EdgeInsets.only(right: 18.0, left: 50, top: 15, bottom: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           const SizedBox(height: 30),
-          messageTextGroup(),
+          messageTextGroup(latitude, longitude),
         ],
       ),
     );
   }
 
-  Widget messageTextGroup() => Flexible(
+  Widget messageTextGroup(double latitude, double longitude) => Flexible(
           child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,9 +57,38 @@ class SentMessage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     (message!.contains("l4t:") && message!.contains("l0n:"))
-                        ? Icon(
-                            LineIcons.mapMarker,
-                            color: Colors.white,
+                        ? Stack(
+                            children: [
+                              Container(
+                                height: 150,
+                                width: 200,
+                                child: GoogleMap(
+                                    myLocationButtonEnabled: false,
+                                    myLocationEnabled: false,
+                                    zoomControlsEnabled: false,
+                                    zoomGesturesEnabled: false,
+                                    scrollGesturesEnabled: false,
+                                    compassEnabled: false,
+                                    rotateGesturesEnabled: false,
+                                    mapToolbarEnabled: false,
+                                    tiltGesturesEnabled: false,
+                                    //onMapCreated: _onMapCreated,
+                                    initialCameraPosition: CameraPosition(
+                                        target: LatLng(latitude, longitude),
+                                        zoom: 30),
+                                    markers: {
+                                      Marker(
+                                        markerId: MarkerId("destination"),
+                                        position: LatLng(latitude, longitude),
+                                        icon: BitmapDescriptor.defaultMarker,
+                                      ),
+                                    }),
+                              ),
+                              SizedBox(
+                                height: 150,
+                                width: 100,
+                              ),
+                            ],
                           )
                         : Text(
                             message!,

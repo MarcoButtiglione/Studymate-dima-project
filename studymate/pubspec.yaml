@@ -42,12 +42,17 @@ dependencies:
   geolocator: ^8.2.0
   google_maps_flutter: ^2.1.7
   location: ^4.4.0
+  http: ^1.1.0
+  json_serializable: ^6.7.1
+  json_annotation: ^4.8.1
+  permission_handler: ^10.4.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
   flutter_launcher_icons: ^0.13.1
+  build_runner: ^2.4.6
 
 
 flutter:
@@ -55,7 +60,6 @@ flutter:
   assets:
     - assets/boarding/
     - assets/login/
-
     - assets/data.json
   uses-material-design: true
 
