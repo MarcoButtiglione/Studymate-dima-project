@@ -104,6 +104,7 @@ class ClassCard extends StatelessWidget {
     double w = size.width;
 
     return Card(
+      elevation: 5,
       
       surfaceTintColor: Colors.white,
       child: Container(

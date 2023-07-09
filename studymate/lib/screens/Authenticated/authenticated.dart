@@ -93,6 +93,7 @@ class _AuthenticatedState extends State<Authenticated> {
 
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
+          resizeToAvoidBottomInset: false,
           body: SafeArea(
             child: (isPortrait)
                 ? Container(
