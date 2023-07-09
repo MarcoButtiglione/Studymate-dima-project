@@ -30,6 +30,7 @@ class _AuthenticatedState extends State<Authenticated> {
         showDragHandle: true,
         context: context,
         isScrollControlled: true,
+        useSafeArea: true,
         builder: (context) => Container(
           child: NewLessonPage(
             isModal: true,

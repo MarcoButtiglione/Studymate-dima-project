@@ -32,6 +32,9 @@ class _LessonCardState extends State<LessonCard> {
   @override
   Widget build(BuildContext context) {
     final Storage storage = Storage();
+    final isMobile = MediaQuery.of(context).size.shortestSide < 600;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return StreamBuilder<List<Users>>(
       stream: readUser(),
@@ -42,10 +45,26 @@ class _LessonCardState extends State<LessonCard> {
           final user = snapshot.data!.first;
           return InkWell(
             onTap: () {
-              Navigator.of(context).push(_createRoute(LessonPage(
-                lesson: widget.lesson,
-                user: user,
-              )));
+              if (!isMobile) {
+                showModalBottomSheet(
+                  showDragHandle: true,
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  builder: (context) => Container(
+                    child: LessonPage(
+                      lesson: widget.lesson,
+                      user: user,
+                    ),
+                  ),
+                );
+              } else {
+                Navigator.of(context).push(_createRoute(LessonPage(
+                  lesson: widget.lesson,
+                  user: user,
+                )));
+              }
             },
             child: Row(
               children: [
