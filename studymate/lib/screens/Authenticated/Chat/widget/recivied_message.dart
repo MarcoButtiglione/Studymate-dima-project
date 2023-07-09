@@ -18,15 +18,11 @@ class ReciviedMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String pos = message!;
-    double latitude = 45.465665;
-    double longitude = 9.1892020;
-    try {
+    double latitude = 0.0;
+    double longitude = 0.0;
+    if (pos.contains("l4t:") && pos.contains("l0n:") && pos.contains(";")) {
       latitude = double.parse(pos.substring(4, pos.indexOf(";")));
-
       longitude = double.parse(pos.substring(pos.indexOf(";") + 5));
-    } catch (e) {
-      // Handle parsing errors here
-      print("Error parsing number: $e");
     }
     return Padding(
       padding: const EdgeInsets.only(right: 18.0, left: 18, top: 15, bottom: 5),
@@ -67,7 +63,9 @@ class ReciviedMessage extends StatelessWidget {
               ),
               child:
                   Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                (message!.contains("l4t:") && message!.contains("l0n:"))
+                (message!.contains("l4t:") &&
+                        message!.contains("l0n:") &&
+                        message!.contains(";"))
                     ? InkWell(
                         onTap: () => Navigator.push(
                             context,

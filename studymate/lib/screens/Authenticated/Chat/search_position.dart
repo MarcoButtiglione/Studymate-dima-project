@@ -283,9 +283,11 @@ class _SearchPositionState extends State<SearchPosition> {
                             onSelected: (Place place) async {
                               final geolocation = await place.geolocation;
                               latlng.LatLng tmp = geolocation!.coordinates;
+                              setState(() {
+                                _destination =
+                                    LatLng(tmp.latitude, tmp.longitude);
+                              });
 
-                              _destination =
-                                  LatLng(tmp.latitude, tmp.longitude);
                               _createMarker(place.description);
                               _getDestinationLocation();
                             },
@@ -310,11 +312,14 @@ class _SearchPositionState extends State<SearchPosition> {
             from_uid: widget.fromId,
             //to_uid: widget.reciver.id,
             content:
-                "l4t:${_destination.latitude},l0n:${_destination.longitude}");
+                "l4t:${_destination.latitude};l0n:${_destination.longitude}");
         final json = addMsg.toFirestore();
         await docUser.add(json).then((DocumentReference doc) {
           docId = doc.id;
         });
+        print(
+            "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ${_destination.latitude},${_destination.longitude}");
+
         docUser.doc(docId).update({'id': docId});
         int num = widget.num! + 1;
         FirebaseFirestore.instance
