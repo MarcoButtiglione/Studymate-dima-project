@@ -172,996 +172,954 @@ class _LessonState extends State<LessonPage> {
   @override
   Widget build(BuildContext context) {
     final Storage storage = Storage();
+    final isMobile = MediaQuery.of(context).size.shortestSide < 600;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          child: Stack(
-            children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  width: 150,
-                  height: 600,
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  child: StreamBuilder<List<Category>>(
-                      stream: readCategory(),
-                      builder: ((context, snapshot) {
-                        if (snapshot.hasError) {
-                          return const Text("Something went wrong!");
-                        } else if (snapshot.hasData) {
-                          final category = snapshot.data!.first;
-                          return FutureBuilder(
-                              future: storage.downloadURL(category.imageURL),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  return const Text("Something went wrong!");
-                                } else if (snapshot.hasData) {
-                                  return Image(
-                                    fit: BoxFit.fill,
-                                    image: NetworkImage(snapshot.data!),
-                                  );
-                                } else {
-                                  return Container();
-                                }
-                              });
-                        } else {
-                          return const Center(
-                              //child: CircularProgressIndicator(),
-                              );
-                        }
-                      })),
-                ),
-              ),
-              Positioned(
-                  top: 0,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            elevation: 0,
+            toolbarHeight: 70,
+            automaticallyImplyLeading: false,
+            //Buttons top
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop(context);
+                  },
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.of(context).pop(context);
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10.0),
-                                      topLeft: Radius.circular(10.0),
-                                      bottomLeft: Radius.circular(10.0),
-                                      bottomRight: Radius.circular(10.0),
-                                    ),
-                                    color: Color.fromARGB(211, 255, 255, 255),
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: SizedBox(
-                                      height: 40,
-                                      width: 40,
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.arrow_back_ios_new,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10.0),
+                        topLeft: Radius.circular(10.0),
+                        bottomLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                      ),
+                      color: Color.fromARGB(211, 255, 255, 255),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: Center(
+                          child: Icon(
+                            Icons.arrow_back_ios_new,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  constraints: const BoxConstraints(maxWidth: 200),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10.0),
+                      topLeft: Radius.circular(10.0),
+                      bottomLeft: Radius.circular(10.0),
+                      bottomRight: Radius.circular(10.0),
+                    ),
+                    color: Color.fromARGB(211, 255, 255, 255),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(35),
+                            child: FutureBuilder(
+                                future: storage
+                                    .downloadURL(widget.user.profileImageURL),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return const Text("Something went wrong!");
+                                  } else if (snapshot.hasData) {
+                                    return Image(
+                                      image: NetworkImage(snapshot.data!),
+                                    );
+                                  } else {
+                                    return Card(
+                                      margin: EdgeInsets.zero,
+                                    );
+                                  }
+                                }),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              widget.user.firstname +
+                                  " " +
+                                  widget.user.lastname,
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 46, 46, 46),
                               ),
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              constraints: const BoxConstraints(maxWidth: 200),
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10.0),
-                                  topLeft: Radius.circular(10.0),
-                                  bottomLeft: Radius.circular(10.0),
-                                  bottomRight: Radius.circular(10.0),
-                                ),
-                                color: Color.fromARGB(211, 255, 255, 255),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            //Buttons chat, like, booking
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(70),
+              child: Container(
+                height: 100,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 50,
+                      right: 0,
+                      left: 0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(50.0),
+                            topLeft: Radius.circular(50.0),
+                          ),
+                          color: Theme.of(context).colorScheme.background,
+                        ),
+                        height: 50,
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      left: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment
+                            .center, //Center Row contents horizontally,
+
+                        children: [
+                          SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: IconButton(
+                                icon: const Icon(Icons.message_outlined),
+                                onPressed: () {
+                                  Users receiver = widget.user;
+                                  send(receiver);
+                                },
+                                style: messageButtonStyle()),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          SizedBox(
+                            width: 90,
+                            height: 90,
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.check_outlined,
+                                size: 50,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      height: 40,
-                                      width: 40,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(35),
-                                        child: FutureBuilder(
-                                            future: storage.downloadURL(
-                                                widget.user.profileImageURL),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.hasError) {
-                                                return const Text(
-                                                    "Something went wrong!");
-                                              } else if (snapshot.hasData) {
-                                                return Image(
-                                                  image: NetworkImage(
-                                                      snapshot.data!),
-                                                );
-                                              } else {
-                                                return Card(
-                                                  margin: EdgeInsets.zero,
-                                                );
-                                              }
-                                            }),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Flexible(
-                                      child: Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          widget.user.firstname +
-                                              " " +
-                                              widget.user.lastname,
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
-                                          softWrap: false,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color:
-                                                Color.fromARGB(255, 46, 46, 46),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              onPressed: () {
+                                showModalBottomSheet(
+                                    elevation: 1,
+                                    context: context,
+                                    isScrollControlled: true,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(40))),
+                                    builder: (context) => BookLessonModal(
+                                        user: widget.user,
+                                        lesson: widget.lesson));
+                              },
+                              style: bookLessonButtonStyle(),
                             ),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: StreamBuilder<List<SavedLesson>>(
+                                stream: readSavedLesson(),
+                                builder: ((context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return IconButton(
+                                      isSelected: false,
+                                      icon: const Icon(
+                                        Icons.error,
+                                        size: 25,
+                                      ),
+                                      onPressed: () {},
+                                      style: savedButtonStyle(false),
+                                    );
+                                  } else if (snapshot.hasData) {
+                                    //If saved
+                                    if (snapshot.data!.isNotEmpty) {
+                                      final savedLesson = snapshot.data!.first;
+                                      return IconButton(
+                                        isSelected: true,
+                                        icon: const Icon(
+                                          Icons.favorite_outline,
+                                          size: 25,
+                                        ),
+                                        selectedIcon: const Icon(
+                                          Icons.favorite,
+                                          size: 25,
+                                        ),
+                                        onPressed: () {
+                                          if (!isBusy) {
+                                            removeSavedLesson(
+                                                savedLessonId: savedLesson.id!);
+                                          }
+                                        },
+                                        style: savedButtonStyle(true),
+                                      );
+                                    }
+                                    //If not saved
+                                    else {
+                                      return IconButton(
+                                        isSelected: false,
+                                        icon: const Icon(
+                                          Icons.favorite_outline,
+                                          size: 25,
+                                        ),
+                                        selectedIcon: const Icon(
+                                          Icons.favorite,
+                                          size: 25,
+                                        ),
+                                        onPressed: () {
+                                          if (!isBusy) {
+                                            final savedLesson = SavedLesson(
+                                                lessonId: widget.lesson.id,
+                                                userId: userLog.uid);
+                                            saveLesson(
+                                                savedLesson: savedLesson);
+                                          }
+                                        },
+                                        style: savedButtonStyle(false),
+                                      );
+                                    }
+                                  } else {
+                                    return IconButton(
+                                      isSelected: false,
+                                      icon: const Icon(
+                                        Icons.favorite_outline,
+                                        size: 25,
+                                      ),
+                                      selectedIcon: const Icon(
+                                        Icons.favorite,
+                                        size: 25,
+                                      ),
+                                      onPressed: () {},
+                                      style: savedButtonStyle(false),
+                                    );
+                                  }
+                                })),
                           ),
                         ],
                       ),
                     ),
-                  )),
-              Positioned(
-                top: 300,
-                left: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(50.0),
-                      topLeft: Radius.circular(50.0),
-                    ),
-                    color: Theme.of(context).colorScheme.background,
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 300,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 40),
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                widget.lesson.title,
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                    fontSize: 25, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                widget.lesson.category,
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            /*
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Location",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Milano, MI",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topRight: Radius.circular(10.0),
-                                      topLeft: Radius.circular(10.0),
-                                      bottomLeft: Radius.circular(10.0),
-                                      bottomRight: Radius.circular(10.0),
-                                    ),
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                  ),
-                                  width: 100,
-                                  height: 50,
-                                  padding: const EdgeInsets.all(10),
-                                  child: const Row(
-                                    children: [
-                                      Icon(
-                                        Icons.pin_drop,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text("1 km")
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                            
-                            const SizedBox(
-                              height: 25,
-                            ),
-                            */
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                AppLocalizations.of(context)!.date,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Wrap(
-                              children: [
-                                StreamBuilder<List<TimeslotsWeek>>(
-                                    stream: readTimeslot(),
-                                    builder: ((context, snapshot) {
-                                      if (snapshot.hasError) {
-                                        return const Text(
-                                            "Something went wrong!");
-                                      } else if (snapshot.hasData) {
-                                        if (snapshot.data != null) {
-                                          if (snapshot.data!.isNotEmpty) {
-                                            final timeslotWeek =
-                                                snapshot.data!.first;
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  child: (() {
-                                                    //Se c'è almeno un elemento nel vettore
-                                                    List<String> toPrint = [];
-                                                    if (timeslotWeek
-                                                        .monday.isNotEmpty) {
-                                                      toPrint =
-                                                          convertListTimestampToPrint(
-                                                              timeslotWeek
-                                                                  .monday);
-                                                    }
-                                                    return toPrint.isNotEmpty
-                                                        ? Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.monday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: toPrint
-                                                                        .map<Text>(
-                                                                            ((e) {
-                                                                      return Text(
-                                                                          e);
-                                                                    })).toList(),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        : Padding(
-                                                            padding: EdgeInsets
-                                                                .fromLTRB(0, 0,
-                                                                    0, 15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.monday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Text(AppLocalizations.of(
-                                                                              context)!
-                                                                          .noLessons)
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
-                                                  }()),
-                                                ),
-                                                Container(
-                                                  child: (() {
-                                                    //Se c'è almeno un elemento nel vettore
-                                                    List<String> toPrint = [];
-                                                    if (timeslotWeek
-                                                        .tuesday.isNotEmpty) {
-                                                      toPrint =
-                                                          convertListTimestampToPrint(
-                                                              timeslotWeek
-                                                                  .tuesday);
-                                                    }
-                                                    return toPrint.isNotEmpty
-                                                        ? Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.tuesday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: toPrint
-                                                                        .map<Text>(
-                                                                            ((e) {
-                                                                      return Text(
-                                                                          e);
-                                                                    })).toList(),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        : Padding(
-                                                            padding: EdgeInsets
-                                                                .fromLTRB(0, 0,
-                                                                    0, 15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.tuesday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Text(AppLocalizations.of(
-                                                                              context)!
-                                                                          .noLessons)
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
-                                                  }()),
-                                                ),
-                                                Container(
-                                                  child: (() {
-                                                    //Se c'è almeno un elemento nel vettore
-                                                    List<String> toPrint = [];
-                                                    if (timeslotWeek
-                                                        .wednesday.isNotEmpty) {
-                                                      toPrint =
-                                                          convertListTimestampToPrint(
-                                                              timeslotWeek
-                                                                  .wednesday);
-                                                    }
-                                                    return toPrint.isNotEmpty
-                                                        ? Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.wednesday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: toPrint
-                                                                        .map<Text>(
-                                                                            ((e) {
-                                                                      return Text(
-                                                                          e);
-                                                                    })).toList(),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        : Padding(
-                                                            padding: EdgeInsets
-                                                                .fromLTRB(0, 0,
-                                                                    0, 15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.wednesday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Text(AppLocalizations.of(
-                                                                              context)!
-                                                                          .noLessons)
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
-                                                  }()),
-                                                ),
-                                                Container(
-                                                  child: (() {
-                                                    //Se c'è almeno un elemento nel vettore
-                                                    List<String> toPrint = [];
-                                                    if (timeslotWeek
-                                                        .thursday.isNotEmpty) {
-                                                      toPrint =
-                                                          convertListTimestampToPrint(
-                                                              timeslotWeek
-                                                                  .thursday);
-                                                    }
-                                                    return toPrint.isNotEmpty
-                                                        ? Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.thursday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: toPrint
-                                                                        .map<Text>(
-                                                                            ((e) {
-                                                                      return Text(
-                                                                          e);
-                                                                    })).toList(),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        : Padding(
-                                                            padding: EdgeInsets
-                                                                .fromLTRB(0, 0,
-                                                                    0, 15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.thursday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Text(AppLocalizations.of(
-                                                                              context)!
-                                                                          .noLessons)
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
-                                                  }()),
-                                                ),
-                                                Container(
-                                                  child: (() {
-                                                    //Se c'è almeno un elemento nel vettore
-                                                    List<String> toPrint = [];
-                                                    if (timeslotWeek
-                                                        .friday.isNotEmpty) {
-                                                      toPrint =
-                                                          convertListTimestampToPrint(
-                                                              timeslotWeek
-                                                                  .friday);
-                                                    }
-                                                    return toPrint.isNotEmpty
-                                                        ? Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.friday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: toPrint
-                                                                        .map<Text>(
-                                                                            ((e) {
-                                                                      return Text(
-                                                                          e);
-                                                                    })).toList(),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        : Padding(
-                                                            padding: EdgeInsets
-                                                                .fromLTRB(0, 0,
-                                                                    0, 15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.friday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Text(AppLocalizations.of(
-                                                                              context)!
-                                                                          .noLessons)
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
-                                                  }()),
-                                                ),
-                                                Container(
-                                                  child: (() {
-                                                    //Se c'è almeno un elemento nel vettore
-                                                    List<String> toPrint = [];
-                                                    if (timeslotWeek
-                                                        .saturday.isNotEmpty) {
-                                                      toPrint =
-                                                          convertListTimestampToPrint(
-                                                              timeslotWeek
-                                                                  .saturday);
-                                                    }
-                                                    return toPrint.isNotEmpty
-                                                        ? Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.saturday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: toPrint
-                                                                        .map<Text>(
-                                                                            ((e) {
-                                                                      return Text(
-                                                                          e);
-                                                                    })).toList(),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        : Padding(
-                                                            padding: EdgeInsets
-                                                                .fromLTRB(0, 0,
-                                                                    0, 15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.saturday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Text(AppLocalizations.of(
-                                                                              context)!
-                                                                          .noLessons)
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
-                                                  }()),
-                                                ),
-                                                Container(
-                                                  child: (() {
-                                                    //Se c'è almeno un elemento nel vettore
-                                                    List<String> toPrint = [];
-                                                    if (timeslotWeek
-                                                        .sunday.isNotEmpty) {
-                                                      toPrint =
-                                                          convertListTimestampToPrint(
-                                                              timeslotWeek
-                                                                  .sunday);
-                                                    }
-                                                    return toPrint.isNotEmpty
-                                                        ? Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.sunday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: toPrint
-                                                                        .map<Text>(
-                                                                            ((e) {
-                                                                      return Text(
-                                                                          e);
-                                                                    })).toList(),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        : Padding(
-                                                            padding: EdgeInsets
-                                                                .fromLTRB(0, 0,
-                                                                    0, 15),
-                                                            child: Row(
-                                                              children: [
-                                                                Expanded(
-                                                                  flex: 4,
-                                                                  child: Text(
-                                                                    "${AppLocalizations.of(context)!.sunday}:",
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  flex: 6,
-                                                                  child: Column(
-                                                                    children: [
-                                                                      Text(AppLocalizations.of(
-                                                                              context)!
-                                                                          .noLessons)
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
-                                                  }()),
-                                                ),
-                                              ],
-                                            );
-                                          }
-                                        }
-                                        return Text(
-                                            AppLocalizations.of(context)!
-                                                .noTimestamp);
-                                      } else {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                    })),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                AppLocalizations.of(context)!.about,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                widget.lesson.description,
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 25,
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                AppLocalizations.of(context)!.userRating,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                RatingBar.builder(
-                                  ignoreGestures: true,
-                                  initialRating:
-                                      double.parse(widget.user.userRating),
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  itemSize: 20,
-                                  itemPadding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0, vertical: 5.0),
-                                  itemBuilder: (context, _) => const Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  ),
-                                  onRatingUpdate: (double value) {},
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
               ),
-              Positioned(
-                top: 250,
-                left: 0,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .center, //Center Row contents horizontally,
-
-                    children: [
-                      SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: IconButton(
-                            icon: const Icon(Icons.message_outlined),
-                            onPressed: () {
-                              Users receiver = widget.user;
-                              send(receiver);
-                            },
-                            style: messageButtonStyle()),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      SizedBox(
-                        width: 90,
-                        height: 90,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.check_outlined,
-                            size: 50,
-                          ),
-                          onPressed: () {
-                            showModalBottomSheet(
-                                elevation: 1,
-                                context: context,
-                                isScrollControlled: true,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(40))),
-                                builder: (context) => BookLessonModal(
-                                    user: widget.user, lesson: widget.lesson));
-                          },
-                          style: bookLessonButtonStyle(),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: StreamBuilder<List<SavedLesson>>(
-                            stream: readSavedLesson(),
-                            builder: ((context, snapshot) {
-                              if (snapshot.hasError) {
-                                return IconButton(
-                                  isSelected: false,
-                                  icon: const Icon(
-                                    Icons.error,
-                                    size: 25,
-                                  ),
-                                  onPressed: () {},
-                                  style: savedButtonStyle(false),
-                                );
-                              } else if (snapshot.hasData) {
-                                //If saved
-                                if (snapshot.data!.isNotEmpty) {
-                                  final savedLesson = snapshot.data!.first;
-                                  return IconButton(
-                                    isSelected: true,
-                                    icon: const Icon(
-                                      Icons.favorite_outline,
-                                      size: 25,
-                                    ),
-                                    selectedIcon: const Icon(
-                                      Icons.favorite,
-                                      size: 25,
-                                    ),
-                                    onPressed: () {
-                                      if (!isBusy) {
-                                        removeSavedLesson(
-                                            savedLessonId: savedLesson.id!);
-                                      }
-                                    },
-                                    style: savedButtonStyle(true),
-                                  );
-                                }
-                                //If not saved
-                                else {
-                                  return IconButton(
-                                    isSelected: false,
-                                    icon: const Icon(
-                                      Icons.favorite_outline,
-                                      size: 25,
-                                    ),
-                                    selectedIcon: const Icon(
-                                      Icons.favorite,
-                                      size: 25,
-                                    ),
-                                    onPressed: () {
-                                      if (!isBusy) {
-                                        final savedLesson = SavedLesson(
-                                            lessonId: widget.lesson.id,
-                                            userId: userLog.uid);
-                                        saveLesson(savedLesson: savedLesson);
-                                      }
-                                    },
-                                    style: savedButtonStyle(false),
-                                  );
-                                }
-                              } else {
-                                return IconButton(
-                                  isSelected: false,
-                                  icon: const Icon(
-                                    Icons.favorite_outline,
-                                    size: 25,
-                                  ),
-                                  selectedIcon: const Icon(
-                                    Icons.favorite,
-                                    size: 25,
-                                  ),
-                                  onPressed: () {},
-                                  style: savedButtonStyle(false),
-                                );
-                              }
-                            })),
-                      ),
-                    ],
+            ),
+            pinned: true,
+            collapsedHeight: 100,
+            expandedHeight: 280,
+            //Background
+            flexibleSpace: FlexibleSpaceBar(
+              collapseMode: CollapseMode.pin,
+              background: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      width: 3,
+                      color: Theme.of(context).colorScheme.background,
+                    ),
                   ),
                 ),
-              )
-            ],
+                child: StreamBuilder<List<Category>>(
+                    stream: readCategory(),
+                    builder: ((context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Text("Something went wrong!");
+                      } else if (snapshot.hasData) {
+                        final category = snapshot.data!.first;
+                        return FutureBuilder(
+                            future: storage.downloadURL(category.imageURL),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return const Text("Something went wrong!");
+                              } else if (snapshot.hasData) {
+                                return Image.network(
+                                  snapshot.data!,
+                                  fit: BoxFit.cover,
+                                );
+                              } else {
+                                return Container();
+                              }
+                            });
+                      } else {
+                        return const Center(
+                            //child: CircularProgressIndicator(),
+                            );
+                      }
+                    })),
+              ),
+            ),
           ),
-        ),
+          //BODY LESSON
+          SliverToBoxAdapter(
+            child: Container(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(40, 10, 40, 40),
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.lesson.title,
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            widget.lesson.category,
+                            style: const TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          /*
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Location",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Milano, MI",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(10.0),
+                                          topLeft: Radius.circular(10.0),
+                                          bottomLeft: Radius.circular(10.0),
+                                          bottomRight: Radius.circular(10.0),
+                                        ),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primaryContainer,
+                                      ),
+                                      width: 100,
+                                      height: 50,
+                                      padding: const EdgeInsets.all(10),
+                                      child: const Row(
+                                        children: [
+                                          Icon(
+                                            Icons.pin_drop,
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text("1 km")
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                
+                                const SizedBox(
+                                  height: 25,
+                                ),
+                                */
+                          Text(
+                            AppLocalizations.of(context)!.date,
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                          Wrap(
+                            children: [
+                              StreamBuilder<List<TimeslotsWeek>>(
+                                  stream: readTimeslot(),
+                                  builder: ((context, snapshot) {
+                                    if (snapshot.hasError) {
+                                      return const Text(
+                                          "Something went wrong!");
+                                    } else if (snapshot.hasData) {
+                                      if (snapshot.data != null) {
+                                        if (snapshot.data!.isNotEmpty) {
+                                          final timeslotWeek =
+                                              snapshot.data!.first;
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .monday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .monday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.monday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.monday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .noLessons)
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .tuesday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .tuesday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.tuesday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.tuesday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .noLessons)
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .wednesday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .wednesday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.wednesday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.wednesday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .noLessons)
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .thursday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .thursday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.thursday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.thursday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .noLessons)
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .friday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .friday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.friday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.friday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .noLessons)
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .saturday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .saturday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.saturday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.saturday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .noLessons)
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                              Container(
+                                                child: (() {
+                                                  //Se c'è almeno un elemento nel vettore
+                                                  List<String> toPrint = [];
+                                                  if (timeslotWeek
+                                                      .sunday.isNotEmpty) {
+                                                    toPrint =
+                                                        convertListTimestampToPrint(
+                                                            timeslotWeek
+                                                                .sunday);
+                                                  }
+                                                  return toPrint.isNotEmpty
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.sunday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: toPrint
+                                                                      .map<Text>(
+                                                                          ((e) {
+                                                                    return Text(
+                                                                        e);
+                                                                  })).toList(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      : Padding(
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(
+                                                                  0, 0, 0, 15),
+                                                          child: Row(
+                                                            children: [
+                                                              Expanded(
+                                                                flex: 4,
+                                                                child: Text(
+                                                                  "${AppLocalizations.of(context)!.sunday}:",
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 6,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(AppLocalizations.of(
+                                                                            context)!
+                                                                        .noLessons)
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                }()),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      }
+                                      return Text(AppLocalizations.of(context)!
+                                          .noTimestamp);
+                                    } else {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    }
+                                  })),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            AppLocalizations.of(context)!.about,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            widget.lesson.description,
+                            style: const TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Text(
+                            AppLocalizations.of(context)!.userRating,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                          RatingBar.builder(
+                            ignoreGestures: true,
+                            initialRating: double.parse(widget.user.userRating),
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemSize: 20,
+                            itemPadding: const EdgeInsets.symmetric(
+                                horizontal: 4.0, vertical: 5.0),
+                            itemBuilder: (context, _) => const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (double value) {},
+                          ),
+                          SizedBox(
+                            height: 20,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
