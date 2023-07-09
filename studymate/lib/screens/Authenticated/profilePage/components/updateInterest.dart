@@ -37,100 +37,99 @@ class _IntrestState extends State<updateInterest> {
     double w = size.width;
     return Scaffold(
         body: Padding(
-            padding: EdgeInsets.all((w > 490 && h > 720) ? 60 : 30),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(children: [
-                    IconButton(
-                        onPressed: () {
-                          widget.callbackClosePage(widget.isOpenedRight);
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          size: 20,
-                        )),
-                    Text(
-                      AppLocalizations.of(context)!.yourInterestsTitle,
-                      style: TextStyle(
-                        fontFamily: "Crimson Pro",
-                        fontSize: (w > 490 && h > 720) ? 50 : 25,
-                        color: Color.fromARGB(255, 233, 64, 87),
-                      ),
-                    ),
-                  ]),
-                  Text(AppLocalizations.of(context)!.yourInterestsSubTitle,
-                      style: TextStyle(
-                        fontFamily: "Crimson Pro",
-                        fontSize: (w > 490 && h > 720) ? 25 : 16,
-                        color: Color.fromARGB(255, 104, 104, 104),
-                      )),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  FutureBuilder<List<Category>>(
-                      future: readCategory().first,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return const Text('Something went wrong!');
-                        } else if (snapshot.hasData) {
-                          final categories = snapshot.data!;
-                          cat = [];
-                          categories.forEach((item) {
-                            cat.add(item.name);
-                          });
-
-                          return SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: MultiSelectChip(
-                              cat,
-                              widget.interest,
-                              onSelectionChanged: (selectedList) {
-                                setState(() {
-                                  selectedCatList = selectedList;
-                                });
-                              },
-                            ),
-                          );
-                        } else {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                      }),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(
-                        top: 0.03 * h, left: 0.03 * h, right: 0.03 * h),
-                    height: 0.08 * h,
-                    width: 0.8 * w,
-                    child: ElevatedButton(
-                      onPressed: saveSelected,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 233, 64, 87),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context)!.continueText,
+            padding: EdgeInsets.all(40),
+            child: SingleChildScrollView(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Row(children: [
+                      IconButton(
+                          onPressed: () {
+                            widget.callbackClosePage(widget.isOpenedRight);
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            size: 20,
+                          )),
+                      Text(
+                        AppLocalizations.of(context)!.yourInterestsTitle,
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: (w > 490 && h > 720) ? 30 : 16,
-                          color: const Color.fromARGB(255, 255, 255, 255),
+                          fontFamily: "Crimson Pro",
+                          fontSize: 40,
+                          color: Color.fromARGB(255, 233, 64, 87),
                         ),
                       ),
+                    ]),
+                    Text(AppLocalizations.of(context)!.yourInterestsSubTitle,
+                        style: TextStyle(
+                          fontFamily: "Crimson Pro",
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 104, 104, 104),
+                        )),
+                    const SizedBox(
+                      height: 10,
                     ),
-                  )
-                ])));
+                    FutureBuilder<List<Category>>(
+                        future: readCategory().first,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Text('Something went wrong!');
+                          } else if (snapshot.hasData) {
+                            final categories = snapshot.data!;
+                            cat = [];
+                            categories.forEach((item) {
+                              cat.add(item.name);
+                            });
+            
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: MultiSelectChip(
+                                cat,
+                                widget.interest,
+                                onSelectionChanged: (selectedList) {
+                                  setState(() {
+                                    selectedCatList = selectedList;
+                                  });
+                                },
+                              ),
+                            );
+                          } else {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                        }),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: 0.03 * h, left: 0.03 * h, right: 0.03 * h),
+                      height: 0.08 * h,
+                      width: 0.8 * w,
+                      child: ElevatedButton(
+                        onPressed: saveSelected,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 233, 64, 87),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.continueText,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: (w > 490 && h > 720) ? 30 : 16,
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                          ),
+                        ),
+                      ),
+                    )
+                  ]),
+            )));
   }
 
   Future saveSelected() async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()));
+
     try {
       if (selectedCatList.isNotEmpty) {
         final docUser =
