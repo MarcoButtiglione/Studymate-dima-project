@@ -102,7 +102,7 @@ class NotificationCard extends StatelessWidget {
                                       (notification.content!.contains("l4t:") &&
                                               notification.content!
                                                   .contains("l0n:"))
-                                          ? Text("Shared curred position!")
+                                          ? Text("Shared position!")
                                           : Text(notification.content!)),
                             ],
                           ),

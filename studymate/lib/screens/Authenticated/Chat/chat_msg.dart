@@ -32,6 +32,8 @@ class _MsgState extends State<ChatMsg> {
   final user = FirebaseAuth.instance.currentUser!;
   final contentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  late bool localizationAllowed = true;
+
   _scrollToEnd() async {
     if (_scrollController.hasClients) {
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
@@ -185,19 +187,27 @@ class _MsgState extends State<ChatMsg> {
                                           child: Wrap(children: [
                                         ListTile(
                                           onTap: () async {
-                                            Navigator.pop(context);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SearchPosition(
-                                                          num: num,
-                                                          chatId:
-                                                              widget.chat!.id,
-                                                          reciver:
-                                                              widget.reciver,
-                                                          fromId: user.uid,
-                                                        )));
+                                            bool perm = await checkPermission();
+                                            if (perm) {
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          SearchPosition(
+                                                            num: num,
+                                                            chatId:
+                                                                widget.chat!.id,
+                                                            reciver:
+                                                                widget.reciver,
+                                                            fromId: user.uid,
+                                                          )));
+                                            } else {
+                                              showAlertDialog(
+                                                  context,
+                                                  "Attention!",
+                                                  "You must turn on or enable the localization service!");
+                                            }
                                           },
                                           //leading: ,
                                           leading: const Icon(
@@ -267,23 +277,68 @@ class _MsgState extends State<ChatMsg> {
     ));
   }
 
+  //this method is used to show a alert with just one button
+  showAlertDialog(BuildContext context, String? title, String? msg) {
+    Widget okButton = TextButton(
+      child: const Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(title!),
+      content: Text(msg!),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   Future sendPosition() async {
+    await checkPermission();
+    if (localizationAllowed) {
+      // Get the current position
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      double latitude = position.latitude;
+      double longitude = position.longitude;
+
+      send("l4t:$latitude;l0n:$longitude");
+      Navigator.pop(context);
+      _scrollToEnd();
+    } else {
+      showAlertDialog(context, "Attention!",
+          "You must turn on or enable the localization service!");
+    }
+  }
+
+  Future checkPermission() async {
     try {
       bool serviceEnabled;
       LocationPermission permission;
-
       // Check if location services are enabled
+
       serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         // Location services are not enabled
-        throw 'Location services are disabled.';
+        localizationAllowed = false;
+        print('Location services are disabled.');
       }
 
       // Check location permission
       permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.deniedForever) {
         // The user permanently denied location permission
-        throw 'Location permissions are permanently denied.';
+        localizationAllowed = false;
+        print('Location permissions are permanently denied.');
       }
 
       if (permission == LocationPermission.denied) {
@@ -292,22 +347,15 @@ class _MsgState extends State<ChatMsg> {
         if (permission != LocationPermission.whileInUse &&
             permission != LocationPermission.always) {
           // The user denied location permission
-          throw 'Location permissions are denied.';
+          localizationAllowed = false;
+          print('Location permissions are denied.');
         }
       }
-
-      // Get the current position
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      double latitude = position.latitude;
-      double longitude = position.longitude;
-
-      send("l4t:$latitude;l0n:$longitude");
-      Navigator.of(context).pop();
-      _scrollToEnd();
     } catch (e) {
+      localizationAllowed = false;
       print(e);
     }
+    return localizationAllowed;
   }
 
   List<List<Msg>> groupByDate(List<Msg> msgs) {

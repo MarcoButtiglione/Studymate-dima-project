@@ -46,22 +46,9 @@ class _SearchPositionState extends State<SearchPosition> {
   late Set<Marker> _markers = {};
   final LatLng _initialCameraPosition = const LatLng(45.475714, 9.1365314);
   late String title = "Share Position";
+  late bool localizationAllowed = true;
 
   late LatLng _destination = LatLng(0, 0);
-  Future<String> _getAddressFromLatLng(
-      double latitude, double longitude) async {
-    await placemarkFromCoordinates(latitude, longitude)
-        .then((List<Placemark> placemarks) {
-      Placemark place = placemarks[0];
-      if (placemarks.isNotEmpty) {
-        return "${place.street},  ${place.subAdministrativeArea}";
-      }
-    }).catchError((e) {
-      debugPrint(e);
-    });
-
-    return "${latitude} ${longitude}";
-  }
 
   //this method is used for settings the map during the creation phase
   void _onMapCreated(GoogleMapController controller) {
@@ -92,7 +79,7 @@ class _SearchPositionState extends State<SearchPosition> {
     }
   }
 
-  Future<bool> checkPermission() async {
+  Future<void> checkPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -100,14 +87,16 @@ class _SearchPositionState extends State<SearchPosition> {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Location services are not enabled
-      throw 'Location services are disabled.';
+      localizationAllowed = false;
+      print('Location services are disabled.');
     }
 
     // Check location permission
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.deniedForever) {
       // The user permanently denied location permission
-      throw 'Location permissions are permanently denied.';
+      localizationAllowed = false;
+      print('Location permissions are permanently denied.');
     }
 
     if (permission == LocationPermission.denied) {
@@ -116,10 +105,10 @@ class _SearchPositionState extends State<SearchPosition> {
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
         // The user denied location permission
-        throw 'Location permissions are denied.';
+        localizationAllowed = false;
+        print('Location permissions are denied.');
       }
     }
-    return true;
   }
 
   //this method is used to show a alert with just one button
@@ -149,35 +138,25 @@ class _SearchPositionState extends State<SearchPosition> {
 
   //this method is used to get the current locations
   _getCurrentLocation() async {
-    if (await checkPermission() == true) {
-      _currentPosition = await Geolocator.getCurrentPosition();
-      _controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          bearing: 0,
-          target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-          zoom: 12.0,
-        ),
-      ));
-    } else {
-      showAlertDialog(
-          context, "Attention!", "You must enabled localization services!");
-    }
+    _currentPosition = await Geolocator.getCurrentPosition();
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+        zoom: 12.0,
+      ),
+    ));
   }
 
   //this method is used to get the current locations
   _getDestinationLocation() async {
-    if (await checkPermission() == true) {
-      _controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          bearing: 0,
-          target: _destination,
-          zoom: 12.0,
-        ),
-      ));
-    } else {
-      showAlertDialog(
-          context, "Attention!", "You must enabled localization services!");
-    }
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: _destination,
+        zoom: 12.0,
+      ),
+    ));
   }
 
   //this return the map frame
@@ -186,105 +165,132 @@ class _SearchPositionState extends State<SearchPosition> {
       children: <Widget>[
         Center(
           child: ClipRRect(
-            child: GoogleMap(
-              myLocationButtonEnabled: false,
-              myLocationEnabled: true,
-              //zoomControlsEnabled: false,
-              zoomGesturesEnabled: true,
-              scrollGesturesEnabled: true,
-              compassEnabled: true,
-              rotateGesturesEnabled: true,
-              //mapToolbarEnabled: false,
-              tiltGesturesEnabled: true,
-              onMapCreated: _onMapCreated,
-              initialCameraPosition:
-                  CameraPosition(target: _initialCameraPosition, zoom: 11),
-              markers: _markers,
-            ),
+            child: (localizationAllowed)
+                ? GoogleMap(
+                    myLocationButtonEnabled: false,
+                    myLocationEnabled: true,
+                    //zoomControlsEnabled: false,
+                    zoomGesturesEnabled: true,
+                    scrollGesturesEnabled: true,
+                    compassEnabled: true,
+                    rotateGesturesEnabled: true,
+                    //mapToolbarEnabled: false,
+                    tiltGesturesEnabled: true,
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition: CameraPosition(
+                        target: _initialCameraPosition, zoom: 11),
+                    markers: _markers,
+                  )
+                : Container(
+                    margin: EdgeInsets.all(20),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      "You must turn on or enable the localization service!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 233, 64, 87)),
+                    )),
           ),
         ),
         Align(
           alignment: Alignment.topRight,
-          child: Container(
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(10),
-            child: IconButton(
-                onPressed: () => _getCurrentLocation(),
-                icon: const Icon(Icons.my_location_outlined)),
-          ),
+          child: (localizationAllowed)
+              ? Container(
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      borderRadius: BorderRadius.circular(10)),
+                  margin: const EdgeInsets.all(10),
+                  child: IconButton(
+                      onPressed: () => _getCurrentLocation(),
+                      icon: const Icon(Icons.my_location_outlined)),
+                )
+              : SizedBox(),
         ),
         Align(
           alignment: Alignment.bottomLeft,
-          child: Container(
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.circular(10)),
-            margin: const EdgeInsets.all(10),
-            child: IconButton(
-                onPressed: () {
-                  if (_destination != LatLng(0, 0)) {
-                    _getDestinationLocation();
-                  }
-                },
-                icon: const Icon(LineIcons.map)),
-          ),
+          child: (localizationAllowed)
+              ? Container(
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      borderRadius: BorderRadius.circular(10)),
+                  margin: const EdgeInsets.all(10),
+                  child: IconButton(
+                      onPressed: () {
+                        if (_destination != LatLng(0, 0)) {
+                          _getDestinationLocation();
+                        }
+                      },
+                      icon: const Icon(LineIcons.map)),
+                )
+              : SizedBox(),
         ),
         Align(
             alignment: Alignment.topRight,
             child: Padding(
               padding: const EdgeInsets.only(right: 50),
-              child: IconButton(
-                  onPressed: () {
-                    send();
-                    Navigator.of(context).pop();
-                  },
-                  icon: Container(
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(30)),
-                    padding: const EdgeInsets.all(10),
-                    margin:
-                        const EdgeInsets.only(bottom: 10, right: 10, top: 5),
-                    child: const Icon(
-                      Icons.send,
-                      color: Color.fromARGB(255, 95, 176, 246),
-                      size: 30,
-                    ),
-                  )),
+              child: (localizationAllowed)
+                  ? IconButton(
+                      onPressed: () {
+                        if (_destination != LatLng(0, 0) &&
+                            localizationAllowed) {
+                          send();
+                          Navigator.of(context).pop();
+                        } else {
+                          showAlertDialog(context, "Attention!",
+                              "Select a location to share!");
+                        }
+                      },
+                      icon: Container(
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(30)),
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.only(
+                            bottom: 10, right: 10, top: 5),
+                        child: const Icon(
+                          Icons.send,
+                          color: Color.fromARGB(255, 95, 176, 246),
+                          size: 30,
+                        ),
+                      ))
+                  : SizedBox(),
             )),
         Align(
             alignment: Alignment.topLeft,
             child: Row(
               children: [
                 Expanded(
-                  child: Container(
-                      margin: const EdgeInsets.only(
-                          bottom: 10, top: 10, left: 10, right: 125),
-                      //width: 0.3 * w,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Color.fromARGB(255, 255, 255, 255)),
-                      child: SearchLocation(
-                        apiKey: kGoogleApiKey,
-                        // The language of the autocompletion
-                        language: 'en',
-                        // location is the center of a place and the radius provided here are between this radius of this place search result
-                        //will be provided,you can set this LatLng dynamically by getting user lat and long in double value
-                        location: latlng.LatLng(
-                            latitude: _currentPosition.latitude,
-                            longitude: _currentPosition.longitude),
-                        radius: 1100,
-                        onSelected: (Place place) async {
-                          final geolocation = await place.geolocation;
-                          latlng.LatLng tmp = geolocation!.coordinates;
+                  child: (localizationAllowed)
+                      ? Container(
+                          margin: const EdgeInsets.only(
+                              bottom: 10, top: 10, left: 10, right: 125),
+                          //width: 0.3 * w,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Color.fromARGB(255, 255, 255, 255)),
+                          child: SearchLocation(
+                            apiKey: kGoogleApiKey,
+                            // The language of the autocompletion
+                            language: 'en',
+                            // location is the center of a place and the radius provided here are between this radius of this place search result
+                            //will be provided,you can set this LatLng dynamically by getting user lat and long in double value
+                            location: latlng.LatLng(
+                                latitude: _currentPosition.latitude,
+                                longitude: _currentPosition.longitude),
+                            radius: 1100,
+                            onSelected: (Place place) async {
+                              final geolocation = await place.geolocation;
+                              latlng.LatLng tmp = geolocation!.coordinates;
 
-                          _destination = LatLng(tmp.latitude, tmp.longitude);
-                          _createMarker(place.description);
-                          _getDestinationLocation();
-                        },
-                      )),
+                              _destination =
+                                  LatLng(tmp.latitude, tmp.longitude);
+                              _createMarker(place.description);
+                              _getDestinationLocation();
+                            },
+                          ))
+                      : SizedBox(),
                 ),
               ],
             ))
@@ -346,7 +352,6 @@ class _SearchPositionState extends State<SearchPosition> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     double w = size.width;
     final Storage storage = Storage();
     return Scaffold(
@@ -409,7 +414,9 @@ class _SearchPositionState extends State<SearchPosition> {
                     ],
                   ),
                 ),
-                Expanded(child: _mapFrame(w))
+                Expanded(
+                  child: _mapFrame(w),
+                )
               ]),
         ));
   }

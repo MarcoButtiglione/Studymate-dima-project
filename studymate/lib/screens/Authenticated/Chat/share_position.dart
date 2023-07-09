@@ -25,10 +25,10 @@ class SharePosition extends StatefulWidget {
 class _SharePositionState extends State<SharePosition> {
   late Position _currentPosition;
   late GoogleMapController _controller;
-  //final Utilities _utilities = Utilities();
   late Set<Marker> _markers = {};
   final LatLng _initialCameraPosition = const LatLng(45.475714, 9.1365314);
   late String title = "Shared Position";
+  late bool localizationAllowed = true;
 
   @override
   void initState() {
@@ -85,7 +85,7 @@ class _SharePositionState extends State<SharePosition> {
     });
   }
 
-  Future<bool> checkPermission() async {
+  Future<void> checkPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -93,14 +93,16 @@ class _SharePositionState extends State<SharePosition> {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Location services are not enabled
-      throw 'Location services are disabled.';
+      localizationAllowed = false;
+      print('Location services are disabled.');
     }
 
     // Check location permission
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.deniedForever) {
       // The user permanently denied location permission
-      throw 'Location permissions are permanently denied.';
+      localizationAllowed = false;
+      print('Location permissions are permanently denied.');
     }
 
     if (permission == LocationPermission.denied) {
@@ -109,10 +111,10 @@ class _SharePositionState extends State<SharePosition> {
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
         // The user denied location permission
-        throw 'Location permissions are denied.';
+        localizationAllowed = false;
+        print('Location permissions are denied.');
       }
     }
-    return true;
   }
 
   //this method is used to show a alert with just one button
@@ -142,35 +144,25 @@ class _SharePositionState extends State<SharePosition> {
 
   //this method is used to get the current locations
   _getCurrentLocation() async {
-    if (await checkPermission() == true) {
-      _currentPosition = await Geolocator.getCurrentPosition();
-      _controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          bearing: 0,
-          target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
-          zoom: 12.0,
-        ),
-      ));
-    } else {
-      showAlertDialog(
-          context, "Attention!", "You must enabled localization services!");
-    }
+    _currentPosition = await Geolocator.getCurrentPosition();
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(_currentPosition.latitude, _currentPosition.longitude),
+        zoom: 12.0,
+      ),
+    ));
   }
 
   //this method is used to get the current locations
   _getDestinationLocation() async {
-    if (await checkPermission() == true) {
-      _controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          bearing: 0,
-          target: LatLng(widget.latitude, widget.longitude),
-          zoom: 12.0,
-        ),
-      ));
-    } else {
-      showAlertDialog(
-          context, "Attention!", "You must enabled localization services!");
-    }
+    _controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(widget.latitude, widget.longitude),
+        zoom: 12.0,
+      ),
+    ));
   }
 
   //this return the map frame
@@ -179,21 +171,33 @@ class _SharePositionState extends State<SharePosition> {
       children: <Widget>[
         Center(
           child: ClipRRect(
-            child: GoogleMap(
-              myLocationButtonEnabled: false,
-              myLocationEnabled: true,
-              //zoomControlsEnabled: false,
-              zoomGesturesEnabled: true,
-              scrollGesturesEnabled: true,
-              compassEnabled: true,
-              rotateGesturesEnabled: true,
-              //mapToolbarEnabled: false,
-              tiltGesturesEnabled: true,
-              onMapCreated: _onMapCreated,
-              initialCameraPosition:
-                  CameraPosition(target: _initialCameraPosition, zoom: 11),
-              markers: _markers,
-            ),
+            child: (localizationAllowed)
+                ? GoogleMap(
+                    myLocationButtonEnabled: false,
+                    myLocationEnabled: true,
+                    //zoomControlsEnabled: false,
+                    zoomGesturesEnabled: true,
+                    scrollGesturesEnabled: true,
+                    compassEnabled: true,
+                    rotateGesturesEnabled: true,
+                    //mapToolbarEnabled: false,
+                    tiltGesturesEnabled: true,
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition: CameraPosition(
+                        target: _initialCameraPosition, zoom: 11),
+                    markers: _markers,
+                  )
+                : Container(
+                    margin: EdgeInsets.all(20),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      "You must turn on or enable the localization services!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 233, 64, 87)),
+                    )),
           ),
         ),
         Align(
@@ -203,9 +207,11 @@ class _SharePositionState extends State<SharePosition> {
                 color: const Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(10),
-            child: IconButton(
-                onPressed: () => _getCurrentLocation(),
-                icon: const Icon(Icons.my_location_outlined)),
+            child: (localizationAllowed)
+                ? IconButton(
+                    onPressed: () => _getCurrentLocation(),
+                    icon: const Icon(Icons.my_location_outlined))
+                : SizedBox(),
           ),
         ),
         Align(
@@ -215,9 +221,11 @@ class _SharePositionState extends State<SharePosition> {
                 color: const Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.circular(10)),
             margin: const EdgeInsets.all(10),
-            child: IconButton(
-                onPressed: () => _getDestinationLocation(),
-                icon: const Icon(LineIcons.map)),
+            child: (localizationAllowed)
+                ? IconButton(
+                    onPressed: () => _getDestinationLocation(),
+                    icon: const Icon(LineIcons.map))
+                : SizedBox(),
           ),
         ),
       ],
@@ -286,7 +294,9 @@ class _SharePositionState extends State<SharePosition> {
                 ],
               ),
             ),
-            Expanded(child: _mapFrame())
+            Expanded(
+              child: _mapFrame(),
+            )
           ]),
     ));
   }
