@@ -602,7 +602,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                             child: Column(
                                               children: [
                                                 Text(
-                                                  '${us.userRating}.0/5.0',
+                                                  '${us.userRating}/5.0',
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 15,
@@ -686,12 +686,14 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${us.firstname} ${us.lastname}',
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                        Align(
+                          alignment:Alignment.topLeft,
+                          child: Text(
+                            '${us.firstname} ${us.lastname}',
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
