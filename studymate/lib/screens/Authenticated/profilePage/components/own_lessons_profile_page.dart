@@ -10,7 +10,6 @@ import '../../../../models/lesson.dart';
 import '../../../../service/storage_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class OwnLessonsProfilePage extends StatefulWidget {
   @override
   State<OwnLessonsProfilePage> createState() => _OwnLessonsProfilePageState();
@@ -85,6 +84,9 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.shortestSide < 600;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     if (isBusy) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -142,21 +144,40 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                         trailing: PopupMenuButton<String>(
                           onSelected: (String? value) {
                             if (value == 'edit') {
-                              Navigator.of(context).push(
-                                  createRoute(EditLessonPage(lesson: lesson,)));
+                              if (isMobile) {
+                                Navigator.of(context)
+                                    .push(createRoute(EditLessonPage(
+                                  isBottomModal: false,
+                                  lesson: lesson,
+                                )));
+                              } else {
+                                showModalBottomSheet(
+                                  showDragHandle: true,
+                                  context: context,
+                                  isScrollControlled: true,
+                                  useSafeArea: true,
+                                  builder: (context) => Container(
+                                    child: EditLessonPage(
+                                      isBottomModal: true,
+                                      lesson: lesson,
+                                    ),
+                                  ),
+                                );
+                              }
                             } else if (value == 'delete') {
                               showDialog<String>(
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
-                                  title: Text(
-                                      AppLocalizations.of(context)!.deleteLessontitle),
-                                  content:  Text(
-                                      AppLocalizations.of(context)!.deleteLessonSubTitle),
+                                  title: Text(AppLocalizations.of(context)!
+                                      .deleteLessontitle),
+                                  content: Text(AppLocalizations.of(context)!
+                                      .deleteLessonSubTitle),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () =>
                                           Navigator.pop(context, 'Cancel'),
-                                      child: Text(AppLocalizations.of(context)!.cancel),
+                                      child: Text(
+                                          AppLocalizations.of(context)!.cancel),
                                     ),
                                     TextButton(
                                       onPressed: () {
@@ -165,7 +186,8 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                                           Navigator.pop(context, 'Ok');
                                         }
                                       },
-                                      child: Text(AppLocalizations.of(context)!.ok),
+                                      child: Text(
+                                          AppLocalizations.of(context)!.ok),
                                     ),
                                   ],
                                 ),
@@ -180,7 +202,8 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                                 children: [
                                   Icon(Icons.edit),
                                   SizedBox(width: 16),
-                                  Text(AppLocalizations.of(context)!.editLesson),
+                                  Text(
+                                      AppLocalizations.of(context)!.editLesson),
                                 ],
                               ),
                             ),
@@ -190,7 +213,8 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                                 children: [
                                   Icon(Icons.delete),
                                   SizedBox(width: 16),
-                                  Text(AppLocalizations.of(context)!.deleteLesson),
+                                  Text(AppLocalizations.of(context)!
+                                      .deleteLesson),
                                 ],
                               ),
                             ),

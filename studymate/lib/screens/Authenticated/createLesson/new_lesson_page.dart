@@ -55,6 +55,10 @@ class _NewLessonPageState extends State<NewLessonPage> {
     });
   }
 
+  void callbackClosePage(bool isTablet) {
+    Navigator.pop(context);
+  }
+
   void callbackDate(String date) {
     setState(() {
       this.date = date;
@@ -246,7 +250,11 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                                 // Do something if the document does not exist
                                                 Navigator.of(context).push(
                                                     createRoute(
-                                                        const HoursSelectionPage()));
+                                                        HoursSelectionPage(
+                                                  callbackClosePage:
+                                                      callbackClosePage,
+                                                  isOpenedRight: false,
+                                                )));
                                               }
                                             });
                                           } else {

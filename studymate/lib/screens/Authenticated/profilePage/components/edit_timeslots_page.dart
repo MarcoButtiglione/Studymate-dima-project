@@ -35,7 +35,11 @@ const List<String> hours = [
 
 class EditTimeslotsPage extends StatefulWidget {
   final TimeslotsWeek timeslots;
-  const EditTimeslotsPage({super.key, required this.timeslots});
+  final bool isOpenedRight;
+  final Function callbackClosePage;
+
+  const EditTimeslotsPage(
+      {super.key, required this.timeslots, required this.isOpenedRight, required this.callbackClosePage});
 
   @override
   State<EditTimeslotsPage> createState() => _EditTimeslotsPageState();
@@ -248,7 +252,7 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
         'sunday': timeslotsWeek.sunday,
       });
 
-      Navigator.pop(context);
+      widget.callbackClosePage(widget.isOpenedRight);
       setState(() {
         isBusy = false;
       });
@@ -448,7 +452,7 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                       Row(children: <Widget>[
                         IconButton(
                             onPressed: () {
-                              Navigator.pop(context);
+                              widget.callbackClosePage(widget.isOpenedRight);
                             },
                             icon: const Icon(
                               Icons.arrow_back_ios,
@@ -527,7 +531,9 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                               decoration: InputDecoration(
                                                 errorStyle:
                                                     const TextStyle(height: 0),
-                                                labelText: AppLocalizations.of(context)!.from,
+                                                labelText: AppLocalizations.of(
+                                                        context)!
+                                                    .from,
                                                 hintText: "--:--",
                                                 border: OutlineInputBorder(
                                                   borderRadius:
@@ -616,7 +622,9 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                               decoration: InputDecoration(
                                                 errorStyle:
                                                     const TextStyle(height: 0),
-                                                labelText: AppLocalizations.of(context)!.to,
+                                                labelText: AppLocalizations.of(
+                                                        context)!
+                                                    .to,
                                                 hintText: "--:--",
                                                 border: OutlineInputBorder(
                                                   borderRadius:
@@ -705,8 +713,9 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                         } else {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
-                                            content: Text(
-                                                AppLocalizations.of(context)!.createTimeslotFillAllSnack),
+                                            content: Text(AppLocalizations.of(
+                                                    context)!
+                                                .createTimeslotFillAllSnack),
                                             duration: Duration(seconds: 2),
                                             backgroundColor: Color.fromARGB(
                                                 255, 255, 68, 35),
@@ -718,7 +727,8 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                         });
                                       }
                                     },
-                                    label: Text(AppLocalizations.of(context)!.addTimeslotButton),
+                                    label: Text(AppLocalizations.of(context)!
+                                        .addTimeslotButton),
                                   ),
                                 ],
                               ),
@@ -757,9 +767,10 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                       send();
                                     } else {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar( SnackBar(
+                                          .showSnackBar(SnackBar(
                                         content: Text(
-                                            AppLocalizations.of(context)!.createTimeslotFillAllSnack),
+                                            AppLocalizations.of(context)!
+                                                .createTimeslotFillAllSnack),
                                         duration: Duration(seconds: 2),
                                         backgroundColor:
                                             Color.fromARGB(255, 255, 68, 35),
@@ -769,7 +780,8 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
                                       content: Text(
-                                          AppLocalizations.of(context)!.createTimeslotFillOneSnack),
+                                          AppLocalizations.of(context)!
+                                              .createTimeslotFillOneSnack),
                                       duration: Duration(seconds: 2),
                                       backgroundColor:
                                           Color.fromARGB(255, 255, 68, 35),
@@ -778,7 +790,8 @@ class _EditTimeslotsPageState extends State<EditTimeslotsPage> {
                                 } else {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
-                                    content: Text(AppLocalizations.of(context)!.createTimeslotInvalidFieldSnack),
+                                    content: Text(AppLocalizations.of(context)!
+                                        .createTimeslotInvalidFieldSnack),
                                     duration: Duration(seconds: 2),
                                     backgroundColor:
                                         Color.fromARGB(255, 255, 68, 35),
