@@ -25,7 +25,10 @@ class SentMessage extends StatelessWidget {
     String pos = message!;
     double latitude = 0.0;
     double longitude = 0.0;
-    if (pos.contains("l4t:") && pos.contains("l0n:") && pos.contains(";")) {
+    if (pos.contains("l4t:") &&
+        pos.contains("l0n:") &&
+        pos.contains(";") &&
+        pos.length > 9) {
       latitude = double.parse(pos.substring(4, pos.indexOf(";")));
       longitude = double.parse(pos.substring(pos.indexOf(";") + 5));
     }
@@ -65,7 +68,8 @@ class SentMessage extends StatelessWidget {
                   children: [
                     (message!.contains("l4t:") &&
                             message!.contains("l0n:") &&
-                            message!.contains(";"))
+                            message!.contains(";") &&
+                            message!.length > 9)
                         ? InkWell(
                             onTap: () => Navigator.push(
                                 context,
