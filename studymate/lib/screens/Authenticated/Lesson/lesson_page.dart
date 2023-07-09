@@ -337,12 +337,11 @@ class _LessonState extends State<LessonPage> {
                               ),
                               onPressed: () {
                                 showModalBottomSheet(
-                                    elevation: 1,
+                                    showDragHandle: true,
                                     context: context,
                                     isScrollControlled: true,
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(40))),
+                                    useSafeArea: true,
+                                    elevation: 1,
                                     builder: (context) => BookLessonModal(
                                         user: widget.user,
                                         lesson: widget.lesson));

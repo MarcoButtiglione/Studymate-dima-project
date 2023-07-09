@@ -54,6 +54,12 @@ class ClassCard extends StatelessWidget {
           ),
           actions: <Widget>[
             TextButton(
+              child: Text(AppLocalizations.of(context)!.cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
               child: Text(AppLocalizations.of(context)!.confirm),
               onPressed: () async {
                 FirebaseFirestore.instance
@@ -84,12 +90,7 @@ class ClassCard extends StatelessWidget {
                 Navigator.pop(context, true);
               },
             ),
-            TextButton(
-              child: Text(AppLocalizations.of(context)!.cancel),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+            
           ],
         );
       },

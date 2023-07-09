@@ -201,115 +201,134 @@ class _BookLessonModalState extends State<BookLessonModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 5),
-      child: StreamBuilder<List<TimeslotsWeek>>(
-          stream: readTimeslot(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text("Something went wrong!");
-            } else if (snapshot.hasData) {
-              if (snapshot.data != null) {
-                if (snapshot.data!.isNotEmpty) {
-                  final timeslotWeek = snapshot.data!.first;
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TableCalendar(
-                        locale: "en_US",
-                        rowHeight: 40,
-                        headerStyle: const HeaderStyle(
-                            formatButtonVisible: false, titleCentered: true),
-                        availableGestures: AvailableGestures.all,
-                        eventLoader: (day) {
-                          List<DateTime> events = [];
-                          if (dates.contains(
-                              DateTime(day.year, day.month, day.day))) {
-                            events.add(day);
-                          }
-                          return events;
-                        },
-                        selectedDayPredicate: (day) =>
-                            isSameDay(day, dateShown),
-                        focusedDay: dateShown,
-                        firstDay: DateTime.now(),
-                        lastDay: DateTime.utc(2025, 12, 31),
-                        onDaySelected: _onDaySelected,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(AppLocalizations.of(context)!.selectTimeslotTitle,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          )),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      StreamBuilder<List<Scheduled>>(
-                          stream: readScheduledTutor(),
-                          builder: (context, snapshot) {
-                            List<Scheduled> scheduledTutor = [];
-                            List<Scheduled> scheduledTutorStud = [];
-                            List<Scheduled> scheduledStudent = [];
-                            List<Scheduled> scheduledStudentTut = [];
-                            if (snapshot.hasError) {
-                              return const Text("Something went wrong!");
-                            } else if (snapshot.hasData) {
-                              scheduledTutor = snapshot.data!;
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 5),
+        child: StreamBuilder<List<TimeslotsWeek>>(
+            stream: readTimeslot(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text("Something went wrong!");
+              } else if (snapshot.hasData) {
+                if (snapshot.data != null) {
+                  if (snapshot.data!.isNotEmpty) {
+                    final timeslotWeek = snapshot.data!.first;
+    
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TableCalendar(
+                          locale: "en_US",
+                          rowHeight: 40,
+                          headerStyle: const HeaderStyle(
+                              formatButtonVisible: false, titleCentered: true),
+                          availableGestures: AvailableGestures.all,
+                          eventLoader: (day) {
+                            List<DateTime> events = [];
+                            if (dates.contains(
+                                DateTime(day.year, day.month, day.day))) {
+                              events.add(day);
                             }
-                            return StreamBuilder<List<Scheduled>>(
-                                stream: readScheduledStudent(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError) {
-                                    return const Text("Something went wrong!");
-                                  } else if (snapshot.hasData) {
-                                    scheduledStudent = snapshot.data!;
-                                  }
-                                  return StreamBuilder<List<Scheduled>>(
-                                      stream: readScheduledTutorStud(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasError) {
-                                          return const Text(
-                                              "Something went wrong!");
-                                        } else if (snapshot.hasData) {
-                                          scheduledTutorStud = snapshot.data!;
-                                        }
-                                        return StreamBuilder<List<Scheduled>>(
-                                            stream: readScheduledStudentTut(),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.hasError) {
-                                                return const Text(
-                                                    "Something went wrong!");
-                                              } else if (snapshot.hasData) {
-                                                scheduledStudentTut =
-                                                    snapshot.data!;
-                                              }
-                                              return Container(
-                                                  height: 45,
-                                                  child: (() {
-                                                    if (getTimeslotOfDay(
-                                                            dateShown.weekday,
-                                                            timeslotWeek)
-                                                        .isNotEmpty) {
-                                                      return ListView(
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        children:
-                                                            getTimeslotOfDay(
-                                                                    dateShown
-                                                                        .weekday,
-                                                                    timeslotWeek)
-                                                                .map<Container>(
-                                                                    (timeslot) {
-                                                          if (checkTimeslotScheduled(
-                                                              scheduledStudent +
-                                                                  scheduledTutor +
-                                                                  scheduledStudentTut +
-                                                                  scheduledTutorStud,
-                                                              timeslot)) {
+                            return events;
+                          },
+                          selectedDayPredicate: (day) =>
+                              isSameDay(day, dateShown),
+                          focusedDay: dateShown,
+                          firstDay: DateTime.now(),
+                          lastDay: DateTime.utc(2025, 12, 31),
+                          onDaySelected: _onDaySelected,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(AppLocalizations.of(context)!.selectTimeslotTitle,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            )),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        StreamBuilder<List<Scheduled>>(
+                            stream: readScheduledTutor(),
+                            builder: (context, snapshot) {
+                              List<Scheduled> scheduledTutor = [];
+                              List<Scheduled> scheduledTutorStud = [];
+                              List<Scheduled> scheduledStudent = [];
+                              List<Scheduled> scheduledStudentTut = [];
+                              if (snapshot.hasError) {
+                                return const Text("Something went wrong!");
+                              } else if (snapshot.hasData) {
+                                scheduledTutor = snapshot.data!;
+                              }
+                              return StreamBuilder<List<Scheduled>>(
+                                  stream: readScheduledStudent(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasError) {
+                                      return const Text("Something went wrong!");
+                                    } else if (snapshot.hasData) {
+                                      scheduledStudent = snapshot.data!;
+                                    }
+                                    return StreamBuilder<List<Scheduled>>(
+                                        stream: readScheduledTutorStud(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasError) {
+                                            return const Text(
+                                                "Something went wrong!");
+                                          } else if (snapshot.hasData) {
+                                            scheduledTutorStud = snapshot.data!;
+                                          }
+                                          return StreamBuilder<List<Scheduled>>(
+                                              stream: readScheduledStudentTut(),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.hasError) {
+                                                  return const Text(
+                                                      "Something went wrong!");
+                                                } else if (snapshot.hasData) {
+                                                  scheduledStudentTut =
+                                                      snapshot.data!;
+                                                }
+                                                return Container(
+                                                    height: 45,
+                                                    child: (() {
+                                                      if (getTimeslotOfDay(
+                                                              dateShown.weekday,
+                                                              timeslotWeek)
+                                                          .isNotEmpty) {
+                                                        return ListView(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          children:
+                                                              getTimeslotOfDay(
+                                                                      dateShown
+                                                                          .weekday,
+                                                                      timeslotWeek)
+                                                                  .map<Container>(
+                                                                      (timeslot) {
+                                                            if (checkTimeslotScheduled(
+                                                                scheduledStudent +
+                                                                    scheduledTutor +
+                                                                    scheduledStudentTut +
+                                                                    scheduledTutorStud,
+                                                                timeslot)) {
+                                                              return Container(
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        right: 5),
+                                                                child: TextButton(
+                                                                  style:
+                                                                      timeslotButtonStyle(
+                                                                    selectedTimeslot
+                                                                        .contains(
+                                                                            timeslot),
+                                                                  ),
+                                                                  onPressed: null,
+                                                                  child: Text(
+                                                                      timeslot),
+                                                                ),
+                                                              );
+                                                            }
                                                             return Container(
                                                               margin:
                                                                   const EdgeInsets
@@ -322,123 +341,60 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                                                       .contains(
                                                                           timeslot),
                                                                 ),
-                                                                onPressed: null,
+                                                                onPressed: () {
+                                                                  onPressTimeslot(
+                                                                      timeslot);
+                                                                },
                                                                 child: Text(
                                                                     timeslot),
                                                               ),
                                                             );
-                                                          }
-                                                          return Container(
-                                                            margin:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    right: 5),
-                                                            child: TextButton(
-                                                              style:
-                                                                  timeslotButtonStyle(
-                                                                selectedTimeslot
-                                                                    .contains(
-                                                                        timeslot),
-                                                              ),
-                                                              onPressed: () {
-                                                                onPressTimeslot(
-                                                                    timeslot);
-                                                              },
-                                                              child: Text(
-                                                                  timeslot),
-                                                            ),
-                                                          );
-                                                        }).toList(),
-                                                      );
-                                                    } else {
-                                                      return Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .noLessonsInDay);
-                                                    }
-                                                  }()));
-                                            });
-                                      });
-                                });
-                          }),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                          "${AppLocalizations.of(context)!.creditAvailable}:",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                          AppLocalizations.of(context)!
-                                              .oneCreditHour,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          StreamBuilder(
-                              stream: readUsers(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  return const Text('Something went wrong!');
-                                } else if (snapshot.hasData) {
-                                  var ownUser = snapshot.data!.first;
-                                  return Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Row(
+                                                          }).toList(),
+                                                        );
+                                                      } else {
+                                                        return Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .noLessonsInDay);
+                                                      }
+                                                    }()));
+                                              });
+                                        });
+                                  });
+                            }),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Column(
+                                  children: [
+                                    Row(
                                       children: [
                                         Text(
-                                          ownUser.hours.toString(),
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        const Icon(
-                                          Icons.av_timer,
-                                          size: 20,
-                                        ),
+                                            "${AppLocalizations.of(context)!.creditAvailable}:",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            )),
                                       ],
                                     ),
-                                  );
-                                } else {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              }),
-                        ],
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Wrap(
-                          children: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              style: TextButton.styleFrom(
-                                primary:
-                                    Theme.of(context).colorScheme.secondary,
+                                    Row(
+                                      children: [
+                                        Text(
+                                            AppLocalizations.of(context)!
+                                                .oneCreditHour,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              child:
-                                  Text(AppLocalizations.of(context)!.closeCaps),
                             ),
                             StreamBuilder(
                                 stream: readUsers(),
@@ -447,45 +403,23 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                     return const Text('Something went wrong!');
                                   } else if (snapshot.hasData) {
                                     var ownUser = snapshot.data!.first;
-                                    return TextButton(
-                                      onPressed: () {
-                                        if (selectedTimeslot.isNotEmpty &&
-                                            isBusy == false) {
-                                          if (selectedTimeslot.length <=
-                                              ownUser.hours) {
-                                            selectedTimeslot.sort(
-                                                (String a, String b) =>
-                                                    a.compareTo(b));
-                                            final scheduled = Scheduled(
-                                              lessionId: widget.lesson.id,
-                                              studentId: userStudent.uid,
-                                              title: widget.lesson.title,
-                                              category: widget.lesson.category,
-                                              tutorId: widget.user.id,
-                                              timeslot: selectedTimeslot,
-                                              date:
-                                                  Timestamp.fromDate(dateShown),
-                                              accepted: false,
-                                            );
-                                            send(
-                                                scheduled: scheduled,
-                                                userStudent: ownUser);
-                                          } else {
-                                            Navigator.pop(context);
-
-                                            Utils.showSnackBar(
-                                                AppLocalizations.of(context)!
-                                                    .noCredits);
-                                          }
-                                        }
-                                      },
-                                      style: TextButton.styleFrom(
-                                        primary: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
+                                    return Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            ownUser.hours.toString(),
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          const Icon(
+                                            Icons.av_timer,
+                                            size: 20,
+                                          ),
+                                        ],
                                       ),
-                                      child: Text(AppLocalizations.of(context)!
-                                          .bookLessonCaps),
                                     );
                                   } else {
                                     return Center(
@@ -494,24 +428,92 @@ class _BookLessonModalState extends State<BookLessonModal> {
                                 }),
                           ],
                         ),
-                      ),
-                      (() {
-                        if (isBusy) {
-                          return LinearProgressIndicator();
-                        }
-                        return Container();
-                      }())
-                    ],
-                  );
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Wrap(
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                style: TextButton.styleFrom(
+                                  primary:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                child:
+                                    Text(AppLocalizations.of(context)!.closeCaps),
+                              ),
+                              StreamBuilder(
+                                  stream: readUsers(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasError) {
+                                      return const Text('Something went wrong!');
+                                    } else if (snapshot.hasData) {
+                                      var ownUser = snapshot.data!.first;
+                                      return TextButton(
+                                        onPressed: () {
+                                          if (selectedTimeslot.isNotEmpty &&
+                                              isBusy == false) {
+                                            if (selectedTimeslot.length <=
+                                                ownUser.hours) {
+                                              selectedTimeslot.sort(
+                                                  (String a, String b) =>
+                                                      a.compareTo(b));
+                                              final scheduled = Scheduled(
+                                                lessionId: widget.lesson.id,
+                                                studentId: userStudent.uid,
+                                                title: widget.lesson.title,
+                                                category: widget.lesson.category,
+                                                tutorId: widget.user.id,
+                                                timeslot: selectedTimeslot,
+                                                date:
+                                                    Timestamp.fromDate(dateShown),
+                                                accepted: false,
+                                              );
+                                              send(
+                                                  scheduled: scheduled,
+                                                  userStudent: ownUser);
+                                            } else {
+                                              Navigator.pop(context);
+    
+                                              Utils.showSnackBar(
+                                                  AppLocalizations.of(context)!
+                                                      .noCredits);
+                                            }
+                                          }
+                                        },
+                                        style: TextButton.styleFrom(
+                                          primary: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                        child: Text(AppLocalizations.of(context)!
+                                            .bookLessonCaps),
+                                      );
+                                    } else {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    }
+                                  }),
+                            ],
+                          ),
+                        ),
+                        (() {
+                          if (isBusy) {
+                            return LinearProgressIndicator();
+                          }
+                          return Container();
+                        }())
+                      ],
+                    );
+                  }
                 }
+                return Text(AppLocalizations.of(context)!.noTimestamp);
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
-              return Text(AppLocalizations.of(context)!.noTimestamp);
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
+            }),
+      ),
     );
   }
 }
