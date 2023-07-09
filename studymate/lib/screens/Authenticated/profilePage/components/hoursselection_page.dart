@@ -34,7 +34,12 @@ const List<String> hours = [
 ];
 
 class HoursSelectionPage extends StatefulWidget {
-  const HoursSelectionPage({super.key});
+  const HoursSelectionPage(
+      {super.key,
+      required this.isOpenedRight,
+      required this.callbackClosePage});
+  final bool isOpenedRight;
+  final Function callbackClosePage;
 
   @override
   State<HoursSelectionPage> createState() => _HoursSelectionPageState();
@@ -128,7 +133,7 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
     if (list.length >= 2) {
       bool isOverlapped = checkingOverlappingFrom(value, index, day);
       if (isOverlapped) {
-        ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context)!.incorrectTimeOverlaps),
           duration: Duration(seconds: 2),
           backgroundColor: Color.fromARGB(255, 255, 68, 35),
@@ -148,7 +153,7 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
     List<SelectedHourField> list = selectedHourWeek[day];
     if (list[index].from != null) {
       if (hours.indexOf(value) <= hours.indexOf(list[index].from!)) {
-        ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context)!.incorrectTime),
           duration: Duration(seconds: 2),
           backgroundColor: Color.fromARGB(255, 255, 68, 35),
@@ -236,12 +241,13 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
         docId = doc.id;
       });
       await docTimeslot.doc(docId).update({'id': docId});
-      Navigator.pop(context);
+      widget.callbackClosePage(widget.isOpenedRight);
+
       setState(() {
         isBusy = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(content: Text(AppLocalizations.of(context)!.timeslotAdded)),
+        SnackBar(content: Text(AppLocalizations.of(context)!.timeslotAdded)),
       );
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -281,14 +287,23 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                   child: Column(
                     children: [
                       const SizedBox(height: 60),
-                      Text(AppLocalizations.of(context)!.createTimeslotTitle,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          )),
-                      Text(
-                          AppLocalizations.of(context)!.createTimeslotSubtitle,
+                      Row(children: <Widget>[
+                        IconButton(
+                            onPressed: () {
+                              widget.callbackClosePage(widget.isOpenedRight);
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              size: 20,
+                            )),
+                        Text(AppLocalizations.of(context)!.createTimeslotTitle,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ]),
+                      Text(AppLocalizations.of(context)!.createTimeslotSubtitle,
                           textAlign: TextAlign.left,
                           style: TextStyle(fontSize: 13)),
                       const SizedBox(height: 30),
@@ -357,7 +372,9 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                                               decoration: InputDecoration(
                                                 errorStyle:
                                                     const TextStyle(height: 0),
-                                                labelText: AppLocalizations.of(context)!.from,
+                                                labelText: AppLocalizations.of(
+                                                        context)!
+                                                    .from,
                                                 hintText: "--:--",
                                                 border: OutlineInputBorder(
                                                   borderRadius:
@@ -446,7 +463,9 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                                               decoration: InputDecoration(
                                                 errorStyle:
                                                     const TextStyle(height: 0),
-                                                labelText: AppLocalizations.of(context)!.to,
+                                                labelText: AppLocalizations.of(
+                                                        context)!
+                                                    .to,
                                                 hintText: "--:--",
                                                 border: OutlineInputBorder(
                                                   borderRadius:
@@ -536,7 +555,8 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
                                             content: Text(
-                                                AppLocalizations.of(context)!.createTimeslotSnackError),
+                                                AppLocalizations.of(context)!
+                                                    .createTimeslotSnackError),
                                             duration: Duration(seconds: 2),
                                             backgroundColor: Color.fromARGB(
                                                 255, 255, 68, 35),
@@ -548,7 +568,8 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                                         });
                                       }
                                     },
-                                    label: Text(AppLocalizations.of(context)!.addTimeslotButton),
+                                    label: Text(AppLocalizations.of(context)!
+                                        .addTimeslotButton),
                                   ),
                                 ],
                               ),
@@ -587,9 +608,10 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                                       send();
                                     } else {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar( SnackBar(
+                                          .showSnackBar(SnackBar(
                                         content: Text(
-                                            AppLocalizations.of(context)!.createTimeslotFillAllSnack),
+                                            AppLocalizations.of(context)!
+                                                .createTimeslotFillAllSnack),
                                         duration: Duration(seconds: 2),
                                         backgroundColor:
                                             Color.fromARGB(255, 255, 68, 35),
@@ -599,7 +621,8 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
                                       content: Text(
-                                          AppLocalizations.of(context)!.createTimeslotFillOneSnack),
+                                          AppLocalizations.of(context)!
+                                              .createTimeslotFillOneSnack),
                                       duration: Duration(seconds: 2),
                                       backgroundColor:
                                           Color.fromARGB(255, 255, 68, 35),
@@ -608,7 +631,8 @@ class _HoursSelectionPageState extends State<HoursSelectionPage> {
                                 } else {
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(SnackBar(
-                                    content: Text(AppLocalizations.of(context)!.createTimeslotInvalidFieldSnack),
+                                    content: Text(AppLocalizations.of(context)!
+                                        .createTimeslotInvalidFieldSnack),
                                     duration: Duration(seconds: 2),
                                     backgroundColor:
                                         Color.fromARGB(255, 255, 68, 35),

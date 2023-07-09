@@ -19,7 +19,9 @@ Stream<List<Category>> readCategory() => FirebaseFirestore.instance
 
 class EditLessonPage extends StatefulWidget {
   final Lesson lesson;
-  const EditLessonPage({super.key, required this.lesson});
+  final bool isBottomModal;
+  const EditLessonPage(
+      {super.key, required this.lesson, required this.isBottomModal});
   @override
   State<EditLessonPage> createState() => _EditLessonPageState();
 }
@@ -33,6 +35,10 @@ class _EditLessonPageState extends State<EditLessonPage> {
       category = widget.lesson.category;
       desciptionController.text = widget.lesson.description;
     });
+  }
+
+  void callbackClosePage(bool isTablet) {
+    Navigator.pop(context);
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -80,7 +86,6 @@ class _EditLessonPageState extends State<EditLessonPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.lessonEdited)),
       );
-      
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
       setState(() {
@@ -102,6 +107,7 @@ class _EditLessonPageState extends State<EditLessonPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -124,16 +130,20 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                 const SizedBox(height: 60),
                                 /*===TITLE AND BACKBUTTON===*/
                                 Row(children: <Widget>[
-                                  IconButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      icon: const Icon(
-                                        Icons.arrow_back_ios,
-                                        size: 20,
-                                      )),
+                                  widget.isBottomModal
+                                      ? SizedBox()
+                                      : IconButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          icon: const Icon(
+                                            Icons.arrow_back_ios,
+                                            size: 20,
+                                          )),
                                   Expanded(
-                                      child: Text(AppLocalizations.of(context)!.editLessonTitle,
+                                      child: Text(
+                                          AppLocalizations.of(context)!
+                                              .editLessonTitle,
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             fontSize: 25,
@@ -146,15 +156,18 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                   controller: titleController,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return AppLocalizations.of(context)!.pleaseEnterText;
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterText;
                                     }
                                     return null;
                                   },
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   decoration: InputDecoration(
-                                    labelText: AppLocalizations.of(context)!.title,
-                                    hintText: AppLocalizations.of(context)!.titleFieldHint,
+                                    labelText:
+                                        AppLocalizations.of(context)!.title,
+                                    hintText: AppLocalizations.of(context)!
+                                        .titleFieldHint,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
                                       borderSide:
@@ -184,7 +197,8 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                 TextFormField(
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return AppLocalizations.of(context)!.pleaseEnterText;
+                                      return AppLocalizations.of(context)!
+                                          .pleaseEnterText;
                                     }
                                     return null;
                                   },
@@ -196,9 +210,9 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                   maxLines: 7,
                                   decoration: InputDecoration(
                                     //labelText: "Description",
-                                    hintText:
-                                        AppLocalizations.of(context)!.descriptionFieldHint,
-      
+                                    hintText: AppLocalizations.of(context)!
+                                        .descriptionFieldHint,
+
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
                                       borderSide:
@@ -228,7 +242,8 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                         ),
                                         onPressed: () {
                                           // Validate returns true if the form is valid, or false otherwise.
-                                          if (_formKey.currentState!.validate()) {
+                                          if (_formKey.currentState!
+                                              .validate()) {
                                             if (isEdited()) {
                                               FirebaseFirestore.instance
                                                   .collection('timeslots')
@@ -240,8 +255,10 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                                     .docs.isNotEmpty) {
                                                   // Do something if the document exists
                                                   updateLesson(
-                                                      lessonId: widget.lesson.id!,
-                                                      title: titleController.text,
+                                                      lessonId:
+                                                          widget.lesson.id!,
+                                                      title:
+                                                          titleController.text,
                                                       category: category,
                                                       description:
                                                           desciptionController
@@ -250,16 +267,23 @@ class _EditLessonPageState extends State<EditLessonPage> {
                                                   // Do something if the document does not exist
                                                   Navigator.of(context).push(
                                                       createRoute(
-                                                          const HoursSelectionPage()));
+                                                          HoursSelectionPage(
+                                                    callbackClosePage:
+                                                        callbackClosePage,
+                                                    isOpenedRight: false,
+                                                  )));
                                                 }
                                               });
                                             } else {
                                               Utils.showSnackBar(
-                                                  AppLocalizations.of(context)!.editOneField);
+                                                  AppLocalizations.of(context)!
+                                                      .editOneField);
                                             }
                                           }
                                         },
-                                        child: Text(AppLocalizations.of(context)!.submit,
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .submit,
                                             style: TextStyle(
                                               color: Color.fromARGB(
                                                   255, 255, 255, 255),

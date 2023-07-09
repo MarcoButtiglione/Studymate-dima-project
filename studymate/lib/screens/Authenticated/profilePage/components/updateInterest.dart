@@ -2,15 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../component/utils.dart';
-import '../../../models/category.dart';
+import '../../../../component/utils.dart';
+import '../../../../models/category.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class updateInterest extends StatefulWidget {
   final List<String> interest;
+  final bool isOpenedRight;
+  final Function callbackClosePage;
 
-  const updateInterest({super.key, required this.interest});
+  const updateInterest(
+      {super.key,
+      required this.interest,
+      required this.isOpenedRight,
+      required this.callbackClosePage});
   @override
   _IntrestState createState() => _IntrestState();
 }
@@ -39,7 +44,7 @@ class _IntrestState extends State<updateInterest> {
                   Row(children: [
                     IconButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          widget.callbackClosePage(widget.isOpenedRight);
                         },
                         icon: const Icon(
                           Icons.arrow_back_ios,
@@ -54,7 +59,7 @@ class _IntrestState extends State<updateInterest> {
                       ),
                     ),
                   ]),
-                  Text( AppLocalizations.of(context)!.yourInterestsSubTitle,
+                  Text(AppLocalizations.of(context)!.yourInterestsSubTitle,
                       style: TextStyle(
                         fontFamily: "Crimson Pro",
                         fontSize: (w > 490 && h > 720) ? 25 : 16,
@@ -109,7 +114,7 @@ class _IntrestState extends State<updateInterest> {
                         ),
                       ),
                       child: Text(
-                         AppLocalizations.of(context)!.continueText,
+                        AppLocalizations.of(context)!.continueText,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: (w > 490 && h > 720) ? 30 : 16,
@@ -134,14 +139,14 @@ class _IntrestState extends State<updateInterest> {
         await docUser.set(
             {'categoriesOfInterest': selectedCatList}, SetOptions(merge: true));
         // ignore: use_build_context_synchronously
-        Navigator.pop(context);
+        widget.callbackClosePage(widget.isOpenedRight);
       } else {
-        Utils.showSnackBar( AppLocalizations.of(context)!.selectOneSubject);
-        Navigator.of(context).pop();
+        Utils.showSnackBar(AppLocalizations.of(context)!.selectOneSubject);
+        widget.callbackClosePage(widget.isOpenedRight);
       }
     } on FirebaseAuthException catch (e) {
       Utils.showSnackBar(e.message);
-      Navigator.of(context).pop();
+      widget.callbackClosePage(widget.isOpenedRight);
     }
   }
 }
