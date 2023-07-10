@@ -3,10 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:studymate/component/utils.dart';
 import 'package:studymate/provider/AuthService.dart';
-
-import '../component/utilities.dart';
-
 
 class Authentication {
   //this method is used to initialize firebase
@@ -26,7 +24,7 @@ class Authentication {
 
   //this method is used to perform the signInWithGoogle
   static Future<void> signInWithGoogle({required BuildContext context}) async {
-    Utilities utilities = Utilities();
+    Utils utilities = Utils();
     FirebaseAuth auth = FirebaseAuth.instance;
     //User? user;
 
@@ -35,7 +33,7 @@ class Authentication {
 
       try {
         //final UserCredential userCredential =
-            await auth.signInWithPopup(authProvider);
+        await auth.signInWithPopup(authProvider);
       } catch (e) {
         print(e);
       }
@@ -81,7 +79,7 @@ class Authentication {
   //this method is used to perform the signOutWithGoogle
   static Future<void> signOutWithGoogle({required BuildContext context}) async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
-    Utilities utilities = Utilities();
+    Utils utilities = Utils();
     try {
       if (!kIsWeb) {
         if (await googleSignIn.isSignedIn()) {

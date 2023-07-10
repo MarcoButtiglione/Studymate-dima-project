@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:studymate/models/user.dart';
+import '../../../component/utils.dart';
 import '../../../service/storage_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class SharePosition extends StatefulWidget {
   final double latitude;
@@ -31,7 +31,6 @@ class _SharePositionState extends State<SharePosition> {
   final LatLng _initialCameraPosition = const LatLng(45.475714, 9.1365314);
   late String title = AppLocalizations.of(context)!.sharedPosition;
   late bool localizationAllowed = true;
-
   @override
   void initState() {
     super.initState();
@@ -119,31 +118,6 @@ class _SharePositionState extends State<SharePosition> {
     }
   }
 
-  //this method is used to show a alert with just one button
-  showAlertDialog(BuildContext context, String title, String msg) {
-    Widget okButton = TextButton(
-      child:  Text(AppLocalizations.of(context)!.ok),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-
-    AlertDialog alert = AlertDialog(
-      title: Text(title),
-      content: Text(msg),
-      actions: [
-        okButton,
-      ],
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
   //this method is used to get the current locations
   _getCurrentLocation() async {
     _currentPosition = await Geolocator.getCurrentPosition();
@@ -193,7 +167,7 @@ class _SharePositionState extends State<SharePosition> {
                     margin: EdgeInsets.all(20),
                     alignment: Alignment.center,
                     child: Text(
-                     AppLocalizations.of(context)!.tunrOnGPS,
+                      AppLocalizations.of(context)!.tunrOnGPS,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,

@@ -4,14 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:search_map_place_updated/search_map_place_updated.dart';
-
+import 'package:search_map_location/search_map_location.dart';
+import 'package:search_map_location/utils/google_search/latlng.dart' as latlng;
+import 'package:search_map_location/utils/google_search/place.dart' as place;
+import '../../../component/utils.dart';
 import '../../../models/msg.dart';
 import '../../../models/notification.dart';
 import '../../../models/user.dart';
 import '../../../service/storage_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:geocoding/geocoding.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchPosition extends StatefulWidget {
@@ -47,8 +48,15 @@ class _SearchPositionState extends State<SearchPosition> {
   final LatLng _initialCameraPosition = const LatLng(45.475714, 9.1365314);
   late String title = AppLocalizations.of(context)!.sharePosition;
   late bool localizationAllowed = true;
-
+  Utils utils = Utils();
   late LatLng _destination = LatLng(0, 0);
+
+  @override
+  void dispose() {
+    // Dispose any resources or cleanup code here
+
+    super.dispose();
+  }
 
   //this method is used for settings the map during the creation phase
   void _onMapCreated(GoogleMapController controller) {
@@ -71,12 +79,7 @@ class _SearchPositionState extends State<SearchPosition> {
     );
     markers.add(m);
 
-    if (mounted) {
-      // mounted returns true only if the widget is in the tree
-      setState(() {
-        _markers = markers;
-      });
-    }
+    _markers = markers;
   }
 
   Future<void> checkPermission() async {
@@ -109,31 +112,6 @@ class _SearchPositionState extends State<SearchPosition> {
         print('Location permissions are denied.');
       }
     }
-  }
-
-  //this method is used to show a alert with just one button
-  showAlertDialog(BuildContext context, String? title, String? msg) {
-    Widget okButton = TextButton(
-      child: Text(AppLocalizations.of(context)!.ok),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-
-    AlertDialog alert = AlertDialog(
-      title: Text(title!),
-      content: Text(msg!),
-      actions: [
-        okButton,
-      ],
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
   }
 
   //this method is used to get the current locations
@@ -227,39 +205,6 @@ class _SearchPositionState extends State<SearchPosition> {
               : SizedBox(),
         ),
         Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 50),
-              child: (localizationAllowed)
-                  ? IconButton(
-                      onPressed: () {
-                        if (_destination != LatLng(0, 0) &&
-                            localizationAllowed) {
-                          send();
-                          Navigator.of(context).pop();
-                        } else {
-                          showAlertDialog(
-                              context,
-                              AppLocalizations.of(context)!.attention,
-                              AppLocalizations.of(context)!.selectLocation);
-                        }
-                      },
-                      icon: Container(
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 255, 255, 255),
-                            borderRadius: BorderRadius.circular(30)),
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.only(
-                            bottom: 10, right: 10, top: 5),
-                        child: const Icon(
-                          Icons.send,
-                          color: Color.fromARGB(255, 255, 81, 69),
-                          size: 30,
-                        ),
-                      ))
-                  : SizedBox(),
-            )),
-        Align(
             alignment: Alignment.topLeft,
             child: Row(
               children: [
@@ -267,32 +212,30 @@ class _SearchPositionState extends State<SearchPosition> {
                   child: (localizationAllowed)
                       ? Container(
                           margin: const EdgeInsets.only(
-                              bottom: 10, top: 10, left: 10, right: 125),
-                          //width: 0.3 * w,
-
+                              bottom: 10, top: 10, left: 10, right: 10),
+                          width: 0.3 * w,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
                               color: Color.fromARGB(255, 255, 255, 255)),
-                          child: SearchMapPlaceWidget(
+                          child: SearchLocation(
                             apiKey: kGoogleApiKey,
                             // The language of the autocompletion
                             language:
                                 Localizations.localeOf(context).languageCode,
                             // location is the center of a place and the radius provided here are between this radius of this place search result
                             //will be provided,you can set this LatLng dynamically by getting user lat and long in double value
-                            location: LatLng(_currentPosition.latitude,
-                                _currentPosition.longitude),
+                            location: latlng.LatLng(
+                                latitude: 9.072264, longitude: 7.491302),
                             radius: 1100,
-                            iconColor: Color.fromARGB(255, 255, 81, 69),
-                            bgColor: Colors.white,
-                            textColor: Colors.black,
-                            onSelected: (Place place) async {
+                            onSelected: (place.Place place) async {
                               final geolocation = await place.geolocation;
-                              LatLng tmp = geolocation!.coordinates;
-                              setState(() {
-                                _destination =
-                                    LatLng(tmp.latitude, tmp.longitude);
-                              });
+                              latlng.LatLng tmp = geolocation!.coordinates;
+                              if (mounted) {
+                                setState(() {
+                                  _destination =
+                                      LatLng(tmp.latitude, tmp.longitude);
+                                });
+                              }
 
                               _createMarker(place.description);
                               _getDestinationLocation();
@@ -300,6 +243,38 @@ class _SearchPositionState extends State<SearchPosition> {
                           ))
                       : SizedBox(),
                 ),
+                (localizationAllowed)
+                    ? IconButton(
+                        onPressed: () {
+                          if (_destination != LatLng(0, 0) &&
+                              localizationAllowed) {
+                            send();
+
+                            Navigator.of(context).pop();
+                          } else {
+                            utils.showAlertDialog(
+                                context,
+                                AppLocalizations.of(context)!.attention,
+                                AppLocalizations.of(context)!.selectLocation);
+                          }
+                        },
+                        icon: Container(
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(30)),
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(
+                              bottom: 10, right: 10, top: 5),
+                          child: const Icon(
+                            Icons.send,
+                            color: Color.fromARGB(255, 103, 204, 244),
+                            size: 30,
+                          ),
+                        ))
+                    : SizedBox(),
+                SizedBox(
+                  width: 1000,
+                )
               ],
             ))
       ],
@@ -355,7 +330,7 @@ class _SearchPositionState extends State<SearchPosition> {
         });
       }
     } on FirebaseAuthException catch (e) {
-      showAlertDialog(context, "error", e.message!);
+      utils.showAlertDialog(context, "error", e.message!);
       Navigator.of(context).pop();
     }
   }
@@ -420,7 +395,7 @@ class _SearchPositionState extends State<SearchPosition> {
                         ),
                       ),
                       const SizedBox(
-                        width: 10,
+                        width: 500,
                       )
                     ],
                   ),

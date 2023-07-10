@@ -18,4 +18,28 @@ class Utils {
       ..removeCurrentSnackBar()
       ..showSnackBar(snackBar);
   }
+
+  showAlertDialog(BuildContext context, String title, String msg) {
+    Widget okButton = TextButton(
+      child: const Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(msg),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }
