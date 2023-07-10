@@ -138,7 +138,7 @@ class _SearchPageState extends State<SearchPage> {
     return books;
   }
 
-    showAlertDialog(BuildContext context, String? title, String? msg) {
+  showAlertDialog(BuildContext context, String? title, String? msg) {
     Widget okButton = TextButton(
       child: const Text("OK"),
       onPressed: () {
@@ -207,7 +207,7 @@ class _SearchPageState extends State<SearchPage> {
                       fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  (book.author_name.isNotEmpty && book.author_name[0]== input!)
+                  (book.author_name.isNotEmpty && book.author_name[0] == input!)
                       ? "${book.author_name[0]}"
                       : "unkwnown",
                   overflow: TextOverflow.ellipsis,
@@ -259,10 +259,12 @@ class _SearchPageState extends State<SearchPage> {
                         onTypedCallback: ((value) async {
                           List<Book> b = await _fetchData(value);
                           selectedLesson = value;
-                          input= value;
-                          setState(() {
-                            bookView = b;
-                          });
+                          input = value;
+                          if (mounted) {
+                            setState(() {
+                              bookView = b;
+                            });
+                          }
                         }),
                         onSelectedCallback: ((p0) {
                           setState(() {

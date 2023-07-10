@@ -23,7 +23,7 @@ class AutocompleteSearchbarSearchPage extends StatefulWidget {
 class _AutocompleteSearchbarSearchPageState
     extends State<AutocompleteSearchbarSearchPage> {
   bool isLoading = false;
-
+  bool view = true;
   late TextEditingController controller;
 
   @override
@@ -43,9 +43,13 @@ class _AutocompleteSearchbarSearchPageState
               if (textEditingValue.text.isEmpty) {
                 return const Iterable<String>.empty();
               } else {
-                return widget.lessonsTitle.where((word) => word
-                    .toLowerCase()
-                    .contains(textEditingValue.text.toLowerCase()));
+                if (view) {
+                  return widget.lessonsTitle.where((word) => word
+                      .toLowerCase()
+                      .contains(textEditingValue.text.toLowerCase()));
+                } else {
+                  return const Iterable<String>.empty();
+                }
               }
             },
             optionsViewBuilder:
@@ -88,6 +92,9 @@ class _AutocompleteSearchbarSearchPageState
                 focusNode: focusNode,
                 onSubmitted: (value) {
                   widget.onTypedCallback(value);
+                  setState(() {
+                    view = false;
+                  });
                   FocusScope.of(context).unfocus();
                 },
                 onEditingComplete: onEditingComplete,
@@ -107,8 +114,12 @@ class _AutocompleteSearchbarSearchPageState
                     hintText: AppLocalizations.of(context)!.searchLessonHint,
                     prefixIcon: IconButton(
                       onPressed: () {
+                        setState(() {
+                          view = false;
+                        });
                         widget.onTypedCallback(controller.text);
-                        Navigator.of(context).pop();
+
+                        //Navigator.of(context).pop();
                       },
                       icon: Icon(Icons.search),
                     ),
