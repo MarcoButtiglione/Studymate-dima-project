@@ -4,9 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:search_map_location/search_map_location.dart';
-import 'package:search_map_location/utils/google_search/place.dart';
-import 'package:search_map_location/utils/google_search/latlng.dart' as latlng;
+import 'package:search_map_place_updated/search_map_place_updated.dart';
+
 import '../../../models/msg.dart';
 import '../../../models/notification.dart';
 import '../../../models/user.dart';
@@ -239,7 +238,9 @@ class _SearchPositionState extends State<SearchPosition> {
                           send();
                           Navigator.of(context).pop();
                         } else {
-                          showAlertDialog(context, AppLocalizations.of(context)!.attention,
+                          showAlertDialog(
+                              context,
+                              AppLocalizations.of(context)!.attention,
                               AppLocalizations.of(context)!.selectLocation);
                         }
                       },
@@ -252,7 +253,7 @@ class _SearchPositionState extends State<SearchPosition> {
                             bottom: 10, right: 10, top: 5),
                         child: const Icon(
                           Icons.send,
-                          color: Color.fromARGB(255, 95, 176, 246),
+                          color: Color.fromARGB(255, 255, 81, 69),
                           size: 30,
                         ),
                       ))
@@ -268,23 +269,26 @@ class _SearchPositionState extends State<SearchPosition> {
                           margin: const EdgeInsets.only(
                               bottom: 10, top: 10, left: 10, right: 125),
                           //width: 0.3 * w,
+
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
                               color: Color.fromARGB(255, 255, 255, 255)),
-                          child: SearchLocation(
+                          child: SearchMapPlaceWidget(
                             apiKey: kGoogleApiKey,
                             // The language of the autocompletion
-                            language:  Localizations.localeOf(context)
-                                      .languageCode,
+                            language:
+                                Localizations.localeOf(context).languageCode,
                             // location is the center of a place and the radius provided here are between this radius of this place search result
                             //will be provided,you can set this LatLng dynamically by getting user lat and long in double value
-                            location: latlng.LatLng(
-                                latitude: _currentPosition.latitude,
-                                longitude: _currentPosition.longitude),
+                            location: LatLng(_currentPosition.latitude,
+                                _currentPosition.longitude),
                             radius: 1100,
+                            iconColor: Color.fromARGB(255, 255, 81, 69),
+                            bgColor: Colors.white,
+                            textColor: Colors.black,
                             onSelected: (Place place) async {
                               final geolocation = await place.geolocation;
-                              latlng.LatLng tmp = geolocation!.coordinates;
+                              LatLng tmp = geolocation!.coordinates;
                               setState(() {
                                 _destination =
                                     LatLng(tmp.latitude, tmp.longitude);
