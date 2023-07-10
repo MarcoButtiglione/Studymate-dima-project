@@ -102,7 +102,7 @@ class NotificationCard extends StatelessWidget {
                                       (notification.content!.contains("l4t:") &&
                                               notification.content!
                                                   .contains("l0n:"))
-                                          ? Text("Shared position!")
+                                          ? Text(AppLocalizations.of(context)!.sharedPosition)
                                           : Text(notification.content!)),
                             ],
                           ),

@@ -13,6 +13,7 @@ import '../../../models/user.dart';
 import '../../../service/storage_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchPosition extends StatefulWidget {
   final String? chatId;
@@ -45,7 +46,7 @@ class _SearchPositionState extends State<SearchPosition> {
   late GoogleMapController _controller;
   late Set<Marker> _markers = {};
   final LatLng _initialCameraPosition = const LatLng(45.475714, 9.1365314);
-  late String title = "Share Position";
+  late String title = AppLocalizations.of(context)!.sharePosition;
   late bool localizationAllowed = true;
 
   late LatLng _destination = LatLng(0, 0);
@@ -114,7 +115,7 @@ class _SearchPositionState extends State<SearchPosition> {
   //this method is used to show a alert with just one button
   showAlertDialog(BuildContext context, String? title, String? msg) {
     Widget okButton = TextButton(
-      child: const Text("OK"),
+      child: Text(AppLocalizations.of(context)!.ok),
       onPressed: () {
         Navigator.pop(context);
       },
@@ -184,8 +185,8 @@ class _SearchPositionState extends State<SearchPosition> {
                 : Container(
                     margin: EdgeInsets.all(20),
                     alignment: Alignment.center,
-                    child: const Text(
-                      "You must turn on or enable the localization service!",
+                    child: Text(
+                      AppLocalizations.of(context)!.tunrOnGPS,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -238,8 +239,8 @@ class _SearchPositionState extends State<SearchPosition> {
                           send();
                           Navigator.of(context).pop();
                         } else {
-                          showAlertDialog(context, "Attention!",
-                              "Select a location to share!");
+                          showAlertDialog(context, AppLocalizations.of(context)!.attention,
+                              AppLocalizations.of(context)!.selectLocation);
                         }
                       },
                       icon: Container(
@@ -273,7 +274,8 @@ class _SearchPositionState extends State<SearchPosition> {
                           child: SearchLocation(
                             apiKey: kGoogleApiKey,
                             // The language of the autocompletion
-                            language: 'en',
+                            language:  Localizations.localeOf(context)
+                                      .languageCode,
                             // location is the center of a place and the radius provided here are between this radius of this place search result
                             //will be provided,you can set this LatLng dynamically by getting user lat and long in double value
                             location: latlng.LatLng(

@@ -148,6 +148,14 @@
    "acceptedTutoring": "接受了你对课程的辅导请求：",
    "rejectedTutoring": "拒绝了你对课程的辅导请求：",
 
+   "attention": "注意！",
+   "tunrOnGPS": "您必须打开或启用定位服务！",
+   "sharePosition": "分享位置",
+   "shareCurrentPosition": "分享当前位置",
+   "sharedPosition": "已分享位置",
+   "selectLocation": "请选择要分享的位置！",
+   "sharedCurrentPosition": "已分享当前位置！",
+
 
    "student": "学生",
    "lessons": "课程",

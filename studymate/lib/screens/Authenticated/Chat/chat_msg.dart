@@ -13,6 +13,8 @@ import '../../../models/chat.dart';
 import '../../../models/msg.dart';
 import '../../../models/notification.dart';
 import '../../../service/storage_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ChatMsg extends StatefulWidget {
   final Chat? chat;
@@ -205,8 +207,8 @@ class _MsgState extends State<ChatMsg> {
                                             } else {
                                               showAlertDialog(
                                                   context,
-                                                  "Attention!",
-                                                  "You must turn on or enable the localization service!");
+                                                  AppLocalizations.of(context)!.attention,
+                                                  AppLocalizations.of(context)!.tunrOnGPS);
                                             }
                                           },
                                           //leading: ,
@@ -214,7 +216,7 @@ class _MsgState extends State<ChatMsg> {
                                               LineIcons.mapMarker,
                                               color: Color.fromARGB(
                                                   255, 233, 64, 87)),
-                                          title: const Text('Share position'),
+                                          title:  Text(AppLocalizations.of(context)!.sharePosition),
                                         ),
                                         ListTile(
                                           onTap: () async {
@@ -225,8 +227,8 @@ class _MsgState extends State<ChatMsg> {
                                               Icons.my_location_outlined,
                                               color: Color.fromARGB(
                                                   255, 233, 64, 87)),
-                                          title: const Text(
-                                              'Share current position'),
+                                          title: Text(
+                                             AppLocalizations.of(context)!.shareCurrentPosition),
                                         ),
                                       ])));
                             },
@@ -280,7 +282,7 @@ class _MsgState extends State<ChatMsg> {
   //this method is used to show a alert with just one button
   showAlertDialog(BuildContext context, String? title, String? msg) {
     Widget okButton = TextButton(
-      child: const Text("OK"),
+      child: Text(AppLocalizations.of(context)!.ok),
       onPressed: () {
         Navigator.pop(context);
       },
@@ -315,8 +317,8 @@ class _MsgState extends State<ChatMsg> {
       Navigator.pop(context);
       _scrollToEnd();
     } else {
-      showAlertDialog(context, "Attention!",
-          "You must turn on or enable the localization service!");
+      showAlertDialog(context, AppLocalizations.of(context)!.attention,
+           AppLocalizations.of(context)!.tunrOnGPS);
     }
   }
 

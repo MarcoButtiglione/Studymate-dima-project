@@ -149,6 +149,14 @@
    "leftReview": "a laissé un avis sur votre leçon :",
    "acceptedTutoring": "a accepté votre demande de tutorat pour la leçon :",
    "rejectedTutoring": "a rejeté votre demande de tutorat pour la leçon :",
+
+   "attention": "Attention !",
+   "tunrOnGPS": "Vous devez activer ou autoriser le service de localisation !",
+   "sharePosition": "Partager la position",
+   "shareCurrentPosition": "Partager la position actuelle",
+   "sharedPosition": "Position partagée",
+   "selectLocation": "Sélectionnez un emplacement à partager !",
+   "sharedCurrentPosition": "Position actuelle partagée !",
    
    "student": "Étudiant",
    "lessons": "Leçons",

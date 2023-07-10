@@ -149,6 +149,14 @@
    "acceptedTutoring": "ha accettato la tua richiesta di tutoraggio per la lezione:",
    "rejectedTutoring": "ha rifiutato la tua richiesta di tutoraggio per la lezione:",
 
+   "attention": "Attenzione!",
+   "tunrOnGPS": "Devi attivare o abilitare il servizio di localizzazione!",
+   "sharePosition": "Condividi posizione",
+   "shareCurrentPosition": "Condividi posizione attuale",
+   "sharedPosition": "Posizione condivisa",
+   "selectLocation": "Seleziona una posizione da condividere!",
+   "sharedCurrentPosition": "Posizione attuale condivisa!",
+
    "student": "Studente",
    "lessons": "Lezioni",
    "tutor": "Tutor",

@@ -149,6 +149,14 @@
    "acceptedTutoring": "hat deine Anfrage für Tutoring der Lektion akzeptiert:",
    "rejectedTutoring": "hat deine Anfrage für Tutoring der Lektion abgelehnt:",
 
+   "attention": "Achtung!",
+   "tunrOnGPS": "Sie müssen den Standortdienst einschalten oder aktivieren!",
+   "sharePosition": "Position teilen",
+   "shareCurrentPosition": "Aktuelle Position teilen",
+   "sharedPosition": "Geteilte Position",
+   "selectLocation": "Wählen Sie einen Ort zum Teilen aus!",
+   "sharedCurrentPosition": "Aktuelle Position geteilt!",
+
    "student": "Schüler",
    "lessons": "Lektionen",
    "tutor": "Tutor",

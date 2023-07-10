@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../service/storage_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ContactCard extends StatelessWidget {
   final String? id;
@@ -100,7 +102,7 @@ class ContactCard extends StatelessWidget {
                       Expanded(
                           child: (last_msg!.contains("l4t:") &&
                                   last_msg!.contains("l0n:"))
-                              ? const Text("Shared current position!")
+                              ?  Text(AppLocalizations.of(context)!.sharedCurrentPosition)
                               : Text(
                                   " ${last_msg!.length < 70 ? last_msg : "${last_msg!.substring(0, 67)}..."}")),
                       (msg_num != null && msg_num! > 0)

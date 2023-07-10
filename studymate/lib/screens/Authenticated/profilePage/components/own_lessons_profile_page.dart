@@ -179,7 +179,7 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                                     context: context,
                                     builder: (BuildContext context) => AlertDialog(
                                       title: Text(AppLocalizations.of(context)!
-                                          .deleteLessontitle),
+                                          .deleteLessonTitle),
                                       content: Text(AppLocalizations.of(context)!
                                           .deleteLessonSubTitle),
                                       actions: <Widget>[
@@ -234,130 +234,6 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
                     ),
                   );
                 },
-              );
-              return Column(
-                children: lessons
-                    .map(
-                      (lesson) => ListTile(
-                        //titleAlignment: titleAlignment,
-                        leading: StreamBuilder<List<Category>>(
-                            stream: readCategory(lesson.category),
-                            builder: ((context, snapshot) {
-                              if (snapshot.hasError) {
-                                return const CircleAvatar(
-                                  child: Text('E'),
-                                );
-                              } else if (snapshot.hasData) {
-                                final category = snapshot.data!.first;
-                                return FutureBuilder(
-                                    future:
-                                        storage.downloadURL(category.imageURL),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasError) {
-                                        return const CircleAvatar(
-                                          child: Text('E'),
-                                        );
-                                      } else if (snapshot.hasData) {
-                                        return CircleAvatar(
-                                          backgroundImage:
-                                              NetworkImage(snapshot.data!),
-                                        );
-                                      } else {
-                                        return const CircleAvatar();
-                                      }
-                                    });
-                              } else {
-                                return const CircleAvatar();
-                              }
-                            })),
-                        title: Text(
-                          lesson.title,
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
-                        trailing: PopupMenuButton<String>(
-                          onSelected: (String? value) {
-                            if (value == 'edit') {
-                              if (isMobile) {
-                                Navigator.of(context)
-                                    .push(createRoute(EditLessonPage(
-                                  isBottomModal: false,
-                                  lesson: lesson,
-                                )));
-                              } else {
-                                showModalBottomSheet(
-                                  showDragHandle: true,
-                                  context: context,
-                                  isScrollControlled: true,
-                                  useSafeArea: true,
-                                  builder: (context) => Container(
-                                    child: EditLessonPage(
-                                      isBottomModal: true,
-                                      lesson: lesson,
-                                    ),
-                                  ),
-                                );
-                              }
-                            } else if (value == 'delete') {
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: Text(AppLocalizations.of(context)!
-                                      .deleteLessontitle),
-                                  content: Text(AppLocalizations.of(context)!
-                                      .deleteLessonSubTitle),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, 'Cancel'),
-                                      child: Text(
-                                          AppLocalizations.of(context)!.cancel),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        if (!isBusy) {
-                                          deleteLessons(lessonId: lesson.id!);
-                                          Navigator.pop(context, 'Ok');
-                                        }
-                                      },
-                                      child: Text(
-                                          AppLocalizations.of(context)!.ok),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<String>>[
-                            PopupMenuItem<String>(
-                              value: 'edit',
-                              child: Row(
-                                children: [
-                                  Icon(Icons.edit),
-                                  SizedBox(width: 16),
-                                  Text(
-                                      AppLocalizations.of(context)!.editLesson),
-                                ],
-                              ),
-                            ),
-                            PopupMenuItem<String>(
-                              value: 'delete',
-                              child: Row(
-                                children: [
-                                  Icon(Icons.delete),
-                                  SizedBox(width: 16),
-                                  Text(AppLocalizations.of(context)!
-                                      .deleteLesson),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                    .toList(),
               );
             } else {
               return Text(AppLocalizations.of(context)!.noOwnLesson);

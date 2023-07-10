@@ -448,12 +448,12 @@
     "@lessonDeleted":{
         "description": "Lesson successfully deleted."
     },
-    "deleteLessontitle":"Do you want to delete the lesson?",
+    "deleteLessonTitle":"Do you want to delete the lesson?",
     "@deleteLessonTitle":{
         "description": "Delete Lesson Title"
     },
     "deleteLessonSubTitle":"Are you sure you want to delete the lesson? This operation is irreversible.",
-    "@deleteLessonTitle":{
+    "@deleteLessonSubTitle":{
         "description": "Delete Lesson SubTitle"
     },
     "ok":"Ok",
@@ -573,6 +573,37 @@
         "description": "Rejected tutoring"
     },
 
+
+    "attention":"Attention!",
+    "@attention":{
+        "description": "Attention!"
+    },
+    "tunrOnGPS":"You must turn on or enable the localization service!",
+    "@tunrOnGPS":{
+        "description": "Student"
+    },
+
+    "sharePosition":"Share position",
+    "@sharePosition":{
+        "description": "Share position"
+    },
+    "shareCurrentPosition":"Share current position",
+    "@shareCurrentPosition":{
+        "description": "Share position"
+    },
+    "sharedPosition":"Shared Position",
+    "@sharedPosition":{
+        "description": "Shared position"
+    },
+    "selectLocation":"Select a location to share!",
+    "@selectLocation":{
+        "description": "Select a location to share!"
+    },
+
+    "sharedCurrentPosition":"Shared current position!",
+    "@sharedCurrentPosition":{
+        "description": "Shared current position!"
+    },
 
     "student":"Student",
     "@student":{

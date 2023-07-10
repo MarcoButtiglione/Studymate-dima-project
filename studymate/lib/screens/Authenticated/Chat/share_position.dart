@@ -7,6 +7,8 @@ import 'package:studymate/models/user.dart';
 import '../../../service/storage_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SharePosition extends StatefulWidget {
   final double latitude;
@@ -27,7 +29,7 @@ class _SharePositionState extends State<SharePosition> {
   late GoogleMapController _controller;
   late Set<Marker> _markers = {};
   final LatLng _initialCameraPosition = const LatLng(45.475714, 9.1365314);
-  late String title = "Shared Position";
+  late String title = AppLocalizations.of(context)!.sharedPosition;
   late bool localizationAllowed = true;
 
   @override
@@ -42,7 +44,7 @@ class _SharePositionState extends State<SharePosition> {
           .then((List<Placemark> placemarks) {
         Placemark place = placemarks[0];
         if (placemarks.isEmpty) {
-          title = "Shared Position";
+          title = AppLocalizations.of(context)!.sharedPosition;
         } else {
           setState(() {
             title = "${place.street},  ${place.subAdministrativeArea}";
@@ -52,7 +54,7 @@ class _SharePositionState extends State<SharePosition> {
         debugPrint(e);
       });
     } catch (e) {
-      title = "Shared Position";
+      title = AppLocalizations.of(context)!.sharedPosition;
     }
   }
 
@@ -120,7 +122,7 @@ class _SharePositionState extends State<SharePosition> {
   //this method is used to show a alert with just one button
   showAlertDialog(BuildContext context, String title, String msg) {
     Widget okButton = TextButton(
-      child: const Text("OK"),
+      child:  Text(AppLocalizations.of(context)!.ok),
       onPressed: () {
         Navigator.pop(context);
       },
@@ -190,8 +192,8 @@ class _SharePositionState extends State<SharePosition> {
                 : Container(
                     margin: EdgeInsets.all(20),
                     alignment: Alignment.center,
-                    child: const Text(
-                      "You must turn on or enable the localization services!",
+                    child: Text(
+                     AppLocalizations.of(context)!.tunrOnGPS,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
