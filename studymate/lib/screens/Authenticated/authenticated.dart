@@ -44,6 +44,12 @@ class _AuthenticatedState extends State<Authenticated> {
     }
   }
 
+  void callbackOpenChat() {
+    setState(() {
+      _selectedIndex = 3;
+    });
+  }
+
   final user = FirebaseAuth.instance.currentUser!;
 
   Stream<List<Chat>> readMessages() => FirebaseFirestore.instance
@@ -63,12 +69,14 @@ class _AuthenticatedState extends State<Authenticated> {
       case 0:
         page = HomePage(
           isSearching: false,
+          callbackOpenChat: callbackOpenChat,
         );
         break;
       case 1:
         if (!isPortrait && !isMobile) {
           page = HomePage(
             isSearching: true,
+            callbackOpenChat: callbackOpenChat,
           );
         } else {
           page = SearchPage();

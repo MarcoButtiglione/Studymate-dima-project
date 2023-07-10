@@ -18,7 +18,10 @@ import '../../models/scheduled.dart';
 
 class HomePage extends StatefulWidget {
   final bool isSearching;
-  const HomePage({super.key, required this.isSearching});
+  final Function callbackOpenChat;
+
+  const HomePage(
+      {super.key, required this.isSearching, required this.callbackOpenChat});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -145,7 +148,9 @@ class _HomePageState extends State<HomePage>
                                 ),
                                 onPressed: () {
                                   Navigator.of(context)
-                                      .push(createRoute(NotificationPage()));
+                                      .push(createRoute(NotificationPage(
+                                    callbackOpenChat: widget.callbackOpenChat,
+                                  )));
                                 },
                               );
                             }
@@ -162,7 +167,9 @@ class _HomePageState extends State<HomePage>
                             ),
                             onPressed: () {
                               Navigator.of(context)
-                                  .push(createRoute(NotificationPage()));
+                                  .push(createRoute(NotificationPage(
+                                callbackOpenChat: widget.callbackOpenChat,
+                              )));
                             },
                           );
                         })),
@@ -199,7 +206,7 @@ class _HomePageState extends State<HomePage>
                                     gridDelegate:
                                         const SliverGridDelegateWithMaxCrossAxisExtent(
                                       maxCrossAxisExtent: 400,
-                                      childAspectRatio: 3 /2.2,
+                                      childAspectRatio: 3 / 2.2,
                                       mainAxisSpacing: 10.0,
                                       crossAxisSpacing: 10.0,
                                     ),

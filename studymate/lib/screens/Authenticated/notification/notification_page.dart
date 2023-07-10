@@ -8,6 +8,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../models/user.dart';
 
 class NotificationPage extends StatefulWidget {
+  final Function callbackOpenChat;
+  const NotificationPage({super.key, required this.callbackOpenChat});
   @override
   _NotificationState createState() => _NotificationState();
 }
@@ -105,6 +107,7 @@ class _NotificationState extends State<NotificationPage> {
             return NotificationCard(
               notification: not,
               user: users.first,
+              callbackOpenChat: widget.callbackOpenChat,
             );
           } else {
             return SizedBox();

@@ -12,11 +12,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class NotificationCard extends StatelessWidget {
   final Notifications notification;
   final Users user;
-  const NotificationCard({
-    super.key,
-    required this.notification,
-    required this.user,
-  });
+  final Function callbackOpenChat;
+
+  const NotificationCard(
+      {super.key,
+      required this.notification,
+      required this.user,
+      required this.callbackOpenChat});
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +54,8 @@ class NotificationCard extends StatelessWidget {
               child: (notification.type == "message")
                   ? GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChatsPage()));
+                        Navigator.pop(context);
+                        callbackOpenChat();
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +102,8 @@ class NotificationCard extends StatelessWidget {
                                       (notification.content!.contains("l4t:") &&
                                               notification.content!
                                                   .contains("l0n:"))
-                                          ? Text(AppLocalizations.of(context)!.sharedPosition)
+                                          ? Text(AppLocalizations.of(context)!
+                                              .sharedPosition)
                                           : Text(notification.content!)),
                             ],
                           ),
