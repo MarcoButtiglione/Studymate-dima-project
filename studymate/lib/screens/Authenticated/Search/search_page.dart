@@ -10,6 +10,7 @@ import 'package:studymate/screens/Authenticated/Search/widgets/autocomplete_sear
 import 'package:studymate/screens/Authenticated/Search/widgets/category_card.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../models/book.dart';
 import '../../../models/category.dart';
@@ -619,23 +620,21 @@ class _SearchPageState extends State<SearchPage> {
       },
     );
   }
-/*
+
   void _openURL(Uri url) async {
     if (await canLaunchUrl(url)) {
       launchUrl(url);
     } else {
       showAlertDialog(context, "Error", 'Could not launch $url');
     }
-  }*/
+  }
 
   Widget bookCard(Book book) {
     return InkWell(
       onTap: () {
         final String apiUrl = 'https://openlibrary.org${book.url}';
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        print(apiUrl);
         Uri url = Uri.parse(apiUrl);
-        //_openURL(url);
+        _openURL(url);
       },
       child: Row(
         children: [

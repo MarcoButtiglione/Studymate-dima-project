@@ -32,17 +32,10 @@ class QRImage extends StatelessWidget {
     }
     return Center(
       child: (data != "")
-          ? QrImage(
+          ? QrImageView(
               data: data,
               size: 280,
-              // You can include embeddedImageStyle Property if you
-              //wanna embed an image from your Asset folder
-              embeddedImageStyle: QrEmbeddedImageStyle(
-                size: const Size(
-                  100,
-                  100,
-                ),
-              ),
+              version: QrVersions.auto,
             )
           : SizedBox(),
     );
