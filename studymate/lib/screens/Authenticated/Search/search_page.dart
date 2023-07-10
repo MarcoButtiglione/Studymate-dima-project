@@ -26,6 +26,7 @@ class _SearchPageState extends State<SearchPage> {
   final userLog = FirebaseAuth.instance.currentUser!;
   String? selectedCategory;
   String? selectedLesson;
+  String? input;
   List<Book> bookView = [];
   Stream<List<RecordLessonView>> readRecordLesson() =>
       FirebaseFirestore.instance
@@ -137,6 +138,93 @@ class _SearchPageState extends State<SearchPage> {
     return books;
   }
 
+    showAlertDialog(BuildContext context, String? title, String? msg) {
+    Widget okButton = TextButton(
+      child: const Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(title!),
+      content: Text(msg!),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void _openURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      launchUrl(url);
+    } else {
+      showAlertDialog(context, "Error", 'Could not launch $url');
+    }
+  }
+
+  Widget bookCard(Book book) {
+    return InkWell(
+      onTap: () {
+        final String apiUrl = 'https://openlibrary.org${book.url}';
+        Uri url = Uri.parse(apiUrl);
+        _openURL(url);
+      },
+      child: Row(
+        children: [
+          SizedBox(
+            height: 70,
+            width: 70,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(35),
+                child: Container(
+                  color: Color.fromARGB(50, 233, 64, 87),
+                  child: const Icon(
+                    Icons.menu_book_rounded,
+                    size: 30,
+                    color: Color.fromARGB(255, 233, 64, 87),
+                  ),
+                )),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  book.name,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  (book.author_name.isNotEmpty && book.author_name[0]== input!)
+                      ? "${book.author_name[0]}"
+                      : "unkwnown",
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  "year:${book.first_publish_year}",
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Divider()
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -171,6 +259,7 @@ class _SearchPageState extends State<SearchPage> {
                         onTypedCallback: ((value) async {
                           List<Book> b = await _fetchData(value);
                           selectedLesson = value;
+                          input= value;
                           setState(() {
                             bookView = b;
                           });
@@ -593,92 +682,6 @@ class _SearchPageState extends State<SearchPage> {
               );
             }
           }),
-    );
-  }
-
-  //this method is used to show a alert with just one button
-  showAlertDialog(BuildContext context, String? title, String? msg) {
-    Widget okButton = TextButton(
-      child: const Text("OK"),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
-
-    AlertDialog alert = AlertDialog(
-      title: Text(title!),
-      content: Text(msg!),
-      actions: [
-        okButton,
-      ],
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  void _openURL(Uri url) async {
-    if (await canLaunchUrl(url)) {
-      launchUrl(url);
-    } else {
-      showAlertDialog(context, "Error", 'Could not launch $url');
-    }
-  }
-
-  Widget bookCard(Book book) {
-    return InkWell(
-      onTap: () {
-        final String apiUrl = 'https://openlibrary.org${book.url}';
-        Uri url = Uri.parse(apiUrl);
-        _openURL(url);
-      },
-      child: Row(
-        children: [
-          SizedBox(
-            height: 70,
-            width: 70,
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(35),
-                child: Container(
-                  color: Color.fromARGB(50, 233, 64, 87),
-                  child: const Icon(
-                    Icons.menu_book_rounded,
-                    size: 30,
-                    color: Color.fromARGB(255, 233, 64, 87),
-                  ),
-                )),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  book.name,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "${book.author_name[0]}",
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  "year:${book.first_publish_year}",
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Divider()
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
