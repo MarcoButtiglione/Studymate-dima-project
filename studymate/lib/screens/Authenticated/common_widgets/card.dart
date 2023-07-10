@@ -67,7 +67,7 @@ class ClassCard extends StatelessWidget {
                     .doc(id)
                     .delete();
                 FirebaseFirestore.instance
-                    .collection("scheduled")
+                    .collection("users")
                     .doc(student.id)
                     .update({"hours": student.hours + timeslot!.length});
                 final docChat =
