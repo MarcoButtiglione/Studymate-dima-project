@@ -168,8 +168,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
   Widget _buildPage(Users us, List<TimeslotsWeek> ts) {
     final Storage storage = Storage();
     final isMobile = MediaQuery.of(context).size.shortestSide < 600;
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+
 
     List<String> interest = [];
     us.categoriesOfInterest!.forEach((element) {

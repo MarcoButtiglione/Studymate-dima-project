@@ -100,9 +100,6 @@ class ClassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Storage storage = Storage();
-    Size size = MediaQuery.of(context).size;
-    double h = size.height;
-    double w = size.width;
 
     return Card(
       elevation: 5,

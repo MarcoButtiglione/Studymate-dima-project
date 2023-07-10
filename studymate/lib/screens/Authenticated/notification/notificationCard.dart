@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:studymate/screens/Authenticated/Chat/chats_page.dart';
 
 import '../../../../service/storage_service.dart';
 import '../../../models/notification.dart';

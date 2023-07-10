@@ -9,7 +9,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../../component/utils.dart';
 import '../../../models/notification.dart';
-import '../../../models/scheduled.dart';
 import '../../../models/user.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

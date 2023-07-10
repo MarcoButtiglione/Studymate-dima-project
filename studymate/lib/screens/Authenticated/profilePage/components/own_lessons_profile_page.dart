@@ -85,8 +85,7 @@ class _OwnLessonsProfilePageState extends State<OwnLessonsProfilePage> {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.shortestSide < 600;
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+
     if (isBusy) {
       return const Center(
         child: CircularProgressIndicator(),

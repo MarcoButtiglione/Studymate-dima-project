@@ -11,7 +11,7 @@ import '../../../models/notification.dart';
 import '../../../models/user.dart';
 import '../../../service/storage_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geocoding/geocoding.dart';
+//import 'package:geocoding/geocoding.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchPosition extends StatefulWidget {
