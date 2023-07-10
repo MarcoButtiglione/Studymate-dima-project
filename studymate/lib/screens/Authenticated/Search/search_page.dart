@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +9,9 @@ import 'package:studymate/models/recordLessonViewed.dart';
 import 'package:studymate/screens/Authenticated/Search/widgets/autocomplete_searchbar_searchpage.dart';
 import 'package:studymate/screens/Authenticated/Search/widgets/category_card.dart';
 import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
+import 'package:http/http.dart' as http;
 
+import '../../../models/book.dart';
 import '../../../models/category.dart';
 import '../../../models/lesson.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -21,7 +25,7 @@ class _SearchPageState extends State<SearchPage> {
   final userLog = FirebaseAuth.instance.currentUser!;
   String? selectedCategory;
   String? selectedLesson;
-
+  List<Book> bookView = [];
   Stream<List<RecordLessonView>> readRecordLesson() =>
       FirebaseFirestore.instance
           .collection('recordLessonsViewed')
@@ -83,6 +87,55 @@ class _SearchPageState extends State<SearchPage> {
           .map((snapshot) =>
               snapshot.docs.map((doc) => Lesson.fromJson(doc.data())).toList());
 
+  Future<List<Book>> _fetchData(String value) async {
+    List<Book> books = [];
+    if (value != "") {
+      List<String> values = value.split(RegExp(r"\s+"));
+      String name = "";
+      values.forEach((element) {
+        name += "$element+";
+      });
+      final String apiUrl =
+          'https://openlibrary.org/search.json?q=${name.substring(0, name.length - 1)}';
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final list = data["docs"];
+        int i = 0;
+        loop:
+        for (final element in list) {
+          if (element["ebook_access"] == "borrowable" &&
+              element["has_fulltext"] == true) {
+            Book temp = Book(
+                name: (element["title"] != null) ? element["title"] : "",
+                url: (element["key"] != null) ? element["key"] : "",
+                author_name: (element["author_name"] != null)
+                    ? element["author_name"]
+                    : [],
+                first_publish_year: (element["first_publish_year"] != null)
+                    ? element["first_publish_year"]
+                    : 0,
+                number_of_pages: (element["number_of_pages_median"] != null)
+                    ? element["number_of_pages_median"]
+                    : 0);
+            if (!books.contains(temp)) {
+              books.add(temp);
+              i++;
+            }
+          }
+          if (i == 10) {
+            break loop;
+          }
+        }
+
+        // Process and use the fetched data as per your requirements
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    }
+    return books;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -108,12 +161,19 @@ class _SearchPageState extends State<SearchPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(AppLocalizations.of(context)!.search,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                           )),
                       AutocompleteSearchbarSearchPage(
                         lessonsTitle: lessonsTitle,
+                        onTypedCallback: ((value) async {
+                          List<Book> b = await _fetchData(value);
+                          selectedLesson = value;
+                          setState(() {
+                            bookView = b;
+                          });
+                        }),
                         onSelectedCallback: ((p0) {
                           setState(() {
                             selectedLesson = p0;
@@ -122,6 +182,7 @@ class _SearchPageState extends State<SearchPage> {
                         onCleanCallback: () {
                           setState(() {
                             selectedLesson = null;
+                            bookView = [];
                           });
                         },
                       ),
@@ -134,7 +195,7 @@ class _SearchPageState extends State<SearchPage> {
                         //Title category
                         Text(AppLocalizations.of(context)!.categories,
                             textAlign: TextAlign.left,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.bold)),
                         //Category filter
                         SizedBox(
@@ -196,7 +257,7 @@ class _SearchPageState extends State<SearchPage> {
                                 //Recent
                                 Text(AppLocalizations.of(context)!.recent,
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold)),
                                 const SizedBox(height: 10),
@@ -301,7 +362,7 @@ class _SearchPageState extends State<SearchPage> {
                                         } else {
                                           return Column(
                                             children: [
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 20,
                                               ),
                                               Center(
@@ -362,7 +423,7 @@ class _SearchPageState extends State<SearchPage> {
                                         } else {
                                           return Column(
                                             children: [
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 20,
                                               ),
                                               Center(
@@ -422,7 +483,7 @@ class _SearchPageState extends State<SearchPage> {
                                         } else {
                                           return Column(
                                             children: [
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 20,
                                               ),
                                               Center(
@@ -483,7 +544,7 @@ class _SearchPageState extends State<SearchPage> {
                                         } else {
                                           return Column(
                                             children: [
-                                              SizedBox(
+                                              const SizedBox(
                                                 height: 20,
                                               ),
                                               Center(
@@ -505,6 +566,20 @@ class _SearchPageState extends State<SearchPage> {
                           }
                           return Container();
                         }()),
+                        SizedBox(height: 10),
+                        const Divider(),
+                        const Text("Available books",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 10),
+                        Column(
+                          children: bookView.map((item) {
+                            return ListTile(
+                              title: bookCard(item),
+                            );
+                          }).toList(),
+                        )
                       ],
                     ),
                   ),
@@ -517,6 +592,94 @@ class _SearchPageState extends State<SearchPage> {
               );
             }
           }),
+    );
+  }
+
+  //this method is used to show a alert with just one button
+  showAlertDialog(BuildContext context, String? title, String? msg) {
+    Widget okButton = TextButton(
+      child: const Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(title!),
+      content: Text(msg!),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+/*
+  void _openURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      launchUrl(url);
+    } else {
+      showAlertDialog(context, "Error", 'Could not launch $url');
+    }
+  }*/
+
+  Widget bookCard(Book book) {
+    return InkWell(
+      onTap: () {
+        final String apiUrl = 'https://openlibrary.org${book.url}';
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        print(apiUrl);
+        Uri url = Uri.parse(apiUrl);
+        //_openURL(url);
+      },
+      child: Row(
+        children: [
+          SizedBox(
+            height: 70,
+            width: 70,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(35),
+                child: Container(
+                  color: Color.fromARGB(50, 233, 64, 87),
+                  child: const Icon(
+                    Icons.menu_book_rounded,
+                    size: 30,
+                    color: Color.fromARGB(255, 233, 64, 87),
+                  ),
+                )),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  book.name,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "${book.author_name[0]}",
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  "year:${book.first_publish_year}",
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Divider()
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -24,8 +24,12 @@ class ReciviedMessage extends StatelessWidget {
         pos.contains("l0n:") &&
         pos.contains(";") &&
         pos.length > 9) {
-      latitude = double.parse(pos.substring(4, pos.indexOf(";")));
-      longitude = double.parse(pos.substring(pos.indexOf(";") + 5));
+      try {
+        latitude = double.parse(pos.substring(4, pos.indexOf(";")));
+        longitude = double.parse(pos.substring(pos.indexOf(";") + 5));
+      } catch (e) {
+        print(e);
+      }
     }
     return Padding(
       padding: const EdgeInsets.only(right: 18.0, left: 18, top: 15, bottom: 5),

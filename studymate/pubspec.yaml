@@ -48,6 +48,7 @@ dependencies:
   permission_handler: ^10.4.2
   search_map_location: ^0.0.6
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

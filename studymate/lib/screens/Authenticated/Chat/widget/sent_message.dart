@@ -29,8 +29,12 @@ class SentMessage extends StatelessWidget {
         pos.contains("l0n:") &&
         pos.contains(";") &&
         pos.length > 9) {
-      latitude = double.parse(pos.substring(4, pos.indexOf(";")));
-      longitude = double.parse(pos.substring(pos.indexOf(";") + 5));
+      try {
+        latitude = double.parse(pos.substring(4, pos.indexOf(";")));
+        longitude = double.parse(pos.substring(pos.indexOf(";") + 5));
+      } catch (e) {
+        print(e);
+      }
     }
 
     return Padding(

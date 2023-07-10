@@ -6,13 +6,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class AutocompleteSearchbarSearchPage extends StatefulWidget {
   final List<String> lessonsTitle;
   final Function(String) onSelectedCallback;
+  final Function(String) onTypedCallback;
   final Function() onCleanCallback;
-  const AutocompleteSearchbarSearchPage({
-    super.key,
-    required this.lessonsTitle,
-    required this.onSelectedCallback,
-    required this.onCleanCallback,
-  });
+  const AutocompleteSearchbarSearchPage(
+      {super.key,
+      required this.lessonsTitle,
+      required this.onSelectedCallback,
+      required this.onCleanCallback,
+      required this.onTypedCallback});
 
   @override
   _AutocompleteSearchbarSearchPageState createState() =>
@@ -76,6 +77,7 @@ class _AutocompleteSearchbarSearchPageState
             },
             onSelected: (selectedString) {
               widget.onSelectedCallback(selectedString);
+              widget.onTypedCallback(selectedString);
             },
             fieldViewBuilder:
                 (context, controller, focusNode, onEditingComplete) {
@@ -84,31 +86,42 @@ class _AutocompleteSearchbarSearchPageState
               return TextField(
                 controller: controller,
                 focusNode: focusNode,
+                onSubmitted: (value) {
+                  widget.onTypedCallback(value);
+                  FocusScope.of(context).unfocus();
+                },
                 onEditingComplete: onEditingComplete,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
-                  ),
-                  hintText: AppLocalizations.of(context)!.searchLessonHint,
-                  prefixIcon: Icon(Icons.search),
-                  suffixIcon: controller.text!=''?IconButton(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey[300]!),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey[300]!),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey[300]!),
+                    ),
+                    hintText: AppLocalizations.of(context)!.searchLessonHint,
+                    prefixIcon: IconButton(
                       onPressed: () {
-                        controller.clear();
-                        widget.onCleanCallback();
+                        widget.onTypedCallback(controller.text);
+                        Navigator.of(context).pop();
                       },
-                      icon: const Icon(
-                        Icons.delete,
-                      )):null
-                ),
+                      icon: Icon(Icons.search),
+                    ),
+                    suffixIcon: controller.text != ''
+                        ? IconButton(
+                            onPressed: () {
+                              controller.clear();
+                              widget.onCleanCallback();
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                            ))
+                        : null),
               );
             },
           )

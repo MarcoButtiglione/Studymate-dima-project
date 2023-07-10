@@ -130,13 +130,13 @@ class _AutocompleteSearchbarState extends State<AutocompleteSearchbar> {
                     borderSide: BorderSide(color: Colors.grey[300]!),
                   ),
                   hintText: AppLocalizations.of(context)!.search,
-                  prefixIcon: IconButton(
+                  suffixIcon: IconButton(
                       onPressed: () {
                         controller.clear();
                         widget.onSelected("");
                       },
                       icon: const Icon(
-                        Icons.arrow_back_ios,
+                        Icons.delete,
                         size: 20,
                       )),
                 ),
