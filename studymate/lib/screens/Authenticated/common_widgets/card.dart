@@ -79,7 +79,7 @@ class ClassCard extends StatelessWidget {
                     to_id: (currUser.uid == student.id) ? tutor.id : student.id,
                     type: "response",
                     content:
-                        " deleted the ${(isTutor!) ? "tutoring" : "lesson"} on ${DateFormat.yMd().format(date!.toDate())}",
+                        " deleted the ${(isTutor) ? "tutoring" : "lesson"} on ${DateFormat.yMd().format(date!.toDate())}",
                     view: false,
                     time: Timestamp.now(),
                   );
@@ -159,7 +159,7 @@ class ClassCard extends StatelessWidget {
                               color: Color.fromARGB(255, 233, 64, 87), size: 20)),
                       IconButton(
                           onPressed: () {
-                            if (isTutor!) {
+                            if (isTutor) {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -189,13 +189,13 @@ class ClassCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        (isTutor!)
+                        (isTutor)
                             ? "${AppLocalizations.of(context)!.student}:  "
                             : "${AppLocalizations.of(context)!.tutor}:  ",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Expanded(
-                        child: (isTutor!)
+                        child: (isTutor)
                             ? Text("${student.firstname} ${student.lastname}")
                             : Text("${tutor.firstname} ${tutor.lastname}"),
                       ),
@@ -256,7 +256,7 @@ class ClassCard extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                             onPressed: () {
-                              isTutor! == false
+                              isTutor == false
                                   ? Navigator.push(
                                       context,
                                       MaterialPageRoute(
