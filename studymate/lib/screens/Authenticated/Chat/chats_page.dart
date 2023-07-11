@@ -127,7 +127,11 @@ class _ChatState extends State<ChatsPage> {
                           chat: chatOpened,
                           isNewWindows: false,
                         )
-                      : Container(child: Center(child: Text(AppLocalizations.of(context)!.selectChat)),),
+                      : Container(
+                          child: Center(
+                              child: Text(
+                                  AppLocalizations.of(context)!.selectChat)),
+                        ),
                 ),
               )
             : SizedBox(),
@@ -163,6 +167,7 @@ class _ChatState extends State<ChatsPage> {
                         height: 5,
                       ),
                       InkWell(
+                          key: Key("chatElement"),
                           onTap: () {
                             if (isTabletLandscape) {
                               setState(() {
@@ -207,6 +212,7 @@ class _ChatState extends State<ChatsPage> {
                       height: 5,
                     ),
                     InkWell(
+                        key: Key("chatElement"),
                         onTap: () {
                           if (isTabletLandscape) {
                             setState(() {

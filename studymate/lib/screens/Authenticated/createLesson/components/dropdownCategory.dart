@@ -36,6 +36,7 @@ class _DropdownCategoryState extends State<DropdownCategory> {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: DropdownButtonFormField<String>(
+        key: Key('dropdownCategory'),
         value: dropdownValue,
         validator: (value) {
           if (value == null || value.isEmpty) {

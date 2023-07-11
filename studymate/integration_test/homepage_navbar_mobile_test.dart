@@ -8,7 +8,6 @@ import 'package:studymate/screens/Authenticated/Search/search_page.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
 import 'package:studymate/screens/Authenticated/createLesson/new_lesson_page.dart';
 import 'package:studymate/screens/Authenticated/homepage.dart';
-import 'package:studymate/screens/Authenticated/notification/notification_page.dart';
 import 'package:studymate/screens/Authenticated/profilePage/own_profile_page.dart';
 import 'package:studymate/screens/Login/login.dart';
 

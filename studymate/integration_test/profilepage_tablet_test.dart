@@ -3,9 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'package:studymate/main.dart' as app;
-import 'package:studymate/screens/Authenticated/Lesson/lesson_page.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
-import 'package:studymate/screens/Authenticated/common_widgets/lesson_card.dart';
 
 import 'package:studymate/screens/Authenticated/profilePage/components/edit_timeslots_page.dart';
 import 'package:studymate/screens/Authenticated/profilePage/components/own_lessons_profile_page.dart';

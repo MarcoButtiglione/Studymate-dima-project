@@ -163,6 +163,7 @@ class _MsgState extends State<ChatMsg> {
                           children: [
                             Expanded(
                               child: TextField(
+                                key: Key('messageTextField'),
                                 keyboardType: TextInputType.multiline,
                                 maxLines: null,
                                 controller: contentController,
@@ -189,6 +190,7 @@ class _MsgState extends State<ChatMsg> {
                                       context: context,
                                       isScrollControlled: true,
                                       builder: (context) => Container(
+                                        key: Key('attachGPS'),
                                               child: Wrap(children: [
                                             ListTile(
                                               onTap: () async {

@@ -138,6 +138,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                               children: [
                                 const SizedBox(height: 30),
                                 TextFormField(
+                                  key: Key('titleNewLessonForm'),
                                   controller: titleController,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
@@ -177,6 +178,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                     initCategory: ""),
                                 const SizedBox(height: 10),
                                 TextFormField(
+                                  key: Key('descriptionNewLessonForm'),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return AppLocalizations.of(context)!
@@ -217,6 +219,7 @@ class _NewLessonPageState extends State<NewLessonPage> {
                                   children: [
                                     Expanded(
                                       child: ElevatedButton(
+                                        key: Key('submitNewLessonForm'),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: const Color.fromARGB(
                                               255, 233, 64, 87),
