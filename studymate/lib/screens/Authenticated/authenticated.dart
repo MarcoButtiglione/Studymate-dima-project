@@ -208,6 +208,7 @@ class _AuthenticatedState extends State<Authenticated> {
                       topRight: Radius.circular(30.0),
                     ),
                     child: BottomNavigationBar(
+                      key: const Key('bottomNavigationBar'),
                       elevation: 10,
                       type: BottomNavigationBarType.fixed,
                       showSelectedLabels: false,

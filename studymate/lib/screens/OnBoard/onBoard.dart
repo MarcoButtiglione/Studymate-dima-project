@@ -71,13 +71,13 @@ class _OnBoardState extends State<OnBoard> {
     double width = size.width;
     double height = size.height;
     if (width >= height) {
-      return horizontalView(width, height,content);
+      return horizontalView(width, height, content);
     } else {
-      return verticalView(width, height,content);
+      return verticalView(width, height, content);
     }
   }
 
-  Widget verticalView(double width, double height,List<OnboardModel> content) {
+  Widget verticalView(double width, double height, List<OnboardModel> content) {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: SafeArea(
@@ -152,6 +152,7 @@ class _OnBoardState extends State<OnBoard> {
                       ? Padding(
                           padding: const EdgeInsets.all(30),
                           child: ElevatedButton(
+                            key: const Key('startOnBoardingVertical'),
                             onPressed: () {
                               _storeOnboardInfo();
                               Navigator.pushReplacement(
@@ -187,6 +188,7 @@ class _OnBoardState extends State<OnBoard> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               TextButton(
+                                key: const Key('skipButtonVer'),
                                 onPressed: () {
                                   _pageController.jumpToPage(2);
                                 },
@@ -207,6 +209,7 @@ class _OnBoardState extends State<OnBoard> {
                                 ),
                               ),
                               ElevatedButton(
+                                key: const Key('nextOnBoardingVertical'),
                                 onPressed: () {
                                   _pageController.nextPage(
                                     duration: const Duration(milliseconds: 200),
@@ -263,7 +266,8 @@ class _OnBoardState extends State<OnBoard> {
     );
   }
 
-  Widget horizontalView(double width, double height,List<OnboardModel> content) {
+  Widget horizontalView(
+      double width, double height, List<OnboardModel> content) {
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: SafeArea(
@@ -330,6 +334,7 @@ class _OnBoardState extends State<OnBoard> {
                       padding: EdgeInsets.only(
                           top: 0.1 * height, bottom: 0.1 * height),
                       child: ElevatedButton(
+                        key: const Key('startOnBoardingHor'),
                         onPressed: () {
                           _storeOnboardInfo();
                           Navigator.pushReplacement(context,
@@ -359,6 +364,7 @@ class _OnBoardState extends State<OnBoard> {
                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton(
+                            key: const Key('skipButtonHor'),
                             onPressed: () {
                               _pageController.jumpToPage(2);
                             },
@@ -392,6 +398,7 @@ class _OnBoardState extends State<OnBoard> {
                             ),
                           ),
                           ElevatedButton(
+                            key: const Key('nextOnBoardingHor'),
                             onPressed: () {
                               _pageController.nextPage(
                                 duration: const Duration(milliseconds: 200),

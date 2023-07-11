@@ -198,6 +198,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                           showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
+
                               title: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
@@ -266,6 +267,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                             isScrollControlled: true,
                             builder: (context) => Container(
                               child: Wrap(
+                                key: Key("menuModal"),
                                 children: [
                                   /*
                                         ListTile(
@@ -487,6 +489,7 @@ class _OwnProfilePageState extends State<OwnProfilePage> {
                                             context: context,
                                             isScrollControlled: true,
                                             builder: (context) => Container(
+                                              key: Key('modalEdicPic'),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [

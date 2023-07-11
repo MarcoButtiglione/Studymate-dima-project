@@ -92,8 +92,6 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-
-
     return Row(
       children: [
         widget.isSearching
@@ -132,6 +130,7 @@ class _HomePageState extends State<HomePage>
                             List<Notifications> notifications = snapshot.data!;
                             if (notifications.isNotEmpty) {
                               return IconButton(
+                                key: const Key('notificationButton'),
                                 icon: badges.Badge(
                                   position:
                                       BadgePosition.topEnd(top: 0, end: 0),
@@ -152,6 +151,7 @@ class _HomePageState extends State<HomePage>
                             }
                           }
                           return IconButton(
+                            key: const Key('notificationButton'),
                             icon: badges.Badge(
                               position: BadgePosition.topEnd(top: 0, end: 0),
                               showBadge: false,
