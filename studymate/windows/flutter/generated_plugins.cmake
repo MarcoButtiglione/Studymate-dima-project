@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  address_search_field
   file_selector_windows
   firebase_core
   geolocator_windows

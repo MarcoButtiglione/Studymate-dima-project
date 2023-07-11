@@ -11,7 +11,6 @@ import '../../provider/authentication.dart';
 import '../Authenticated/authenticated.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -51,6 +50,7 @@ class _LoginState extends State<Login> {
                   ),
                   Column(mainAxisAlignment: MainAxisAlignment.end, children: [
                     Text(
+                      key: const Key('titleLogin'),
                       AppLocalizations.of(context)!.login,
                       style: TextStyle(
                         fontFamily: "Crimson Pro",
@@ -63,6 +63,7 @@ class _LoginState extends State<Login> {
                       alignment: Alignment.center,
                       width: 0.8 * w,
                       child: TextFormField(
+                        key: const Key('emailFieldLogin'),
                         controller: emailController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
@@ -88,6 +89,7 @@ class _LoginState extends State<Login> {
                       alignment: Alignment.center,
                       width: 0.8 * w,
                       child: TextFormField(
+                        key: const Key('passwordFieldLogin'),
                         controller: passwordController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
@@ -113,6 +115,7 @@ class _LoginState extends State<Login> {
                       margin: EdgeInsets.only(
                           right: (w > 490 && h > 720) ? 80 : 50, top: 10),
                       child: GestureDetector(
+                        key: const Key('forgotPwdGestureLogin'),
                         onTap: () => {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) => Reset())),
@@ -131,6 +134,7 @@ class _LoginState extends State<Login> {
                       height: 0.08 * h,
                       width: 0.8 * w,
                       child: ElevatedButton(
+                          key: const Key('loginButton'),
                           onPressed: signIn,
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
@@ -154,24 +158,27 @@ class _LoginState extends State<Login> {
                       margin: EdgeInsets.only(
                           right: (w > 490 && h > 720) ? 80 : 50, top: 10),
                       child: RichText(
+                          key: const Key('noAccountQuestionLogin'),
                           text: TextSpan(
                               style: TextStyle(
                                   fontSize: (w > 490 && h > 720) ? 20 : 12,
                                   color: Color.fromARGB(156, 65, 62, 88)),
-                              text: AppLocalizations.of(context)!.noAccountQustion,
+                              text: AppLocalizations.of(context)!
+                                  .noAccountQustion,
                               children: [
-                            TextSpan(
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Register())),
-                              text: ' '+AppLocalizations.of(context)!.signUp,
-                              style: TextStyle(
-                                  fontSize: (w > 490 && h > 720) ? 20 : 12,
-                                  color: Color.fromARGB(255, 233, 64, 87)),
-                            )
-                          ])),
+                                TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Register())),
+                                  text: ' ' +
+                                      AppLocalizations.of(context)!.signUp,
+                                  style: TextStyle(
+                                      fontSize: (w > 490 && h > 720) ? 20 : 12,
+                                      color: Color.fromARGB(255, 233, 64, 87)),
+                                )
+                              ])),
                     ),
                     SizedBox(
                       height: 0.03 * h,
@@ -218,6 +225,7 @@ class _LoginState extends State<Login> {
                                   Color.fromARGB(255, 233, 64, 87)),
                             )
                           : GestureDetector(
+                              key: const Key('buttonSignUpGoogle'),
                               onTap: () {
                                 setState(() {
                                   _isSigningIn = true;
@@ -253,7 +261,8 @@ class _LoginState extends State<Login> {
                                         width: 10,
                                       ),
                                       Text(
-                                        AppLocalizations.of(context)!.buttonSignUpGoogle,
+                                        AppLocalizations.of(context)!
+                                            .buttonSignUpGoogle,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,

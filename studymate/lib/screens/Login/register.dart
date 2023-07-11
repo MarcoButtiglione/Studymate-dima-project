@@ -45,6 +45,7 @@ class _RegisterState extends State<Register> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
+                      key: const Key('titleRegister'),
                       AppLocalizations.of(context)!.signUp,
                       style: TextStyle(
                         fontFamily: "Crimson Pro",
@@ -58,6 +59,7 @@ class _RegisterState extends State<Register> {
                       width: 0.8 * w,
                       alignment: Alignment.center,
                       child: TextFormField(
+                        key: const Key('emailFieldRegister'),
                         controller: emailController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
@@ -83,6 +85,7 @@ class _RegisterState extends State<Register> {
                       width: 0.8 * w,
                       alignment: Alignment.center,
                       child: TextFormField(
+                        key: const Key('passwordFieldRegister'),
                         controller: passwordController,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
@@ -109,6 +112,7 @@ class _RegisterState extends State<Register> {
                       height: 0.08 * h,
                       width: 0.8 * w,
                       child: ElevatedButton(
+                          key: const Key('signUpButton'),
                           onPressed: signUp,
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
@@ -130,24 +134,27 @@ class _RegisterState extends State<Register> {
                     Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: RichText(
+                          key: const Key('alreadyAccountQuestionRegister'),
                           text: TextSpan(
                               style: TextStyle(
                                   fontSize: (w > 490 && h > 720) ? 20 : 12,
                                   color: Color.fromARGB(156, 65, 62, 88)),
-                              text: AppLocalizations.of(context)!.haveAlreadyAccount,
+                              text: AppLocalizations.of(context)!
+                                  .haveAlreadyAccount,
                               children: [
-                            TextSpan(
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Login())),
-                              text: ' '+AppLocalizations.of(context)!.login,
-                              style: TextStyle(
-                                  fontSize: (w > 490 && h > 720) ? 20 : 12,
-                                  color: Color.fromARGB(255, 233, 64, 87)),
-                            )
-                          ])),
+                                TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Login())),
+                                  text:
+                                      ' ' + AppLocalizations.of(context)!.login,
+                                  style: TextStyle(
+                                      fontSize: (w > 490 && h > 720) ? 20 : 12,
+                                      color: Color.fromARGB(255, 233, 64, 87)),
+                                )
+                              ])),
                     ),
                   ]),
             ],
@@ -156,6 +163,8 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
+
+ 
 
   Future signUp() async {
     final isValid = formKey.currentState!.validate();
