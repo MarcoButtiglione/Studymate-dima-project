@@ -10,17 +10,73 @@ import 'package:studymate/screens/Authenticated/Search/search_page.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('Writing on searchbar - searchpage - smartphone', (tester) async {
+  testWidgets('Writing on searchbar - searchpage - tablet', (tester) async {
     //setup
     app.main();
     //do
-    //LOGIN
+
+    //------
     await tester.pumpAndSettle(const Duration(seconds: 5));
-    final button = find.byKey(Key('skipButtonVer'));
+    expect(find.byType(Authenticated), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.search));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    expect(find.byType(SearchPage), findsOneWidget);
+    // Find the text field using the specified key
+    final textFieldFinder = find.byType(TextField);
+    expect(textFieldFinder, findsOneWidget);
+
+    final testText = 'Hello, World!';
+    await tester.enterText(textFieldFinder, testText);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+
+    //test
+    final enteredText =
+        (tester.widget(textFieldFinder) as TextField).controller!.text;
+    expect(enteredText, testText);
+  });
+
+  testWidgets(
+      'Writing on searchbar and clicking search button - searchpage - tablet',
+      (tester) async {
+    //setup
+    app.main();
+    //do
+    //------
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    expect(find.byType(Authenticated), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.search));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    expect(find.byType(SearchPage), findsOneWidget);
+    // Find the text field using the specified key
+    final textFieldFinder = find.byType(TextField);
+    expect(textFieldFinder, findsOneWidget);
+
+    final testText = 'randombowrdsforsearchpage';
+    await tester.enterText(textFieldFinder, testText);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.tap(find.byIcon(Icons.search).at(1));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    //test
+    expect(find.text(testText), findsOneWidget);
+  });
+  testWidgets(
+      'Writing on searchbar and finding no lesson- searchpage - tablet',
+      (tester) async {
+    //setup
+    app.main();
+    //do
+        //LOGIN
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    final button = find.byKey(Key('skipButtonHor'));
     expect(button, findsOneWidget);
     await tester.tap(button);
     await tester.pumpAndSettle(const Duration(seconds: 2));
-    final buttonStart = find.byKey(Key('startOnBoardingVertical'));
+    final buttonStart = find.byKey(Key('startOnBoardingHor'));
     expect(buttonStart, findsOneWidget);
     await tester.tap(buttonStart);
     await tester.pumpAndSettle(const Duration(seconds: 5));
@@ -46,70 +102,17 @@ void main() {
     final textFieldFinder = find.byType(TextField);
     expect(textFieldFinder, findsOneWidget);
 
-    final testText = 'Hello, World!';
-    await tester.enterText(textFieldFinder, testText);
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pump();
-
-    //test
-    final enteredText =
-        (tester.widget(textFieldFinder) as TextField).controller!.text;
-    expect(enteredText, testText);
-  });
-
-  testWidgets(
-      'Writing on searchbar and clicking search button - searchpage - smartphone',
-      (tester) async {
-    //setup
-    app.main();
-    //do
-    await tester.pumpAndSettle(const Duration(seconds: 5));
-    expect(find.byType(Authenticated), findsOneWidget);
-
-    await tester.tap(find.byIcon(Icons.search));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-    expect(find.byType(SearchPage), findsOneWidget);
-    // Find the text field using the specified key
-    final textFieldFinder = find.byType(TextField);
-    expect(textFieldFinder, findsOneWidget);
-
     final testText = 'randombowrdsforsearchpage';
     await tester.enterText(textFieldFinder, testText);
     await tester.pumpAndSettle(const Duration(seconds: 2));
-    await tester.tap(find.byIcon(Icons.search).at(0));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-
-    //test
-    expect(find.text(testText), findsNWidgets(2));
-  });
-  testWidgets(
-      'Writing on searchbar and clicking search button - searchpage - smartphone',
-      (tester) async {
-    //setup
-    app.main();
-    //do
-    await tester.pumpAndSettle(const Duration(seconds: 5));
-    expect(find.byType(Authenticated), findsOneWidget);
-
-    await tester.tap(find.byIcon(Icons.search));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-    expect(find.byType(SearchPage), findsOneWidget);
-    // Find the text field using the specified key
-    final textFieldFinder = find.byType(TextField);
-    expect(textFieldFinder, findsOneWidget);
-
-    final testText = 'randombowrdsforsearchpage';
-    await tester.enterText(textFieldFinder, testText);
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-    await tester.tap(find.byIcon(Icons.search).at(0));
+    await tester.tap(find.byIcon(Icons.search).at(1));
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     //test
     expect(find.text('No lessons'), findsOneWidget);
   });
   testWidgets(
-      'Writing on searchbar and manually deleting - searchpage - smartphone',
+      'Writing on searchbar and manually deleting - searchpage - tablet',
       (tester) async {
     //setup
     app.main();
@@ -139,7 +142,7 @@ void main() {
     expect(enteredText, '');
   });
   testWidgets(
-      'Writing on searchbar exist delete button - searchpage - smartphone',
+      'Writing on searchbar exist delete button - searchpage - tablet',
       (tester) async {
     //setup
     app.main();
@@ -161,10 +164,10 @@ void main() {
     await tester.pump();
 
     //test
-    expect(find.byIcon(Icons.delete), findsOneWidget);
+    expect(find.byKey(Key('cleanAutocompleteSearchBar')), findsOneWidget);
   });
   testWidgets(
-      'Writing on searchbar and clicking delete button - searchpage - smartphone',
+      'Writing on searchbar and clicking delete button - searchpage - tablet',
       (tester) async {
     //setup
     app.main();
@@ -184,7 +187,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pump();
-    await tester.tap(find.byIcon(Icons.delete));
+    await tester.tap(find.byKey(Key('cleanAutocompleteSearchBar')));
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     //test
@@ -193,7 +196,7 @@ void main() {
     expect(enteredText, '');
   });
   testWidgets(
-      'Writing on searchbar and clicking delete button existing delete button - searchpage - smartphone',
+      'Writing on searchbar and clicking delete button existing delete button - searchpage - tablet',
       (tester) async {
     //setup
     app.main();
@@ -213,13 +216,13 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pump();
-    await tester.tap(find.byIcon(Icons.delete));
+    await tester.tap(find.byKey(Key('cleanAutocompleteSearchBar')));
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
     //test
-    expect(find.byIcon(Icons.delete), findsNothing);
+    expect(find.byKey(Key('cleanAutocompleteSearchBar')), findsNothing);
   });
-  testWidgets('Clicking recent lessons - searchpage - smartphone',
+  testWidgets('Clicking recent lessons - searchpage - tablet',
       (tester) async {
     //setup
     app.main();
@@ -238,7 +241,7 @@ void main() {
     //test
     expect(find.byType(LessonPage), findsOneWidget);
   });
-  testWidgets('Clicking recent lessons and return - searchpage - smartphone',
+  testWidgets('Clicking recent lessons and return - searchpage - tablet',
       (tester) async {
     //setup
     app.main();

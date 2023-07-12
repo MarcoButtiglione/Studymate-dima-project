@@ -129,6 +129,7 @@ class _AutocompleteSearchbarSearchPageState
                               controller.clear();
                               widget.onCleanCallback();
                             },
+                            key: Key('cleanAutocompleteSearchBar'),
                             icon: const Icon(
                               Icons.delete,
                             ))
