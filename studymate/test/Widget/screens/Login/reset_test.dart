@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:studymate/l10n/l10n.dart';
-import 'package:studymate/screens/Login/login.dart';
 import 'package:studymate/screens/Login/reset.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
