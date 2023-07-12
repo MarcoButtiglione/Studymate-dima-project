@@ -5,7 +5,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:studymate/main.dart' as app;
 import 'package:studymate/screens/Authenticated/Lesson/lesson_page.dart';
 import 'package:studymate/screens/Authenticated/authenticated.dart';
-import 'package:studymate/screens/Authenticated/homepage.dart';
 import 'package:studymate/screens/Login/login.dart';
 import 'package:studymate/screens/Authenticated/Search/search_page.dart';
 

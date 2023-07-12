@@ -14,7 +14,7 @@ import 'package:studymate/screens/Authenticated/profilePage/components/updateInt
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('Clicking on own lessons - profile page - smartphone',
+  testWidgets('Clicking on own lessons - profile page - tablet',
       (tester) async {
     //setup
     app.main();
@@ -56,7 +56,7 @@ void main() {
     //test
     expect(find.byType(OwnLessonsProfilePage), findsOneWidget);
   });
-  testWidgets('Clicking on saved lessons - profile page - smartphone',
+  testWidgets('Clicking on saved lessons - profile page - tablet',
       (tester) async {
     //setup
     app.main();
@@ -73,7 +73,7 @@ void main() {
     //test
     expect(find.byType(SavedLessonsProfilePage), findsOneWidget);
   });
-  testWidgets('Clicking on credits hours lessons - profile page - smartphone',
+  testWidgets('Clicking on credits hours lessons - profile page - tablet',
       (tester) async {
     //setup
     app.main();
@@ -90,7 +90,7 @@ void main() {
     //test
     expect(find.byType(AlertDialog), findsOneWidget);
   });
-  testWidgets('Clicking on edit profile image - profile page - smartphone',
+  testWidgets('Clicking on edit profile image - profile page - tablet',
       (tester) async {
     //setup
     app.main();
@@ -107,7 +107,7 @@ void main() {
     //test
     expect(find.byKey(Key('modalEdicPic')), findsOneWidget);
   });
-  testWidgets('Clicking on menu - profile page - smartphone', (tester) async {
+  testWidgets('Clicking on menu - profile page - tablet', (tester) async {
     //setup
     app.main();
     //do
@@ -123,7 +123,7 @@ void main() {
     //test
     expect(find.byKey(Key("menuModal")), findsOneWidget);
   });
-  testWidgets('Clicking on edit preferences - menu - profile page - smartphone',
+  testWidgets('Clicking on edit preferences - menu - profile page - tablet',
       (tester) async {
     //setup
     app.main();
@@ -144,7 +144,7 @@ void main() {
     //test
     expect(find.byType(updateInterest), findsOneWidget);
   });
-  testWidgets('Clicking on edit timeslots - menu - profile page - smartphone',
+  testWidgets('Clicking on edit timeslots - menu - profile page - tablet',
       (tester) async {
     //setup
     app.main();
@@ -165,7 +165,7 @@ void main() {
     //test
     expect(find.byType(EditTimeslotsPage), findsOneWidget);
   });
-  testWidgets('Clicking on logout - menu - profile page - smartphone',
+  testWidgets('Clicking on logout - menu - profile page - tablet',
       (tester) async {
     //setup
     app.main();
