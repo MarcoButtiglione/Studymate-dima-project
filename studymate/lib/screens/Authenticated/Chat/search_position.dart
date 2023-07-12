@@ -205,6 +205,37 @@ class _SearchPositionState extends State<SearchPosition> {
               : SizedBox(),
         ),
         Align(
+          alignment: Alignment.topRight,
+          child: (localizationAllowed)
+              ? IconButton(
+                  onPressed: () {
+                    if (_destination != LatLng(0, 0) && localizationAllowed) {
+                      send();
+
+                      Navigator.of(context).pop();
+                    } else {
+                      utils.showAlertDialog(
+                          context,
+                          AppLocalizations.of(context)!.attention,
+                          AppLocalizations.of(context)!.selectLocation);
+                    }
+                  },
+                  icon: Container(
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        borderRadius: BorderRadius.circular(30)),
+                    padding: const EdgeInsets.all(10),
+                    margin:
+                        const EdgeInsets.only(bottom: 10, right: 60, top: 5),
+                    child: const Icon(
+                      Icons.send,
+                      color: Color.fromARGB(255, 233, 64, 87),
+                      size: 30,
+                    ),
+                  ))
+              : SizedBox(),
+        ),
+        Align(
             alignment: Alignment.topLeft,
             child: Row(
               children: [
@@ -212,8 +243,8 @@ class _SearchPositionState extends State<SearchPosition> {
                   child: (localizationAllowed)
                       ? Container(
                           margin: const EdgeInsets.only(
-                              bottom: 10, top: 10, left: 10, right: 10),
-                          width: 0.3 * w,
+                              bottom: 10, top: 10, left: 10, right: 125),
+                          //width: 0.6 * w,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
                               color: Color.fromARGB(255, 255, 255, 255)),
@@ -227,6 +258,7 @@ class _SearchPositionState extends State<SearchPosition> {
                             location: latlng.LatLng(
                                 latitude: 9.072264, longitude: 7.491302),
                             radius: 1100,
+                            iconColor: Color.fromARGB(255, 233, 64, 87),
                             onSelected: (place.Place place) async {
                               final geolocation = await place.geolocation;
                               latlng.LatLng tmp = geolocation!.coordinates;
@@ -243,38 +275,6 @@ class _SearchPositionState extends State<SearchPosition> {
                           ))
                       : SizedBox(),
                 ),
-                (localizationAllowed)
-                    ? IconButton(
-                        onPressed: () {
-                          if (_destination != LatLng(0, 0) &&
-                              localizationAllowed) {
-                            send();
-
-                            Navigator.of(context).pop();
-                          } else {
-                            utils.showAlertDialog(
-                                context,
-                                AppLocalizations.of(context)!.attention,
-                                AppLocalizations.of(context)!.selectLocation);
-                          }
-                        },
-                        icon: Container(
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              borderRadius: BorderRadius.circular(30)),
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.only(
-                              bottom: 10, right: 10, top: 5),
-                          child: const Icon(
-                            Icons.send,
-                            color: Color.fromARGB(255, 103, 204, 244),
-                            size: 30,
-                          ),
-                        ))
-                    : SizedBox(),
-                SizedBox(
-                  width: 1000,
-                )
               ],
             ))
       ],
@@ -393,9 +393,6 @@ class _SearchPositionState extends State<SearchPosition> {
                             color: Color.fromARGB(255, 0, 0, 0),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 500,
                       )
                     ],
                   ),
