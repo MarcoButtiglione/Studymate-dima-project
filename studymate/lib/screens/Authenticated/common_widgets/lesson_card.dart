@@ -43,6 +43,7 @@ class _LessonCardState extends State<LessonCard> {
         } else if (snapshot.hasData) {
           final user = snapshot.data!.first;
           return InkWell(
+            key: Key('lessonCard'),
             onTap: () {
               if (!isMobile) {
                 showModalBottomSheet(
