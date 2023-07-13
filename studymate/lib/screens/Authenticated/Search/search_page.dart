@@ -315,7 +315,6 @@ class _SearchPageState extends State<SearchPage> {
                                         scrollDirection: Axis.horizontal,
                                         children: categories
                                             .map((category) => InkWell(
-                                                  key: Key('categoryCard'),
                                                   onTap: (() {
                                                     if (selectedCategory ==
                                                         category.name) {
@@ -740,7 +739,6 @@ class _SearchPageState extends State<SearchPage> {
                                             return bookCard(bookView[index]);
                                           },
                                         ),
-                                        
                                       ],
                                     )
                                   : const SizedBox()
